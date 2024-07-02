@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # app-gestion-stock
 
 ## Getting Started
@@ -20,6 +19,3 @@ mvn install
 ```bash
 ./mvnw spring-boot:run
 ```
-=======
-# Gestion-Commerciale
->>>>>>> 16b4b8220aa1f8b9f11e59e280ce2b21c5a6d6aa
