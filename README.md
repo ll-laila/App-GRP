@@ -1,6 +1,4 @@
-<<<<<<< HEAD
-# app-gestion-stock
-
+# ERP-GS
 ## Getting Started
 
 ### Installation
@@ -20,6 +18,6 @@ mvn install
 ```bash
 ./mvnw spring-boot:run
 ```
-=======
-# ERP-GS
->>>>>>> ce81bf2cbf62f966e6bafddbdce050f84da97927
+
+
+
