@@ -77,12 +77,24 @@ public class ClientConverter {
         item.setRabais(dto.getRabais());
         item.setLanguePDF(dto.getLanguePDF());
         item.setValeurCommandeMinimale(dto.getValeurCommandeMinimale());
-        item.setAdresse(adresseConverter.toItem(dto.getAdresse()));
-        item.setDevises(devisesConverter.toItem(dto.getDevises()));
-        item.setNiveauPrix(niveauPrixConverter.toItem(dto.getNiveauPrix()));
-        item.setTaxe(taxeConverter.toItem(dto.getTaxe()));
-        item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
-        item.setClientProduitNiveauPrix(clientProduitNiveauPrixConverter.toItem(dto.getClientProduitNiveauPrixes()));
+        if (adresse) {
+            item.setAdresse(adresseConverter.toItem(dto.getAdresse()));
+        }
+        if (devises) {
+            item.setDevises(devisesConverter.toItem(dto.getDevises()));
+        }
+        if (niveauPrix) {
+            item.setNiveauPrix(niveauPrixConverter.toItem(dto.getNiveauPrix()));
+        }
+        if (taxe) {
+            item.setTaxe(taxeConverter.toItem(dto.getTaxe()));
+        }
+        if (entreprise) {
+            item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
+        }
+        if (clientProduitNiveauPrix) {
+            item.setClientProduitNiveauPrix(clientProduitNiveauPrixConverter.toItem(dto.getClientProduitNiveauPrixes()));
+        }
         return item;
     }
 
@@ -98,12 +110,24 @@ public class ClientConverter {
         dto.setRabais(item.getRabais());
         dto.setLanguePDF(item.getLanguePDF());
         dto.setValeurCommandeMinimale(item.getValeurCommandeMinimale());
-        dto.setAdresse(adresse ? adresseConverter.toDto(item.getAdresse()) : null);
-        dto.setDevises(devises ? devisesConverter.toDto(item.getDevises()) : null);
-        dto.setNiveauPrix(niveauPrix ? niveauPrixConverter.toDto(item.getNiveauPrix()) : null);
-        dto.setTaxe(taxe ? taxeConverter.toDto(item.getTaxe()) : null);
-        dto.setEntreprise(entreprise ? entrepriseConverter.toDto(item.getEntreprise()) : null);
-        dto.setClientProduitNiveauPrixes(clientProduitNiveauPrix ? clientProduitNiveauPrixConverter.toDto(item.getClientProduitNiveauPrix()) : null);
+        if (adresse) {
+            dto.setAdresse(adresseConverter.toDto(item.getAdresse()));
+        }
+        if (devises) {
+            dto.setDevises(devisesConverter.toDto(item.getDevises()));
+        }
+        if (niveauPrix) {
+            dto.setNiveauPrix(niveauPrixConverter.toDto(item.getNiveauPrix()));
+        }
+        if (taxe) {
+            dto.setTaxe(taxeConverter.toDto(item.getTaxe()));
+        }
+        if (entreprise) {
+            dto.setEntreprise(entrepriseConverter.toDto(item.getEntreprise()));
+        }
+        if (clientProduitNiveauPrix) {
+            dto.setClientProduitNiveauPrixes(clientProduitNiveauPrixConverter.toDto(item.getClientProduitNiveauPrix()));
+        }
         return dto;
     }
 

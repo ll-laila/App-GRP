@@ -65,10 +65,13 @@ public class AppUserConverter {
         return item;
     }
 
-    public final List<AppUser> toItem(List<AppUserDto> dtos) {
-        List<AppUser> list = new ArrayList<>();
-        dtos.forEach(it -> list.add(toItem(it)));
-        return list;
+    // AppUserConverter.java
+    public List<AppUser> toItem(List<AppUserDto> dtos) {
+        List<AppUser> items = new ArrayList<>();
+        if (dtos != null) {
+            dtos.forEach(it -> items.add(toItem(it)));
+        }
+        return items;
     }
 
     public final List<AppUserDto> toDto(List<AppUser> items) {
