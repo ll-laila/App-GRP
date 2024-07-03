@@ -1,0 +1,52 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/parametres/nouvelle-devise"(click)="cancel()">Annuler</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Actualiser
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Modifier
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+              <svg cIcon name="cil-barcode"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Labelle</label>
+                <input cFormControl id="labelle" type="text" placeholder="Labelle" [(ngModel)]="item.labelle" name="labelle" [valid]="validator.labelle.valid" (blur)="validator.labelle.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.labelle.message }}</c-form-feedback>
+            </c-col>
+
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

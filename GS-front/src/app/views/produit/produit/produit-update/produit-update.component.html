@@ -1,0 +1,137 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/produit/produit"(click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Reset
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Update
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+<!--<ng-container *ngTemplateOutlet="createSubEntities"></ng-container>-->
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+                <label cLabel for="nom">Nom</label>
+                <input cFormControl id="nom" type="text" placeholder="Nom" [(ngModel)]="item.nom" name="nom" [valid]="validator.nom.valid" (blur)="validator.nom.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.nom.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="sku">Sku</label>
+                <input cFormControl id="sku" type="text" placeholder="Sku" [(ngModel)]="item.sku" name="sku" [valid]="validator.sku.valid" (blur)="validator.sku.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.sku.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="barcode">Barcode</label>
+                <input cFormControl id="barcode" type="text" placeholder="Barcode" [(ngModel)]="item.barcode" name="barcode" [valid]="validator.barcode.valid" (blur)="validator.barcode.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.barcode.message }}</c-form-feedback>
+            </c-col>
+
+            <c-col sm="4">
+                <label cLabel for="niveauStockInitial">NiveauStockInitial</label>
+                <input cFormControl id="niveauStockInitial" type="number" placeholder="NiveauStockInitial" [(ngModel)]="item.niveauStockInitial" name="niveauStockInitial" [valid]="validator.niveauStockInitial.valid" (blur)="validator.niveauStockInitial.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.niveauStockInitial.message }}</c-form-feedback>
+            </c-col>
+
+            <c-col sm="4">
+                <label cLabel for="pointCommande">PointCommande</label>
+                <input cFormControl id="pointCommande" type="number" placeholder="PointCommande" [(ngModel)]="item.pointCommande" name="pointCommande" [valid]="validator.pointCommande.valid" (blur)="validator.pointCommande.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.pointCommande.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="prixGros">PrixGros</label>
+                <input cFormControl id="prixGros" type="number" placeholder="PrixGros" [(ngModel)]="item.prixGros" name="prixGros" [valid]="validator.prixGros.valid" (blur)="validator.prixGros.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.prixGros.message }}</c-form-feedback>
+            </c-col>
+<!--
+            <c-col sm="4">
+                <label cLabel for="prixAchat">PrixAchat</label>
+                <input cFormControl id="prixAchat" type="number" placeholder="PrixAchat" [(ngModel)]="item.prixAchat" name="prixAchat" [valid]="validator.prixAchat.valid" (blur)="validator.prixAchat.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.prixAchat.message }}</c-form-feedback>
+            </c-col>-->
+            <c-col sm="4">
+                <label cLabel for="devises">Devises</label>
+                <c-input-group>
+                    <select cSelect id="devises" name="devises" [(ngModel)]="devises.id" [valid]="validator.devises.valid" (blur)="validator.devises.validate()">
+                        @for (it of devisesList; track it) {
+                        <option [value]="it.id">{{ it.id }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToDevisesCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.devises.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="taxe">Taxe</label>
+                <c-input-group>
+                    <select cSelect id="taxe" name="taxe" [(ngModel)]="taxe.id" [valid]="validator.taxe.valid" (blur)="validator.taxe.validate()">
+                        @for (it of taxeList; track it) {
+                        <option [value]="it.id">{{ it.id }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToTaxeCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.taxe.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="fournisseur">Fournisseur</label>
+                <c-input-group>
+                    <select cSelect id="fournisseur" name="fournisseur" [(ngModel)]="fournisseur.id" [valid]="validator.fournisseur.valid" (blur)="validator.fournisseur.validate()">
+                        @for (it of fournisseurList; track it) {
+                        <option [value]="it.id">{{ it.code }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToFournisseurCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.fournisseur.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+<!--
+<ng-template #createSubEntities>
+        <c-card class="mb-3">
+            <c-card-header>
+                <strong>NiveauStock</strong>
+            </c-card-header>
+            <c-card-body>
+                <app-niveau-stock-update [getter]="niveauStockGetter"  [setter]="niveauStockSetter" [validator]="validator.niveauStock"/>
+            </c-card-body>
+        </c-card>
+</ng-template>
+-->

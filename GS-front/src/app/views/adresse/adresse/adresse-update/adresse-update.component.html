@@ -1,0 +1,79 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/adresse/adresse" (click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Reset
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Update
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+                <svg cIcon name="cib-zingat"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="address1" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Adresse 1</label> <input cFormControl id="address1" type="text" placeholder="Address1" [(ngModel)]="item.address1" name="address1" >
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cib-zingat"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="address2" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Adresse 2</label>
+                <input cFormControl id="address2" type="text" placeholder="Address2" [(ngModel)]="item.address2" name="address2">
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-envelope-letter"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="postalCode" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Code postal</label>
+                <input cFormControl id="postalCode" type="text" placeholder="PostalCode" [(ngModel)]="item.postalCode" name="postalCode" >
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cib-periscope"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="city" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Ville</label>
+                <input cFormControl id="city" type="text" placeholder="City" [(ngModel)]="item.city" name="city" >
+            </c-col>
+            <c-col sm="4">
+
+              <svg cIcon name="cil-globe-alt"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="pays" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Pays</label>
+                <c-input-group>
+                    <select cSelect id="pays" name="pays" [(ngModel)]="pays.id" >
+                        @for (it of paysList; track it) {
+                        <option [value]="it.id">{{ it.name }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToPaysCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                </c-input-group>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

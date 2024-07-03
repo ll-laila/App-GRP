@@ -1,0 +1,100 @@
+@if (true) {
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4" style="height: 590px">
+          <c-card-body class="p-4">
+            <div>
+              <br>
+              <br>
+              <h1 style=" font-family: 'Arial Black';font-size: 30px ;color: #000000 ;text-align: center">Inscription</h1>
+              <br>
+              <br>
+              <c-input-group class="mb-3">
+                <span cInputGroupText><svg cIcon name="cilUser" style="color: blue"></svg></span>
+                <input style="color: #1d0528; font-weight: bold ;font-size: 18px " autoComplete="name" cFormControl placeholder="Nom d'utilisation" [(ngModel)]="item.username" [valid]="validator.username.valid" (blur)="validator.username.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.username.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText style="color: blue">&#64;</span>
+                <input style="color: black; font-weight: bold ;font-size: 18px"  autoComplete="email" cFormControl placeholder="Email" [(ngModel)]="item.email" [valid]="validator.email.valid" (blur)="validator.email.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.email.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText><svg cIcon name="cilPhone" style="color: blue"></svg></span>
+                <input style="color: black; font-weight: bold ;font-size: 18px" autoComplete="phone" cFormControl placeholder="Téléphone" [(ngModel)]="item.phone" [valid]="validator.phone.valid" (blur)="validator.phone.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.phone.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText><svg cIcon name="cilLockLocked" style="color: blue"></svg></span>
+                <input style="color: black; font-weight: bold ;font-size: 18px " autoComplete="new-password" cFormControl placeholder="Mot de passe" type="password" [(ngModel)]="item.password" [valid]="validator.password.valid" (blur)="validator.password.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.password.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-4">
+                <span cInputGroupText><svg cIcon name="cilLockLocked" style="color: blue"></svg></span>
+                <input  style="color: black; font-weight: bold ;font-size: 18px"autoComplete="new-password" cFormControl placeholder="Répétez le mot de passe" type="password" [(ngModel)]="item.confirmPassword" [valid]="validator.confirmPassword.valid" (blur)="validator.confirmPassword.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.confirmPassword.message }}</c-form-feedback>
+              </c-input-group>
+              <div class="vstack gap-2 mx-auto">
+                <button cButton color="primary" (click)="createAccount()">Créer un compte</button>
+             <!--   <button cButton color="link" style="width: fit-content; margin: auto;" routerLink="/login" (click)="item = undefined; validator.reset()">Already Have Account?</button>-->
+              </div>
+            </div>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
+}
+  @else {
+<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
+  <c-container>
+    <c-row class="justify-content-center">
+      <c-col lg="7" md="9" xl="6">
+        <c-card class="mx-4">
+          <c-card-body class="p-4">
+            <div>
+              <h1 style=" font-family: 'Arial Black';font-size: 30px ;color: #000000">Iscription</h1>
+
+              <c-input-group class="mb-3">
+                <span cInputGroupText><svg cIcon name="cilUser" style="color: blue"></svg></span>
+                <input autoComplete="name" cFormControl placeholder="Nom d'utilisation" [(ngModel)]="item.username" [valid]="validator.username.valid" (blur)="validator.username.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.username.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText style="color: blue">&#64;</span>
+                <input autoComplete="email" cFormControl placeholder="Email" [(ngModel)]="item.email" [valid]="validator.email.valid" (blur)="validator.email.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.email.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText><svg cIcon name="cilPhone" style="color: blue"></svg></span>
+                <input autoComplete="phone" cFormControl placeholder="Téléphone" [(ngModel)]="item.phone" [valid]="validator.phone.valid" (blur)="validator.phone.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.phone.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-3">
+                <span cInputGroupText><svg cIcon name="cilLockLocked" style="color: blue"></svg></span>
+                <input autoComplete="new-password" cFormControl placeholder="Mot de passe" type="password" [(ngModel)]="item.password" [valid]="validator.password.valid" (blur)="validator.password.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.password.message }}</c-form-feedback>
+              </c-input-group>
+              <c-input-group class="mb-4">
+                <span cInputGroupText><svg cIcon name="cilLockLocked" style="color: blue"></svg></span>
+                <input autoComplete="new-password" cFormControl placeholder="Répéter le mot de passe" type="password" [(ngModel)]="item.confirmPassword" [valid]="validator.confirmPassword.valid" (blur)="validator.confirmPassword.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.confirmPassword.message }}</c-form-feedback>
+              </c-input-group>
+
+
+              <div class="vstack gap-2 mx-auto">
+
+                <button cButton color="success" (click)="createAccount()">Créer un compte</button>
+                <!--   <button cButton color="link" style="width: fit-content; margin: auto;" routerLink="/login" (click)="item = undefined; validator.reset()">Already Have Account?</button>-->
+              </div>
+            </div>
+          </c-card-body>
+        </c-card>
+      </c-col>
+    </c-row>
+  </c-container>
+</div>
+  }

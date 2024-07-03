@@ -1,0 +1,158 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        @if (toReturn) {
+        <c-nav-item class="p-2">
+            <button cButton color="secondary" [routerLink]="returnUrl" (click)="retour()">Return</button>
+        </c-nav-item>
+        }
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/contacts/fournisseur" (click)="cancel()">Annuler</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">Réinisialisert</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="create()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPlus"></svg>
+                }
+                Créer
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+<ng-container *ngTemplateOutlet="createSubEntities"></ng-container>
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+  <c-card-header>
+    <strong style="color: #1d0528 ;font-family: 'Times New Roman';font-size: 21px; margin-left: 300px" >Veuillez remplir les informations  ci-dessous pour créer un nouveau "Fournisseur"</strong>
+  </c-card-header>
+    <c-card-body>
+        <c-row class="g-3">
+          <c-col sm="4">
+            <svg cIcon name="cil-barcode"  style="color: blue ;font-size: 30px"></svg>
+            <label cLabel for="code" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Code</label>
+            <input cFormControl id="code" type="text" [(ngModel)]="item.code" name="code" [valid]="validator.code.valid" (blur)="validator.code.validate()"  style="background-color: #ffffff" disabled="true"/>
+            <c-form-feedback [valid]="false">{{ validator.code.message }}</c-form-feedback>
+          </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cilUser"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="nom" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Nom complet</label>
+                <input cFormControl id="nom" type="text" [(ngModel)]="item.nom" name="nom" [valid]="validator.nom.valid" (blur)="validator.nom.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.nom.message }}</c-form-feedback>
+            </c-col>
+
+            <c-col sm="4">
+              <svg cIcon name="cil-envelope-closed"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="email" style="color: black;font-family: 'Times New Roman';font-size: 19px;font-weight: bold">Email</label>
+                <input cFormControl id="email" type="text" [(ngModel)]="item.email" name="email" [valid]="validator.email.valid" (blur)="validator.email.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.email.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cib-openstreetmap"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="siteweb" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Site web</label>
+                <input cFormControl id="siteweb" type="text" [(ngModel)]="item.siteweb" name="siteweb" [valid]="validator.siteweb.valid" (blur)="validator.siteweb.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.siteweb.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-phone"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="telephone" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Téléphone</label>
+                <input cFormControl id="telephone" type="text"  [(ngModel)]="item.telephone" name="telephone" [valid]="validator.telephone.valid" (blur)="validator.telephone.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.telephone.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-building"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="taxeNumero" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">ICE </label>
+                <input cFormControl id="taxeNumero" type="number"  [(ngModel)]="item.taxeNumero" name="taxeNumero" [valid]="validator.taxeNumero.valid" (blur)="validator.taxeNumero.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.taxeNumero.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-sort-descending"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="rabais" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise</label>
+                <input cFormControl id="rabais" type="number"  [(ngModel)]="item.rabais" name="rabais" [valid]="validator.rabais.valid" (blur)="validator.rabais.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.rabais.message }}</c-form-feedback>
+            </c-col>
+          <c-col sm="4">
+            <svg cIcon name="cil-sort-ascending"  style="color: blue ;font-size: 30px"></svg>
+            <label cLabel for="taxe" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Taxe</label>
+            <c-input-group>
+              <select cSelect id="taxe" name="taxe" [(ngModel)]="taxe.id" [valid]="validator.taxe.valid" (blur)="validator.taxe.validate()">
+                @for (it of taxeList; track it) {
+                  <option [value]="it.id">{{ it.nom }}</option>
+                }
+              </select>
+              <button cButton color="secondary" type="button" variant="outline" (click)="navigateToTaxeCreate()">
+                <svg cIcon name="cilPlus"></svg>
+              </button>
+              <c-form-feedback [valid]="false">{{ validator.taxe.message }}</c-form-feedback>
+            </c-input-group>
+          </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-dollar"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="devises" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Devise</label>
+                <c-input-group>
+                    <select cSelect id="devises" name="devises" [(ngModel)]="devises.id" [valid]="validator.devises.valid" (blur)="validator.devises.validate()">
+                        @for (it of devisesList; track it) {
+                        <option [value]="it.id">{{ it.nouvelleDevise?.labelle }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToDevisesCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.devises.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-bar-chart"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="niveauPrix" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Niveau de fidélité</label>
+                <c-input-group>
+                    <select cSelect id="niveauPrix" name="niveauPrix" [(ngModel)]="niveauPrix.id" [valid]="validator.niveauPrix.valid" (blur)="validator.niveauPrix.validate()">
+                        @for (it of niveauPrixList; track it) {
+                        <option [value]="it.id">{{ it.nom }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToNiveauPrixCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.niveauPrix.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+
+          <c-col sm="4">
+            <svg cIcon name="cil-building" style="color: blue ;font-size: 30px"></svg>
+            <label cLabel for="entreprise" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Entreprise</label>
+            <c-input-group>
+              <select cSelect id="entreprise" name="niveauPrix" [(ngModel)]="entreprise.id" [valid]="validator.entreprise.valid" (blur)="validator.entreprise.validate()">
+                @for (it of entrepriseList; track it) {
+                  <option [value]="it.id">{{ it.nom }}</option>
+                }
+              </select>
+              <button cButton color="secondary" type="button" variant="outline" (click)="navigateToEntrepriseCreate()">
+                <svg cIcon name="cilPlus"></svg>
+              </button>
+              <c-form-feedback [valid]="false">{{ validator.entreprise.message }}</c-form-feedback>
+            </c-input-group>
+          </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+
+<ng-template #createSubEntities>
+    <c-card class="mb-3">
+
+        <c-card-body>
+            <app-adresse-create [getter]="adresseGetter"  [setter]="adresseSetter" [validator]="validator.adresse"/>
+        </c-card-body>
+    </c-card>
+</ng-template>

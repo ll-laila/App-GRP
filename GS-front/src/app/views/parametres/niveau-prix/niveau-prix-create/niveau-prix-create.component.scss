@@ -1,0 +1,32 @@
+.responsive-header {
+
+  font-family: 'Times New Roman';
+  font-size: 21px;
+  margin-left: 300px;
+}
+
+@media (max-width: 1024px) {
+  /* Styles pour les tablettes */
+  .responsive-header {
+    font-size: 18px;
+    margin-left: 100px;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Styles pour les petits écrans comme les téléphones */
+  .responsive-header {
+    font-size: 16px;
+    margin-left: 50px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Styles pour les très petits écrans */
+  .responsive-header {
+    font-size: 14px;
+    margin-left: 20px;
+    text-align: center;
+  }
+}

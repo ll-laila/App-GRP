@@ -1,0 +1,137 @@
+@defer (when standAlon) {
+  <c-row class="mb-3" xmlns:border-radius="http://www.w3.org/1999/xhtml"
+         xmlns:border-radius="http://www.w3.org/1999/xhtml">
+    <c-nav class="hstack gap">
+      @if (toReturn) {
+        <c-nav-item class="p-2">
+          <button cButton color="secondary" [routerLink]="returnUrl" (click)="retour()">Return</button>
+        </c-nav-item>
+      }
+      <c-nav-item class="p-2 ms-auto">
+        <button cButton color="secondary" variant="outline" routerLink="/ventes/facture/facture" (click)="cancel()">
+          Annuler
+        </button>
+      </c-nav-item>
+      <c-nav-item class="p-2">
+        <button cButton color="dark" (click)="reset()">Reset</button>
+      </c-nav-item>
+      <!-- <c-nav-item class="p-2">
+             <button cButton color="dark" (click)="generateDocument()">pdf</button>
+           </c-nav-item>-->
+      <c-nav-item class="p-2">
+        <button cButton color="primary"  (click)="create()">
+          @if (sending) {
+            <c-spinner aria-hidden="true" size="sm"></c-spinner>
+          } @else {
+            <svg cIcon name="cilPlus"></svg>
+          }
+          Créer
+        </button>
+      </c-nav-item>
+    </c-nav>
+  </c-row>
+  <ng-container *ngTemplateOutlet="createFrom"></ng-container>
+  <ng-container *ngTemplateOutlet="devisProduitCreate"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+  <ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+  <c-card class="mb-3">
+    <c-card-body>
+      <c-row class="g-3">
+
+        <c-col sm="4">
+          <svg cIcon name="cil-barcode" style="color: blue ;font-size: 30px"></svg>
+
+          <label cLabel for="codhe"
+                 style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Code</label>
+          <input cFormControl id="codhe" type="text" placeholder="Code" [(ngModel)]="itemF.code" name="code"
+            />
+          <!--<c-form-feedback [valid]="false">{{ validator.code.message }}</c-form-feedback>-->
+        </c-col>
+
+        <c-col sm="4">
+          <svg cIcon name="cilUser"  style="color: blue ;font-size: 30px"></svg>
+
+          <label cLabel for="client" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Client</label>
+          <c-input-group>
+            <select cSelect id="client" name="client" [(ngModel)]="itemF.client">
+                <option [value]="itemF.client">{{ itemF.client?.nom }}</option>
+
+            </select>
+            <button cButton color="secondary" type="button" variant="outline" (click)="navigateToClientCreate()">
+              <svg cIcon name="cilPlus"></svg>
+            </button>
+           <!-- <c-form-feedback [valid]="false">{{ validator.client.message }}</c-form-feedback>-->
+          </c-input-group>
+        </c-col>
+
+
+
+
+        <c-col sm="4">
+          <svg cIcon name="cil-building" style="color: blue ;font-size: 30px"></svg>
+          <label cLabel for="entreprise" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Entreprise</label>
+          <c-input-group>
+            <select cSelect id="entreprise" name="entreprise" [(ngModel)]="itemF.entreprise" >
+                <option [value]="itemF.entreprise">{{ itemF.entreprise?.nom}}</option>
+
+            </select>
+            <button cButton color="secondary" type="button" variant="outline" (click)="navigateToEntrepriseCreate()">
+              <svg cIcon name="cilPlus"></svg>
+            </button>
+         <!--   <c-form-feedback [valid]="false">{{ validator.entreprise.message }}</c-form-feedback>-->
+          </c-input-group>
+        </c-col>
+      </c-row>
+    </c-card-body>
+  </c-card>
+</ng-template>
+
+
+<ng-template #devisProduitCreate>
+  <c-card class="mb-3">
+    <c-card-header>
+      <strong>Sélectionner des produits</strong>
+    </c-card-header>
+    <c-card-body>
+      <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+        <thead class="text-nowrap text-truncate">
+        <tr>
+          <th class="bg-body-tertiary">Produit</th>
+          <th class="bg-body-tertiary">Prix</th>
+          <th class="bg-body-tertiary">Quantite</th>
+          <th class="bg-body-tertiary">Disponible</th>
+          <th class="bg-body-tertiary" style="display: flex; justify-content: end;">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (it of itemF.factureProduit; track it; let i = $index) {
+            <tr>
+              <td>
+                {{ it.produit != null ? it.produit.nom : "null" }}
+              </td>
+              <td>{{ it.prix }}</td>
+              <td >
+                <input type="number" [(ngModel)]="it.quantite">
+              </td>
+              <td>{{ it.disponible }}</td>
+
+              <td style="display: flex; justify-content: end;">
+                <button (click)="deleteretourProduitProduit(itemRP)" cButton color>
+                  <svg cIcon name="cil-trash" size="lg"></svg>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+
+    </c-card-body>
+  </c-card>
+</ng-template>

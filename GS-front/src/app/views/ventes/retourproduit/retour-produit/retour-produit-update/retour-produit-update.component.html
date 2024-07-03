@@ -1,0 +1,111 @@
+@defer (when standAlon) {
+  <c-row class="mb-3">
+    <c-nav class="hstack gap">
+      <c-nav-item class="p-2 ms-auto">
+        <button cButton color="secondary" variant="outline" routerLink="/ventes/retourproduit/retour-produit"
+                (click)="cancel()">Annuler
+        </button>
+      </c-nav-item>
+      <c-nav-item class="p-2">
+        <button cButton color="dark" (click)="reset()">
+          @if (resetting) {
+            <c-spinner aria-hidden="true" size="sm"></c-spinner>
+          } @else {
+            <svg cIcon name="cilReload"></svg>
+          }
+          Reset
+        </button>
+      </c-nav-item>
+      <c-nav-item class="p-2">
+        <button cButton color="primary" (click)="update()">
+          @if (sending) {
+            <c-spinner aria-hidden="true" size="sm"></c-spinner>
+          } @else {
+            <svg cIcon name="cilPen"></svg>
+          }
+         Modifier
+        </button>
+      </c-nav-item>
+    </c-nav>
+  </c-row>
+  <ng-container *ngTemplateOutlet="createFrom"></ng-container>
+<!--  <ng-container *ngTemplateOutlet="createSubEntities"></ng-container>-->
+}
+
+@defer (when !standAlon) {
+  <ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+  <c-card class="mb-3">
+    <c-card-body>
+      <c-row class="g-3">
+        <!--  <c-col sm="4">
+              <label cLabel for="code">Code</label>
+              <input cFormControl id="code" type="text" placeholder="Code" [(ngModel)]="item.code" name="code" [valid]="validator.code.valid" (blur)="validator.code.validate()"/>
+              <c-form-feedback [valid]="false">{{ validator.code.message }}</c-form-feedback>
+          </c-col>
+          <c-col sm="4">
+              <label cLabel for="statut">Statut</label>
+              <select cSelect id="statut" name="statut" [(ngModel)]="item.statut" [valid]="validator.statut.valid" (blur)="validator.statut.validate()">
+                  @for (it of statutRetourProduitEnumList; track it) {
+                  <option [value]="it">{{ it }}</option>
+                  }
+              </select>
+              <c-form-feedback [valid]="false">{{ validator.statut.message }}</c-form-feedback>
+          </c-col>-->
+        <c-col sm="4">
+          <label cLabel for="client">Client</label>
+          <c-input-group>
+            <select cSelect id="client" name="client" [(ngModel)]="client.id" [valid]="validator.client.valid"
+                    (blur)="validator.client.validate()">
+              @for (it of clientList; track it) {
+                <option [value]="it.id">{{ it.code }}</option>
+              }
+            </select>
+            <button cButton color="secondary" type="button" variant="outline" (click)="navigateToClientCreate()">
+              <svg cIcon name="cilPlus"></svg>
+            </button>
+            <c-form-feedback [valid]="false">{{ validator.client.message }}</c-form-feedback>
+          </c-input-group>
+        </c-col>
+        <!--  <c-col sm="4">
+              <label cLabel for="entreprise">Entreprise</label>
+              <c-input-group>
+                  <select cSelect id="entreprise" name="entreprise" [(ngModel)]="entreprise.id" [valid]="validator.entreprise.valid" (blur)="validator.entreprise.validate()">
+                      @for (it of entrepriseList; track it) {
+                      <option [value]="it.id">{{ it.id }}</option>
+                      }
+                  </select>
+                  <button cButton color="secondary" type="button" variant="outline" (click)="navigateToEntrepriseCreate()">
+                      <svg cIcon name="cilPlus"></svg>
+                  </button>
+                  <c-form-feedback [valid]="false">{{ validator.entreprise.message }}</c-form-feedback>
+              </c-input-group>
+          </c-col>-->
+      </c-row>
+    </c-card-body>
+  </c-card>
+</ng-template>
+<!--
+<ng-template #createSubEntities>
+  <c-card class="mb-3">
+    <c-card-header>
+      <strong>NoteCredit</strong>
+    </c-card-header>
+    <c-card-body>
+      <app-note-credit-update [getter]="noteCreditGetter" [setter]="noteCreditSetter"
+                              [validator]="validator.noteCredit"/>
+    </c-card-body>
+  </c-card>
+  <c-card class="mb-3">
+    <c-card-header>
+      <strong>Remboursements</strong>
+    </c-card-header>
+    <c-card-body>
+      <app-remboursement-update [getter]="remboursementsGetter" [setter]="remboursementsSetter"
+                                [validator]="validator.remboursements"/>
+    </c-card-body>
+  </c-card>
+</ng-template>
+-->

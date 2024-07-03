@@ -1,0 +1,63 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        @if (toReturn) {
+        <c-nav-item class="p-2">
+            <button cButton color="secondary" [routerLink]="returnUrl" (click)="retour()">Return</button>
+        </c-nav-item>
+        }
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/parametres/taxe"(click)="cancel()">Annuler</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">Reset</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="create()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPlus"></svg>
+                }
+                Créer
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+  <c-card-header>
+    <strong class="responsive-header" style="color: #1d0528 ;font-family: 'Times New Roman';font-size: 21px; margin-left: 300px" >Veuillez remplir les informations  ci-dessous pour créer un nouveau "Taxe"</strong>
+  </c-card-header>
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+              <svg cIcon name="cil-swap-horizontal"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="nom" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Nom</label>
+                <input cFormControl id="nom" type="text" placeholder="Nom" [(ngModel)]="item.nom" name="nom" [valid]="validator.nom.valid" (blur)="validator.nom.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.nom.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-barcode"  style="color: blue ;font-size: 30px"></svg>
+                <label cLabel for="tauxImposition" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Taux de taxe</label>
+                <input cFormControl id="tauxImposition" type="number" placeholder="TauxImposition" [(ngModel)]="item.tauxImposition" name="tauxImposition" >
+            </c-col>
+            <c-col class="g-3" sm="12">
+                <c-form-check>
+                    <input cFormCheckInput id="actif" name="actif" type="checkbox" [(ngModel)]="item.actif"/>
+                    <label cFormCheckLabel for="actif">Actif</label>
+                </c-form-check>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

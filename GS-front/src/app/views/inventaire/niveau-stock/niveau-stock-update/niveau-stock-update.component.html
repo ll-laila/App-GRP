@@ -1,0 +1,57 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/inventaire/niveau-stock"(click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Reset
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Update
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+<ng-template #createFrom>
+  <c-card-body>
+    <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
+      <thead class="text-nowrap text-truncate">
+      <tr>
+        <th class="bg-body-tertiary">Nom</th>
+        <th class="bg-body-tertiary">SKU</th>
+        <th class="bg-body-tertiary">Disponible</th>
+      </tr>
+      </thead>
+      <tbody>
+      <!--@for (it of factureProduit; track it; let i = $index) {
+        <tr>
+          <td>{{ it.nom }}</td>
+          <td>{{ it.Sku }}</td>
+          <td>{{ it.disponible }}</td>
+
+
+        </tr>
+      }-->
+      </tbody>
+    </table>
+  </c-card-body>
+</ng-template>
+

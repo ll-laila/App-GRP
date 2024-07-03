@@ -1,0 +1,50 @@
+@defer (when standAlon) {
+  <c-row class="mb-3">
+    <c-nav class="hstack gap">
+      @if (toReturn) {
+        <c-nav-item class="p-2">
+          <button cButton color="secondary" [routerLink]="returnUrl" (click)="retour()">Return</button>
+        </c-nav-item>
+      }
+      <c-nav-item class="p-2 ms-auto">
+        <button cButton color="secondary" variant="outline" routerLink="/inventaire/boncommande/bon-commande"(click)="cancel()">Annuler</button>
+      </c-nav-item>
+      <c-nav-item class="p-2">
+        <button cButton color="dark" (click)="reset()">Reset</button>
+      </c-nav-item>
+
+    </c-nav>
+  </c-row>
+  <ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+  <ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+
+<ng-template #createFrom>
+  <c-card class="mb-3">
+    <c-card-body>
+      <c-row class="g-3">
+        <c-col sm="4">
+          <label cLabel for="nom">Nom</label>
+          <input cFormControl id="nom" type="text" placeholder="Nom" [(ngModel)]="item.nom" name="nom" [valid]="validator.nom.valid" (blur)="validator.nom.validate()"/>
+          <c-form-feedback [valid]="false">{{ validator.nom.message }}</c-form-feedback>
+        </c-col>
+        <c-col sm="4">
+          <label cLabel for="sku">Sku</label>
+          <input cFormControl id="sku" type="text" placeholder="Sku" [(ngModel)]="item.sku" name="sku" [valid]="validator.sku.valid" (blur)="validator.sku.validate()"/>
+          <c-form-feedback [valid]="false">{{ validator.sku.message }}</c-form-feedback>
+        </c-col>
+        <c-col sm="4">
+          <label cLabel for="disponible">Disponible</label>
+          <input cFormControl id="disponible" type="text" placeholder="Disponible" [(ngModel)]="item.disponible" name="disponible" [valid]="validator.disponible.valid" (blur)="validator.disponible.validate()"/>
+          <c-form-feedback [valid]="false">{{ validator.disponible.message }}</c-form-feedback>
+        </c-col>
+
+      </c-row>
+    </c-card-body>
+  </c-card>
+</ng-template>

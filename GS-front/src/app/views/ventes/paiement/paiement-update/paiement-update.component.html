@@ -1,0 +1,86 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/ventes/paiement"(click)="cancel()">Annuler</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Reset
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Modifier
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+              <svg cIcon name="cil-calendar"  style="color: blue ;font-size: 30px"></svg>
+
+              <label cLabel for="datePaiement" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Date de paiement</label>
+                <input cFormControl id="datePaiement" type="date" placeholder="DatePaiement" [(ngModel)]="item.datePaiement" name="datePaiement" >
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-ruble"  style="color: blue ;font-size: 30px"></svg>
+
+              <label cLabel for="montantPaye" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Montant payé</label>
+                <input cFormControl id="montantPaye" type="number" placeholder="MontantPaye" [(ngModel)]="item.montantPaye" name="montantPaye" >
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-credit-card"  style="color: blue ;font-size: 30px"></svg>
+
+              <label cLabel for="methodePaiement" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Méthode de paiement</label>
+                <c-input-group>
+                    <select cSelect id="methodePaiement" name="methodePaiement" [(ngModel)]="methodePaiement.id" >
+                        @for (it of methodePaiementList; track it) {
+                        <option [value]="it.id">{{ it.id }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToMethodePaiementCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                </c-input-group>
+            </c-col>
+          <!--  <c-col sm="4">
+                <label cLabel for="entreprise">Entreprise</label>
+                <c-input-group>
+                    <select cSelect id="entreprise" name="entreprise" [(ngModel)]="entreprise.id" [valid]="validator.entreprise.valid" (blur)="validator.entreprise.validate()">
+                        @for (it of entrepriseList; track it) {
+                        <option [value]="it.id">{{ it.id }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToEntrepriseCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.entreprise.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>-->
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

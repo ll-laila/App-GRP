@@ -1,0 +1,71 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/parametres/niveau-prix"(click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Actualiser
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Modifier
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+  <c-card-header>
+    <strong  class="responsive-header" style="color: #1d0528 ;font-family: 'Times New Roman';font-size: 21px; margin-left: 300px" >Merci de renseigner les détails nécessaires pour mettre à jour les informations de ce "Nivequ de fidélité"</strong>
+  </c-card-header>
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+              <svg cIcon name="cil-barcode"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="nom" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Nom</label>
+
+                <input cFormControl id="nom" type="text" placeholder="Nom" [(ngModel)]="item.nom" name="nom" [valid]="validator.nom.valid" (blur)="validator.nom.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.nom.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+              <svg cIcon name="cil-check-alt"  style="color: blue ;font-size: 30px"></svg>
+              <label cLabel for="nom" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Type</label>
+                <select cSelect id="type" name="type" [(ngModel)]="item.type" [valid]="validator.type.valid" (blur)="validator.type.validate()">
+                    @for (it of statutNiveauPrixEnumList; track it) {
+                    <option [value]="it">{{ it }}</option>
+                    }
+                </select>
+                <c-form-feedback [valid]="false">{{ validator.type.message }}</c-form-feedback>
+            </c-col>
+            <c-col class="g-3" sm="12">
+                <c-form-check>
+                    <input cFormCheckInput id="actif" name="actif" type="checkbox" [(ngModel)]="item.actif"/>
+                    <label cFormCheckLabel for="actif">Actif</label>
+                </c-form-check>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

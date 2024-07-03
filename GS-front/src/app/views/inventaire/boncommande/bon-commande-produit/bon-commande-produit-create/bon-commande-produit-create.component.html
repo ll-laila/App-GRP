@@ -1,0 +1,86 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        @if (toReturn) {
+        <c-nav-item class="p-2">
+            <button cButton color="secondary" [routerLink]="returnUrl" (click)="retour()">Return</button>
+        </c-nav-item>
+        }
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/inventaire/boncommande/bon-commande-produit" (click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">Reset</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="create()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPlus"></svg>
+                }
+                Create
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+                <label cLabel for="total">Total</label>
+                <input cFormControl id="total" type="number" placeholder="Total" [(ngModel)]="item.total" name="total" [valid]="validator.total.valid" (blur)="validator.total.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.total.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="quantite">Quantite</label>
+                <input cFormControl id="quantite" type="number" placeholder="Quantite" [(ngModel)]="item.quantite" name="quantite" [valid]="validator.quantite.valid" (blur)="validator.quantite.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.quantite.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="disque">Disque</label>
+                <input cFormControl id="disque" type="number" placeholder="Disque" [(ngModel)]="item.disque" name="disque" [valid]="validator.disque.valid" (blur)="validator.disque.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.disque.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="produit">Produit</label>
+                <c-input-group>
+                    <select cSelect id="produit" name="produit" [(ngModel)]="produit.id" [valid]="validator.produit.valid" (blur)="validator.produit.validate()">
+                        @for (it of produitList; track it) {
+                        <option [value]="it.id">{{ it.nom }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToProduitCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.produit.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="bonCommande">BonCommande</label>
+                <c-input-group>
+                    <select cSelect id="bonCommande" name="bonCommande" [(ngModel)]="bonCommande.id" [valid]="validator.bonCommande.valid" (blur)="validator.bonCommande.validate()">
+                        @for (it of bonCommandeList; track it) {
+                        <option [value]="it.id">{{ it.code }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToBonCommandeCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.bonCommande.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

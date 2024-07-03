@@ -1,0 +1,88 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/ventes/devis/devis-produit"(click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">
+                @if (resetting) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilReload"></svg>
+                }
+                Reset
+            </button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="update()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPen"></svg>
+                }
+                Update
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+                <label cLabel for="total">Total</label>
+                <input cFormControl id="total" type="number" placeholder="Total" [(ngModel)]="item.total" name="total" [valid]="validator.total.valid" (blur)="validator.total.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.total.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="quantite">Quantite</label>
+                <input cFormControl id="quantite" type="number" placeholder="Quantite" [(ngModel)]="item.quantite" name="quantite" [valid]="validator.quantite.valid" (blur)="validator.quantite.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.quantite.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="disque">Disque</label>
+                <input cFormControl id="disque" type="number" placeholder="Disque" [(ngModel)]="item.disque" name="disque" [valid]="validator.disque.valid" (blur)="validator.disque.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.disque.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="produit">Produit</label>
+                <c-input-group>
+                    <select cSelect id="produit" name="produit" [(ngModel)]="produit.id" [valid]="validator.produit.valid" (blur)="validator.produit.validate()">
+                        @for (it of produitList; track it) {
+                        <option [value]="it.id">{{ it.nom }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToProduitCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.produit.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="devis">Devis</label>
+                <c-input-group>
+                    <select cSelect id="devis" name="devis" [(ngModel)]="devis.id" [valid]="validator.devis.valid" (blur)="validator.devis.validate()">
+                        @for (it of devisList; track it) {
+                        <option [value]="it.id">{{ it.code }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToDevisCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.devis.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+

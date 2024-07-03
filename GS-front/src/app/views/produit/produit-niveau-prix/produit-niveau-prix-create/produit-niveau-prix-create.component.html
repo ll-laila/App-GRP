@@ -1,0 +1,76 @@
+@defer (when standAlon) {
+<c-row class="mb-3">
+    <c-nav class="hstack gap">
+        @if (toReturn) {
+        <c-nav-item class="p-2">
+            <button cButton color="secondary" [routerLink]="returnUrl" (click)="retour()">Return</button>
+        </c-nav-item>
+        }
+        <c-nav-item class="p-2 ms-auto">
+            <button cButton color="secondary" variant="outline" routerLink="/produit/produit-niveau-prix"(click)="cancel()">Cancel</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="dark" (click)="reset()">Reset</button>
+        </c-nav-item>
+        <c-nav-item class="p-2">
+            <button cButton color="primary" (click)="create()">
+                @if (sending) {
+                <c-spinner aria-hidden="true" size="sm"></c-spinner>
+                } @else {
+                <svg cIcon name="cilPlus"></svg>
+                }
+                Create
+            </button>
+        </c-nav-item>
+    </c-nav>
+</c-row>
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+
+}
+
+@defer (when !standAlon) {
+<ng-container *ngTemplateOutlet="createFrom"></ng-container>
+}
+
+<ng-template #createFrom>
+<c-card class="mb-3">
+    <c-card-body>
+        <c-row class="g-3">
+            <c-col sm="4">
+                <label cLabel for="prix">Prix</label>
+                <input cFormControl id="prix" type="number" placeholder="Prix" [(ngModel)]="item.prix" name="prix" [valid]="validator.prix.valid" (blur)="validator.prix.validate()"/>
+                <c-form-feedback [valid]="false">{{ validator.prix.message }}</c-form-feedback>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="produit">Produit</label>
+                <c-input-group>
+                    <select cSelect id="produit" name="produit" [(ngModel)]="produit.id" [valid]="validator.produit.valid" (blur)="validator.produit.validate()">
+                        @for (it of produitList; track it) {
+                        <option [value]="it.id">{{ it.nom }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToProduitCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.produit.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+            <c-col sm="4">
+                <label cLabel for="niveauPrix">NiveauPrix</label>
+                <c-input-group>
+                    <select cSelect id="niveauPrix" name="niveauPrix" [(ngModel)]="niveauPrix.id" [valid]="validator.niveauPrix.valid" (blur)="validator.niveauPrix.validate()">
+                        @for (it of niveauPrixList; track it) {
+                        <option [value]="it.id">{{ it.id }}</option>
+                        }
+                    </select>
+                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToNiveauPrixCreate()">
+                        <svg cIcon name="cilPlus"></svg>
+                    </button>
+                    <c-form-feedback [valid]="false">{{ validator.niveauPrix.message }}</c-form-feedback>
+                </c-input-group>
+            </c-col>
+        </c-row>
+    </c-card-body>
+</c-card>
+</ng-template>
+
