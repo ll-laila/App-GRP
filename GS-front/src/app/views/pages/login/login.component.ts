@@ -14,6 +14,8 @@ import {JwtRequestValidator} from "src/app/controller/auth/validators/jwt-reques
 import {FormsModule} from "@angular/forms";
 import {JwtRequest} from "src/app/controller/auth/entities/jwt-request";
 import {ToasterService} from "../../../toaster/controller/toaster.service";
+import {UserInfosService} from "../../../controller/shared/user-infos.service";
+import {AppUserService} from "../../../controller/auth/services/app-user.service";
 
 @Component({
   selector: 'app-login',
@@ -30,13 +32,15 @@ export class LoginComponent {
 
   loading = false
 
-  private authService = inject(AuthService)
-  private toasterService = inject(ToasterService)
-  private router = inject(Router)
-  private tokenService = inject(TokenService)
-  protected validator = JwtRequestValidator.init(() => this.item)
+  private authService = inject(AuthService);
+  private toasterService = inject(ToasterService);
+  private router = inject(Router);
+  private tokenService = inject(TokenService);
+  protected validator = JwtRequestValidator.init(() => this.item);
 
-  get item(): JwtRequest {
+  constructor(private userInfosService: UserInfosService) {
+  }
+    get item(): JwtRequest {
     return this.authService.item;
   }
 
@@ -49,7 +53,8 @@ export class LoginComponent {
     this.loading = true;
     this.authService.login().subscribe({
       next: data => {
-        console.log(data)
+        this.userInfosService.setUsername(data.username);
+        console.log(data);
         this.tokenService.setToken(data.accessToken)
         this.tokenService.setRole(data.roles)
         this.validator.reset()

@@ -13,6 +13,8 @@ import org.sir.appgestionstock.ws.dto.contacts.user.EmployeDto;
 import org.sir.appgestionstock.ws.dto.contacts.ClientDto;
 import org.sir.appgestionstock.ws.dto.inventaire.boncommande.BonCommandeDto;
 import org.sir.appgestionstock.ws.dto.ventes.facture.FactureDto;
+import org.sir.appgestionstock.zsecurity.entity.AppUser;
+import org.sir.appgestionstock.zsecurity.ws.dto.AppUserDto;
 
 import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -39,6 +41,7 @@ private List<DevisesDto> devisesList;
 private List<NouvelleDeviseDto> nouvelleDevises;
 private List<DevisDto> devisList;
 private List<EntrepriseDevisesDto> entrepriseDevises;
+private Long idAdmin;
 public Long getId() {
 return id;
 }
@@ -171,4 +174,11 @@ return entrepriseDevises;
 public void setEntrepriseDevises(List<EntrepriseDevisesDto> value) {
 this.entrepriseDevises = value;
 }
+
+public Long getIdAdmin() {
+        return idAdmin;
+    }
+public void setIdAdmin(Long value) {
+        this.idAdmin = value;
+    }
 }

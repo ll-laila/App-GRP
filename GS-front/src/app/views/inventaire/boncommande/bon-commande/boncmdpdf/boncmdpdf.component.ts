@@ -49,4 +49,6 @@ export class BoncmdpdfComponent {
       error: err => console.log(err)
     })
   }
+
+
 }

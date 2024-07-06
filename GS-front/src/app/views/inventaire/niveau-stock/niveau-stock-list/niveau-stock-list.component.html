@@ -59,7 +59,7 @@
                   <td>{{ it.disponible }}</td>
                   <td>{{ it.entreprise != null ? it.entreprise.id : "null" }}</td>
                   <td style="display: flex; justify-content: end;">
-                    <button cButton color [routerLink]="'update'" (click)="item ">
+                    <button cButton color routerLink="update" (click)="item ">
                       <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
 
                     </button>

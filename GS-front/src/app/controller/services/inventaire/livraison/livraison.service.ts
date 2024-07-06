@@ -5,6 +5,7 @@ import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Livraison } from 'src/app/controller/entities/inventaire/livraison/livraison';
 import { LivraisonValidator } from 'src/app/controller/validators/inventaire/livraison/livraison.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
+import {BonCommande} from "../../../entities/inventaire/boncommande/bon-commande";
 
 @Injectable({ providedIn: 'root' })
 export class LivraisonService {
@@ -24,7 +25,7 @@ export class LivraisonService {
   }
 
   public findById(id: number) {
-    return this.http.get<Livraison>(`${this.api}/id/${id}`);
+      return this.http.get<Livraison>(`${this.api}/id/${id}`);
   }
 
   public findAllOptimized() {

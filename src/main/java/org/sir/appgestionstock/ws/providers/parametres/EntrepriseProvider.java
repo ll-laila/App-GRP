@@ -26,6 +26,14 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+    @GetMapping("/Admin/Entreprises/{username}")
+    public ResponseEntity<List<EntrepriseDto>> findAllByAdmin(@PathVariable String username) {
+        var result = service.findEntrepriseByAdmin(username);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping("/optimized")
 public ResponseEntity<List<EntrepriseDto>> findAllOptimized() {
 var result = service.findAllOptimized();

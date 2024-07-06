@@ -28,6 +28,10 @@ export class EntrepriseService {
     return this.http.get<Entreprise>(`${this.api}/id/${id}`);
   }
 
+  public findByAdmin(username: string) {
+    return this.http.get<Array<Entreprise>>(`${this.api}/Admin/Entreprises/${username} `);
+  }
+
   public findAllOptimized() {
     return this.http.get<Array<Entreprise>>(`${this.api}/optimized`);
   }

@@ -43,7 +43,7 @@
             <c-col sm="4">
               <svg cIcon name="cil-barcode"  style="color: blue ;font-size: 30px"></svg>
               <label cLabel for="code" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Code</label>
-                <input cFormControl id="code" type="text" placeholder="Code" [(ngModel)]="item.code" name="code" [valid]="validator.code.valid" (blur)="validator.code.validate()"/>
+                <input cFormControl id="code" type="text" placeholder="Code" [(ngModel)]="item.code" disabled="true" name="code" [valid]="validator.code.valid" (blur)="validator.code.validate()"/>
                 <c-form-feedback [valid]="false">{{ validator.code.message }}</c-form-feedback>
             </c-col>
             <c-col sm="4">
@@ -73,15 +73,7 @@
                 </select>
                 <c-form-feedback [valid]="false">{{ validator.typeRabais.message }}</c-form-feedback>
             </c-col>
-           <!-- <c-col sm="4">
-                <label cLabel for="statut">Statut</label>
-                <select cSelect id="statut" name="statut" [(ngModel)]="item.statut" [valid]="validator.statut.valid" (blur)="validator.statut.validate()">
-                    @for (it of statutBonCommandeEnumList; track it) {
-                    <option [value]="it">{{ it }}</option>
-                    }
-                </select>
-                <c-form-feedback [valid]="false">{{ validator.statut.message }}</c-form-feedback>
-            </c-col>-->
+
             <c-col sm="4">
               <svg cIcon name="cil-sort-ascending"  style="color: blue ;font-size: 30px"></svg>
               <label cLabel for="taxe" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Taxe</label>

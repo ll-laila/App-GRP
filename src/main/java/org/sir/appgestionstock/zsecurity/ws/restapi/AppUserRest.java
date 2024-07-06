@@ -68,6 +68,7 @@ public class AppUserRest {
         return appUserConverter.toDto(appUserService.findByUsernameWithRoles(username));
     }
 
+
     @DeleteMapping("/username/{username}")
     public int deleteByUsername(@PathVariable String username) {
         return appUserService.deleteByUsername(username);

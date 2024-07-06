@@ -107,6 +107,8 @@ export class LivraisonProduitCreateComponent {
           this.router.navigate([this.returnUrl]).then()
           return;
         }
+        console.log("this one :"+this.item);
+
         this.item = new LivraisonProduit()
         this.router.navigate(["/inventaire/livraison/livraison-produit"]).then()
       },

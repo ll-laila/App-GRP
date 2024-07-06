@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.ws.converter.inventaire.livraison;
 import org.sir.appgestionstock.bean.core.inventaire.livraison.Livraison;
+import org.sir.appgestionstock.ws.converter.inventaire.boncommande.BonCommandeConverter;
 import org.sir.appgestionstock.ws.dto.inventaire.livraison.LivraisonDto;
 import org.sir.appgestionstock.ws.converter.parametres.TaxeConverter;
 import org.sir.appgestionstock.ws.converter.contacts.FournisseurConverter;
@@ -15,10 +16,13 @@ public class LivraisonConverter {
 @Autowired private FournisseurConverter fournisseurConverter;
 @Autowired private LivraisonProduitConverter livraisonProduitConverter;
 @Autowired private TaxeConverter taxeConverter;
+@Autowired private BonCommandeConverter bonCommandeConverter;
+
 private boolean taxeExpedition = true;
 private boolean fournisseur = true;
 private boolean livraisonProduit = true;
 private boolean entreprise = true;
+
 protected void configure(boolean value) {
 this.entrepriseConverter.setLivraison(value);
 this.livraisonProduitConverter.setLivraison(value);
@@ -59,6 +63,7 @@ item.setTaxeExpedition(taxeConverter.toItem(dto.getTaxeExpedition()));
 item.setFournisseur(fournisseurConverter.toItem(dto.getFournisseur()));
 item.setLivraisonProduit(livraisonProduitConverter.toItem(dto.getLivraisonProduit()));
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
+item.setIdBonCom(dto.getBonCommande().getId());
 return item;
 }
 protected LivraisonDto convertToDto(Livraison item) {
@@ -78,6 +83,7 @@ dto.setLivraisonProduit(livraisonProduit? livraisonProduitConverter.toDto(item.g
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
 return dto;
 }
+
 public void setTaxeExpedition(boolean value) {
 this.taxeExpedition = value;
 }
@@ -92,12 +98,6 @@ this.entreprise = value;
 }
 public void setEntrepriseConverter(EntrepriseConverter value) {
 this.entrepriseConverter = value;
-}
-public EntrepriseConverter getEntrepriseConverter() {
-return entrepriseConverter;
-}
-public void setFournisseurConverter(FournisseurConverter value) {
-this.fournisseurConverter = value;
 }
 public FournisseurConverter getFournisseurConverter() {
 return fournisseurConverter;
@@ -114,4 +114,10 @@ this.taxeConverter = value;
 public TaxeConverter getTaxeConverter() {
 return taxeConverter;
 }
+public EntrepriseConverter getEntrepriseConverter() {
+        return entrepriseConverter;
+    }
+public void setFournisseurConverter(FournisseurConverter value) {
+        this.fournisseurConverter = value;
+    }
 }

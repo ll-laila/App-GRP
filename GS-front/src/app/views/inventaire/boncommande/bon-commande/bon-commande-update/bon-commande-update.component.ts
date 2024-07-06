@@ -33,6 +33,9 @@ import {LivraisonUpdateComponent} from "src/app/views/inventaire/livraison/livra
 import {LivraisonValidator} from "src/app/controller/validators/inventaire/livraison/livraison.validator";
 import {TypeRabaisEnum} from "src/app/controller/enums/type-rabais-enum";
 import {StatutBonCommandeEnum} from "src/app/controller/enums/statut-bon-commande-enum";
+import {FactureProduit} from "../../../../../controller/entities/ventes/facture/facture-produit";
+import {Produit} from "../../../../../controller/entities/produit/produit";
+import {ProduitService} from "../../../../../controller/services/produit/produit.service";
 
 @Component({
   selector: 'app-bon-commande-update',
@@ -53,6 +56,7 @@ export class BonCommandeUpdateComponent {
   protected sending = false
   protected resetting = false
   protected standAlon = true
+  protected readonly TypeRabaisEnum = TypeRabaisEnum;
 
   @Input("getter") set setItemGetter(getter: () => BonCommande) {
     this.itemGetter = getter
@@ -72,6 +76,8 @@ export class BonCommandeUpdateComponent {
   private devisesService = inject(DevisesService)
   private niveauPrixService = inject(NiveauPrixService)
   private entrepriseService = inject(EntrepriseService)
+  private produitService = inject(ProduitService);
+  private bonCommandeProduitService = inject(BonCommandeProduitService)
 
   protected validator = BonCommandeValidator.init(() => this.item)
   //  .setLivraison(LivraisonValidator.init(() => this.livraison))
@@ -81,6 +87,9 @@ export class BonCommandeUpdateComponent {
   protected devisesList!: Devises[]
   protected niveauPrixList!: NiveauPrix[]
   protected entrepriseList!: Entreprise[]
+  protected produitList!: Produit[]
+  protected produits!: Produit[]
+
 
   ngAfterContentInit() {
     if (!this.isPartOfUpdateForm && this.item.id == null) this.router.navigate(["/inventaire/boncommande/bon-commande"]).then()
@@ -113,18 +122,15 @@ export class BonCommandeUpdateComponent {
         this.item.niveauPrix = niveauPrixCreated.item
         //this.validator.niveauPrix.validate()
       }
-     /* let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }*/
+
     } else { this.validator.reset() }
 
-    this.loadTaxeList()
-    this.loadFournisseurList()
-    this.loadDevisesList()
-    this.loadNiveauPrixList()
-    this.loadEntrepriseList()
+    this.loadTaxeList();
+    this.loadFournisseurList();
+    this.loadDevisesList();
+    this.loadNiveauPrixList();
+    this.loadEntrepriseList();
+    this.loadProduitList();
   }
 
   // LOAD DATA
@@ -178,18 +184,7 @@ export class BonCommandeUpdateComponent {
   }
 
   reset() {
-    this.resetting = true
-    this.service.findById(this.item.id).subscribe({
-      next: value => {
-        this.item = value
-        this.validator.reset()
-        this.resetting = false
-      },
-      error: err => {
-        console.log(err)
-        this.resetting = false
-      }
-    })
+    this.router.navigate(["/inventaire/boncommande/bon-commande"]).then()
   }
 
   // GETTERS AND SETTERS
@@ -217,7 +212,7 @@ export class BonCommandeUpdateComponent {
     this.service.item = value;
   }
 
-  public get livraison(): Livraison {
+  /*public get livraison(): Livraison {
     if (this.item.livraison == null)
       this.item.livraison = new Livraison()
     return this.item.livraison;
@@ -227,7 +222,7 @@ export class BonCommandeUpdateComponent {
   }
 
   protected livraisonGetter = () => this.livraison;
-  protected livraisonSetter = (value: Livraison ) => this.livraison = value;
+  protected livraisonSetter = (value: Livraison ) => this.livraison = value;*/
 
   public get taxe(): Taxe {
     if (this.item.taxe == null)
@@ -318,4 +313,150 @@ export class BonCommandeUpdateComponent {
     this.item = new BonCommande();
   }
 
+
+  public set bonCmdProduits(value:BonCommandeProduit[]) {
+    this.bonCommandeProduitService.items = value;
+  }
+
+  public get bonCmdProduit(): BonCommandeProduit {
+    return this.bonCommandeProduitService.item;
+  }
+
+  public set bonCmdProduit(value: BonCommandeProduit ) {
+    this.bonCommandeProduitService.item = value;
+  }
+
+  public get bonCmdProduits(): BonCommandeProduit[] {
+    if (this.item.bonCommandeProduit == null)
+      this.item.bonCommandeProduit = []
+    return this.item.bonCommandeProduit;
+  }
+  calculerTotal(bonCommandeProduit: BonCommandeProduit): number {
+    console.log(this.item);
+    // Vérifier si factureProduit1.produit existe
+    if (bonCommandeProduit.produit) {
+      let prix = bonCommandeProduit.prix || 0;
+
+      bonCommandeProduit.produit.produitNiveauPrix?.forEach(e => {
+        if (this.item.niveauPrix?.id == e.niveauPrix?.id) {
+          console.log("Niveau de prix trouvé...");
+          prix = e.prix;
+        }
+      });
+      console.log("prixProduit", prix);
+      // Calculer le sous-total
+      let sousTotal = (bonCommandeProduit.quantite * prix);
+      console.log("sousTotal", sousTotal);
+
+      // Obtenir la taxe du produit
+      let taxeProduit = bonCommandeProduit.produit.taxe ? bonCommandeProduit.produit.taxe.tauxImposition : 0.0;
+      console.log("taxeProduit", taxeProduit);
+
+      // Obtenir la taxe de la facture
+      let taxeFacture = this.taxeList?.find(it => it.id == this.item.taxe?.id)?.tauxImposition || 0.0;
+      console.log("taxeFacture", taxeFacture);
+
+      let totalFinal = 0; // Initialisation par défaut
+
+      // Si le type de rabais est un pourcentage
+      if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
+        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit) / 100));
+        console.log("totalAvecTaxe (pourcentage)", totalAvecTaxe);
+
+        let disque = totalAvecTaxe * (this.item.rabais / 100);
+        console.log("disque (pourcentage)", disque);
+
+        totalFinal = totalAvecTaxe - disque; // Calcul du total final
+        console.log("totalFinal (pourcentage)", totalFinal);
+      }
+      // Si le type de rabais est un montant fixe
+      else if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.MONTANT) {
+        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit) / 100));
+        console.log("totalAvecTaxe (montant)", totalAvecTaxe);
+
+        let disque = this.item.rabais;
+        console.log("disque (montant)", disque);
+
+        totalFinal = totalAvecTaxe - disque; // Calcul du total final
+        console.log("totalFinal (montant)", totalFinal);
+      }
+
+      totalFinal *= bonCommandeProduit.quantite || 1;
+      totalFinal -= bonCommandeProduit.disque || 0;
+      totalFinal = parseFloat(totalFinal.toFixed(2)); // Formater le total avec 2 chiffres après la virgule
+      bonCommandeProduit.total = totalFinal;
+      return totalFinal; // Retourne la valeur correcte de totalFinal
+    }
+
+    console.log("Produit non trouvé...");
+    return 0; // Si aucun produit n'est trouvé, retourne 0
+  }
+  deleteBonCmdProduit(itemFP: FactureProduit): void {
+    this.item.bonCommandeProduit = this.item.bonCommandeProduit?.filter(item => item !== itemFP);
+  }
+  public addBonCmdProduits(produit: Produit): void {
+    console.log(produit);
+    if (this.item.bonCommandeProduit == null) {
+      this.item.bonCommandeProduit = [];
+    }
+
+// this.produitniveauxPrix.findByProduitId(produit.id).subscribe(data => produit.produitNiveauPrix = data);
+    let bonCommandeProduit = new BonCommandeProduit();
+    bonCommandeProduit.produit = produit
+    console.log("produit", produit);
+    bonCommandeProduit.disque = 0
+    bonCommandeProduit.quantite = 1
+    produit.disponible = produit?.niveauStockInitial - bonCommandeProduit?.quantite;
+    console.log("disponible", produit.disponible);
+    bonCommandeProduit.disponible = produit.disponible
+    console.log(bonCommandeProduit.disponible);
+// bonCommandeProduit.prix = produit.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.item.niveauPrix?.id)[0]?.prix
+
+    bonCommandeProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.fournisseur?.niveauPrix?.id)[0]?.prix || produit.prixGros;
+    console.log("client", this.fournisseur);
+    console.log("niveau prix du client", this?.fournisseur.niveauPrix);
+    console.log(bonCommandeProduit.prix);
+    bonCommandeProduit.total = this.calculerTotal(bonCommandeProduit);
+    console.log(bonCommandeProduit.total);
+
+    this.item.bonCommandeProduit = [...this.item.bonCommandeProduit, bonCommandeProduit]
+    console.log(this.item.bonCommandeProduit)
+  }
+
+  calculerSommeSousTotal(bonCmdProduits: BonCommandeProduit[]): string {
+    const somme = bonCmdProduits.reduce((total, bonCmdProduit) => {
+      if (bonCmdProduit?.quantite && bonCmdProduit?.prix) {
+        return total + (bonCmdProduit.quantite * bonCmdProduit.prix);
+      } else {
+        return total;
+      }
+    }, 0);
+    this.item.sousTotal = somme
+    return somme.toFixed(2);
+  }
+  calculerSommeTotale(bonCommandeProduitList: BonCommandeProduit[]): number {
+    const sommeTotale = bonCommandeProduitList.reduce((somme, bonCmdProduit) => {
+      const total = this.calculerTotal(bonCmdProduit);
+      console.log(`Total pour ${bonCmdProduit.produit?.nom}: ${total}`);
+      return somme + total;
+    }, 0);
+
+    const sommeTotaleFormatee = parseFloat(sommeTotale.toFixed(2));
+    console.log(`Somme totale formatée: ${sommeTotaleFormatee}`);
+    this.item.total = sommeTotaleFormatee;
+    return sommeTotaleFormatee;
+  }
+  calculerSommeQuantite(bonCommandeProduitList: BonCommandeProduit[]): number {
+    let number = bonCommandeProduitList.reduce((sommeQuantite, bonCmdProduit) => {
+      return sommeQuantite + (bonCmdProduit.quantite || 0);
+    }, 0);
+    this.item.totalUnites = number
+    return number;
+  }
+  loadProduitList() {
+    this.produitService.findAll().subscribe({
+      next: data => this.produits = data,
+      error: err => console.log(err)
+    })
+  }
 }
