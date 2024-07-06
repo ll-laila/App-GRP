@@ -44,6 +44,11 @@ export const routes: Routes = [
   path: 'adresse',
   loadChildren: () => import('./views/adresse/routes').then((m) => m.routes)
   },
+      {
+        path: 'profil',
+        loadComponent: () => import('./views/pages/profil/profil.component').then(m => m.ProfilComponent),
+        data: {title: 'profil Page'}
+      }
 
     ]
   },
@@ -64,6 +69,7 @@ export const routes: Routes = [
     loadComponent: () => import('./views/pages/login/login.component').then(m => m.LoginComponent),
     data: {title: 'Login Page'}
   },
+
   {
     path: 'register',
     loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),

@@ -83,6 +83,10 @@ export class DefaultHeaderComponent extends HeaderComponent {
     this.tokenService.clearToken()
     this.router.navigate(["/login"]).then()
   }
+  profile() {
+    this.router.navigate(["/profil"]).then();
+  }
+
   printReport(): void {
     window.print();
   }

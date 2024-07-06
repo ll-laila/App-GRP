@@ -59,6 +59,7 @@ export class CommandeUpdateComponent {
   protected sending = false
   protected resetting = false
   protected standAlon = true
+  filteredClientList: Client[] = [];
 
   @Input("getter") set setItemGetter(getter: () => Commande) {
     this.itemGetter = getter
@@ -139,10 +140,16 @@ export class CommandeUpdateComponent {
   }
   loadClientList() {
     this.clientService.findAllOptimized().subscribe({
-      next: data => this.clientList = data,
+      next: data => {
+        // Filter out clients already associated with this command
+        this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
+        // Optionally, you can set the original list for other purposes
+        this.clientList = data;
+      },
       error: err => console.log(err)
     })
   }
+
   loadDevisesList() {
     this.devisesService.findAllOptimized().subscribe({
       next: data => this.devisesList = data,

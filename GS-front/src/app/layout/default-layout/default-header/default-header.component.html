@@ -9,9 +9,7 @@
       style="margin-inline-start: -14px;">
       <svg cIcon name="cilMenu" size="lg"></svg>
     </button>
-
-
-    <c-header-nav class="d-none d-md-flex">
+   <c-header-nav class="d-none d-md-flex">
       <c-nav-item>
         <a cNavLink routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
       </c-nav-item>
@@ -34,8 +32,10 @@
       <a cNavLink>
         <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
       </a>
+      <a cNavLink>
+        <svg cIcon class="my-1" name="cilList" size="lg"></svg>
+      </a>
     </c-header-nav>
-
     <c-header-nav class="ms-auto ms-md-0">
       <div class="nav-item py-1">
         <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
@@ -78,6 +78,12 @@
           <svg cIcon class="me-2" name="cilAccountLogout"></svg>
           Logout
 
+        </a>
+      </li>
+      <li>
+        <a cDropdownItem (click)="profile()">
+          <svg cIcon class="me-2" name="cilSettings"></svg>
+          Paramètre
         </a>
       </li>
     </ul>

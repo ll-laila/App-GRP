@@ -142,13 +142,11 @@
                 </c-input-group>
             </c-col>-->
             <c-col sm="4">
-              <svg cIcon name="cilUser"  style="color: blue ;font-size: 30px"></svg>
-
-              <label cLabel for="client"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Client</label>
+                <label cLabel for="client">Client</label>
                 <c-input-group>
                     <select cSelect id="client" name="client" [(ngModel)]="client.id" [valid]="validator.client.valid" (blur)="validator.client.validate()">
-                        @for (it of clientList; track it) {
-                        <option [value]="it.id">{{ it.code }}</option>
+                        @for (it of filteredClientList; track it) {
+                        <option [value]="it.id">{{ it.nom }}</option>
                         }
                     </select>
                     <button cButton color="secondary" type="button" variant="outline" (click)="navigateToClientCreate()">

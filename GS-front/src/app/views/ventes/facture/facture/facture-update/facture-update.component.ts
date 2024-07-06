@@ -93,6 +93,7 @@ export class FactureUpdateComponent {
   protected devisesList!: Devises[]
   protected niveauPrixList!: NiveauPrix[]
   protected entrepriseList!: Entreprise[]
+  filteredClientList: Client[] = [];
 
   ngAfterContentInit() {
     if (!this.isPartOfUpdateForm && this.item.id == null) this.router.navigate(["/ventes/facture/facture"]).then()
@@ -133,7 +134,12 @@ export class FactureUpdateComponent {
   }
   loadClientList() {
     this.clientService.findAllOptimized().subscribe({
-      next: data => this.clientList = data,
+      next: data => {
+        // Filter out clients already associated with this command
+        this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
+        // Optionally, you can set the original list for other purposes
+        this.clientList = data;
+      },
       error: err => console.log(err)
     })
   }

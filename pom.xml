@@ -86,8 +86,11 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- #################################################################################### -->
-
+        <dependency>
+            <groupId>org.sir</groupId>
+            <artifactId>appgestionstock</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 
