@@ -5,15 +5,14 @@ import {StatutNiveauPrixEnum} from 'src/app/controller/enums/statut-niveau-prix-
 
 export class NiveauPrixValidator extends Validator< NiveauPrix> {
   nom = new ValidatorItem<string>(
-    () => this.item().nom,
-    (value) => this.item().nom = value,
-    (value) => {
-      this.nom.stringValidators
-        ?.required()
-        ?.pattern(/^[a-zA-Z]+$/,'Nom invalide,Veuillez entrer un nom contenant uniquement des lettres alphabétiques')
-
-        ?.valid()
-    }
+      () => this.item().nom,
+      (value) => this.item().nom = value,
+      (value) => {
+        this.nom.stringValidators
+            ?.required()
+            ?.pattern(/^[a-zA-Z0-9]+$/, 'Nom invalide, Veuillez entrer un nom contenant uniquement des lettres et/ou des chiffres')
+            ?.valid()
+      }
   )
   actif = new ValidatorItem<boolean>(
     () => this.item().actif,

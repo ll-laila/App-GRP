@@ -14,6 +14,7 @@ import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
 import {ProduitService} from "../../../../controller/services/produit/produit.service";
 import {Produit} from "../../../../controller/entities/produit/produit";
+import {BonCommande} from "../../../../controller/entities/inventaire/boncommande/bon-commande";
 
 @Component({
   selector: 'app-niveau-stock-list',
@@ -39,7 +40,6 @@ export class NiveauStockListComponent {
 private produitService = inject(ProduitService)
   ngOnInit() {
     this.produit()
-
     this.findAll()
   }
 

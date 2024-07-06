@@ -157,7 +157,7 @@ export const navItems: INavData[] = [
         iconComponent: {name: 'cil-cash'},
       },
       {
-        name: ' Niveau de fidélité',
+        name: ' Niveau de prix',
         url: '/parametres/niveau-prix',
         iconComponent: {name: 'cib-deezer'},
       },
@@ -339,7 +339,7 @@ export const navItems2: INavData[] = [
         iconComponent: {name: 'cil-cash'},
       },
       {
-        name: ' Niveau de fidélité',
+        name: ' Niveau de prix',
         url: '/parametres/niveau-prix',
         iconComponent: {name: 'cib-deezer'},
       },
