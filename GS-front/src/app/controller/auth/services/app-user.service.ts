@@ -23,6 +23,10 @@ export class AppUserService {
     return this.http.get< AppUser>(`${this.api}/username/${username}`);
   }
 
+  public findByUsername(username: string){
+    return this.http.get< AppUser>(`${this.api}/admin/${username}`);
+  }
+
   public deleteById(id: number) {
     return this.http.delete< number>(`${this.api}/id/${id}`);
   }

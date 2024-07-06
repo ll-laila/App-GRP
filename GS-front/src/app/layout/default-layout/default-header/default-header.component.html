@@ -25,9 +25,6 @@
       <a cNavLink>
         <svg cIcon class="my-1" name="cilList" size="lg"></svg>
       </a>
-      <a cNavLink>
-        <svg cIcon class="my-1" name="cilEnvelopeOpen" size="lg"></svg>
-      </a>
     </c-header-nav>
     <c-header-nav class="ms-auto ms-md-0">
       <div class="nav-item py-1">
@@ -62,16 +59,16 @@
       />
     </button>
     <ul cDropdownMenu class="pt-0 w-auto">
-
-
-
-
-
-
       <li>
         <a cDropdownItem (click)="logout()">
           <svg cIcon class="me-2" name="cilAccountLogout"></svg>
           Logout
+        </a>
+      </li>
+      <li>
+        <a cDropdownItem (click)="profile()">
+          <svg cIcon class="me-2" name="cilSettings"></svg>
+          Paramètre
         </a>
       </li>
     </ul>

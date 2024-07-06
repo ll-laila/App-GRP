@@ -110,8 +110,8 @@
                 <label cLabel for="client">Client</label>
                 <c-input-group>
                     <select cSelect id="client" name="client" [(ngModel)]="client.id" [valid]="validator.client.valid" (blur)="validator.client.validate()">
-                        @for (it of clientList; track it) {
-                        <option [value]="it.id">{{ it.code }}</option>
+                        @for (it of filteredClientList; track it) {
+                        <option [value]="it.id">{{ it.nom }}</option>
                         }
                     </select>
                     <button cButton color="secondary" type="button" variant="outline" (click)="navigateToClientCreate()">
@@ -119,21 +119,22 @@
                     </button>
                     <c-form-feedback [valid]="false">{{ validator.client.message }}</c-form-feedback>
                 </c-input-group>
-            </c-col><!--
-            <c-col sm="4">
-                <label cLabel for="devises">Devises</label>
-                <c-input-group>
-                    <select cSelect id="devises" name="devises" [(ngModel)]="devises.id" [valid]="validator.devises.valid" (blur)="validator.devises.validate()">
-                        @for (it of devisesList; track it) {
-                        <option [value]="it.id">{{ it.id }}</option>
-                        }
-                    </select>
-                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToDevisesCreate()">
-                        <svg cIcon name="cilPlus"></svg>
-                    </button>
-                    <c-form-feedback [valid]="false">{{ validator.devises.message }}</c-form-feedback>
-                </c-input-group>
-            </c-col>-->
+            </c-col>
+            <!--
+                        <c-col sm="4">
+                            <label cLabel for="devises">Devises</label>
+                            <c-input-group>
+                                <select cSelect id="devises" name="devises" [(ngModel)]="devises.id" [valid]="validator.devises.valid" (blur)="validator.devises.validate()">
+                                    @for (it of devisesList; track it) {
+                                    <option [value]="it.id">{{ it.id }}</option>
+                                    }
+                                </select>
+                                <button cButton color="secondary" type="button" variant="outline" (click)="navigateToDevisesCreate()">
+                                    <svg cIcon name="cilPlus"></svg>
+                                </button>
+                                <c-form-feedback [valid]="false">{{ validator.devises.message }}</c-form-feedback>
+                            </c-input-group>
+                        </c-col>-->
 
            <!-- <c-col sm="4">
                 <label cLabel for="entreprise">Entreprise</label>

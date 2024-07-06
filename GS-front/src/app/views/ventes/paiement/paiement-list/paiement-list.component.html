@@ -56,8 +56,8 @@
                         <td>{{ it.id }}</td>
                             <td>{{ it.datePaiement }}</td>
                             <td>{{ it.montantPaye }}</td>
-                            <td>{{ it.methodePaiement != null ? it.methodePaiement.id: "null" }}</td>
-                            <td>{{ it.entreprise != null ? it.entreprise.id: "null" }}</td>
+                            <td>{{ it.methodePaiement != null ? it.methodePaiement.nom: "null" }}</td>
+                            <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
                         <td style="display: flex; justify-content: end;">
                             <button cButton color routerLink="update" (click)="item = it">
                                 <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
