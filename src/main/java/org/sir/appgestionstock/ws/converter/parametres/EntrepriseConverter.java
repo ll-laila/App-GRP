@@ -14,6 +14,7 @@ import org.sir.appgestionstock.ws.converter.ventes.retourproduit.RetourProduitCo
 import org.sir.appgestionstock.ws.converter.ventes.facture.FactureConverter;
 import org.sir.appgestionstock.ws.converter.ventes.commande.CommandeConverter;
 import org.sir.appgestionstock.ws.converter.ventes.devis.DevisConverter;
+import org.sir.appgestionstock.zsecurity.ws.converter.AppUserConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class EntrepriseConverter {
 @Autowired private BonCommandeConverter bonCommandeConverter;
 @Autowired private FactureConverter factureConverter;
 @Autowired private EntrepriseDevisesConverter entrepriseDevisesConverter;
+
 private boolean adresse = true;
 private boolean employes = true;
 private boolean produits = true;
@@ -58,6 +60,7 @@ private boolean devisesList = true;
 private boolean nouvelleDevises = true;
 private boolean devisList = true;
 private boolean entrepriseDevises = true;
+
 protected void configure(boolean value) {
 this.paiementConverter.setEntreprise(value);
 this.niveauStockConverter.setEntreprise(value);
@@ -104,6 +107,7 @@ item.setEmail(dto.getEmail());
 item.setTelephone(dto.getTelephone());
 item.setSiteweb(dto.getSiteweb());
 item.setLogo(dto.getLogo());
+item.setIdAdmin(dto.getIdAdmin());
 item.setAdresse(adresseConverter.toItem(dto.getAdresse()));
 item.setEmployes(employeConverter.toItem(dto.getEmployes()));
 item.setProduits(produitConverter.toItem(dto.getProduits()));
@@ -130,6 +134,7 @@ dto.setEmail(item.getEmail());
 dto.setTelephone(item.getTelephone());
 dto.setSiteweb(item.getSiteweb());
 dto.setLogo(item.getLogo());
+dto.setIdAdmin(item.getIdAdmin());
 dto.setAdresse(adresse? adresseConverter.toDto(item.getAdresse()): null);
 dto.setEmployes(employes? employeConverter.toDto(item.getEmployes()): null);
 dto.setProduits(produits? produitConverter.toDto(item.getProduits()): null);
@@ -208,6 +213,7 @@ this.devisList = value;
 public void setEntrepriseDevises(boolean value) {
 this.entrepriseDevises = value;
 }
+
 public void setAdresseConverter(AdresseConverter value) {
 this.adresseConverter = value;
 }
@@ -304,4 +310,5 @@ this.entrepriseDevisesConverter = value;
 public EntrepriseDevisesConverter getEntrepriseDevisesConverter() {
 return entrepriseDevisesConverter;
 }
+
 }

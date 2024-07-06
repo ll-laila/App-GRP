@@ -25,7 +25,11 @@ export class BonCommandeService {
     return this.http.get<Array<BonCommande>>(this.api);
   }
 
-  public findById(id: number) {
+  public findByIdFor(idFor: number) {
+      return this.http.get<Array<BonCommande>>(`${this.api}/idFor/${idFor}`);
+  }
+
+    public findById(id: number | undefined) {
     return this.http.get<BonCommande>(`${this.api}/id/${id}`);
   }
 

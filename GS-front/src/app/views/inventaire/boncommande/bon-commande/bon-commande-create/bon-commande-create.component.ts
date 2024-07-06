@@ -123,29 +123,21 @@ export class BonCommandeCreateComponent {
         this.validator.entreprise.validate()
       }
     } else { this.reset(false) }
-    this.service.keepData = false
-    this.item.livraison = new Livraison()
+    this.service.keepData = false;
+    this.item.livraison = new Livraison();
+    this.loadTaxeList();
+    this.loadFournisseurList();
+    this.loadDevisesList();
+    this.loadNiveauPrixList();
+    this.loadEntrepriseList();
+    this.loadProduitList();
+    this.generateCode();
 
-    this.loadTaxeList()
-    this.loadFournisseurList()
-    this.loadDevisesList()
-    this.loadNiveauPrixList()
-    this.loadEntrepriseList()
-    this.loadProduitList()
-    this.clientForm = this.formBuilder.group({
-      code: [{value: this.generateCode(), disabled: true}]
-
-    });
-    this.service.getNextCode().subscribe({
-      next: value => this.item.code = value.code,
-      error: err => console.log(err)
-    })
   }
-  currentCodeNumber: number = 1;
 
-  clientForm !: FormGroup;
-  generateCode(): string {
-    return 'I' + this.currentCodeNumber.toString().padStart(7, '0');
+  generateCode(): void {
+    const randomNumber = Math.floor(Math.random() * 1000000);
+    this.item.code = 'B' + randomNumber.toString().padStart(6, '0');
   }
 
 

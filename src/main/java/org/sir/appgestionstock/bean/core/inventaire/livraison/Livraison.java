@@ -1,9 +1,11 @@
 package org.sir.appgestionstock.bean.core.inventaire.livraison;
+import org.sir.appgestionstock.bean.core.inventaire.boncommande.BonCommande;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.core.contacts.Fournisseur;
 import org.sir.appgestionstock.bean.core.parametres.Taxe;
 import org.sir.appgestionstock.bean.enums.StatutLivraisonEnum;
 import jakarta.persistence.*;
+
 import java.time.*;
 import java.util.*;
 @Entity
@@ -29,6 +31,10 @@ private Fournisseur fournisseur;
 private List<LivraisonProduit> livraisonProduit;
 @ManyToOne(fetch = FetchType.LAZY)
 private Entreprise entreprise;
+
+private Long idBonCom;
+
+
 public Livraison() {
 }
 public Livraison(Long id, String label) {
@@ -114,6 +120,14 @@ return entreprise;
 public void setEntreprise(Entreprise value) {
 this.entreprise = value;
 }
+
+    public Long getIdBonCom() {
+        return idBonCom;
+    }
+    public void setIdBonCom(Long idBonCom) {
+        this.idBonCom = idBonCom;
+    }
+
 @Override
 public boolean equals(Object object) {
 if (object instanceof Livraison livraison) {

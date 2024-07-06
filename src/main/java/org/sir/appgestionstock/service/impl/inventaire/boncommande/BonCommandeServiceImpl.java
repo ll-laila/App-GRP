@@ -38,6 +38,10 @@ return dao.findById(id).orElse(null);
 public List<BonCommande> findAll() {
 return dao.findAll();
 }
+public List<BonCommande> findAllByIdFor(Long id) {
+        return dao.findByFournisseurId(id);
+}
+
 public List<BonCommande> findAllOptimized() {
 return dao.findAllOptimized();
 }
@@ -120,7 +124,7 @@ if (found == null) throw new NotFoundException("Unknown Given Entreprise");
 item.setEntreprise(found);
 }
 }
-createAssociatedObject(item);
+//createAssociatedObject(item);
 BonCommande saved = dao.save(item);
 createAssociatedList(saved);
 return saved;
@@ -296,10 +300,10 @@ return dao.findByEntrepriseId(id);
 
     }
 
-public void createAssociatedObject(BonCommande item) {
+/*public void createAssociatedObject(BonCommande item) {
 if (item == null) return;
 ServiceHelper.createObject(item, BonCommande::getLivraison, livraisonService::create);
-}
+}*/
 public void createAssociatedList(BonCommande item) {
 if (item == null || item.getId() == null) return;
 ServiceHelper.createList(item, BonCommande::getBonCommandeProduit, BonCommandeProduit::setBonCommande, bonCommandeProduitService::create);

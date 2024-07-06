@@ -91,8 +91,16 @@ public class LivraisonServiceImpl implements LivraisonService {
         item.setStatut(StatutLivraisonEnum.LIVRE);
         Livraison saved = dao.save(item);
         createAssociatedList(saved);
+        BonCommande bonCommande = bonCommandeService.findById(item.getIdBonCom());
+        bonCommande.setLivraison(saved);
         return saved;
     }
+
+
+
+
+
+
 
     @Transactional(rollbackFor = Exception.class)
     public List<Livraison> create(List<Livraison> items) {

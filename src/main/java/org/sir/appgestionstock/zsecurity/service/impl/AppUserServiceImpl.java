@@ -3,7 +3,6 @@ package org.sir.appgestionstock.zsecurity.service.impl;
 import org.sir.appgestionstock.zsecurity.entity.Role;
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
 import org.sir.appgestionstock.zsecurity.dao.AppUserDao;
-import org.sir.appgestionstock.zsecurity.permissions.RoleEnum;
 import org.sir.appgestionstock.zsecurity.service.facade.RoleService;
 import org.sir.appgestionstock.zsecurity.service.facade.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +66,8 @@ public class AppUserServiceImpl implements AppUserService {
             return null;
         return appUserDao.findByUsername(username);
     }
+
+
 
     @Override
     @Transactional
@@ -151,4 +151,6 @@ public class AppUserServiceImpl implements AppUserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return findByUsernameWithRoles(username);
     }
+
+
 }

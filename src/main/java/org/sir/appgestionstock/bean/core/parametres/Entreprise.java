@@ -13,6 +13,7 @@ import org.sir.appgestionstock.bean.core.contacts.Client;
 import org.sir.appgestionstock.bean.core.inventaire.boncommande.BonCommande;
 import org.sir.appgestionstock.bean.core.ventes.facture.Facture;
 import jakarta.persistence.*;
+import org.sir.appgestionstock.zsecurity.entity.AppUser;
 
 import java.util.*;
 @Entity
@@ -26,6 +27,8 @@ private String email;
 private String telephone;
 private String siteweb;
 private String logo;
+private Long idAdmin;
+
 @OneToOne()
 private Adresse adresse;
 @OneToMany(mappedBy = "entreprise")
@@ -192,6 +195,13 @@ return entrepriseDevises;
 public void setEntrepriseDevises(List<EntrepriseDevises> value) {
 this.entrepriseDevises = value;
 }
+
+    public Long getIdAdmin() {
+        return idAdmin;
+    }
+    public void setIdAdmin(Long value) {
+        this.idAdmin = value;
+    }
 @Override
 public boolean equals(Object object) {
 if (object instanceof Entreprise entreprise) {

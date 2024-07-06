@@ -1,15 +1,13 @@
 package org.sir.appgestionstock.zsecurity.entity;
 
 import jakarta.persistence.*;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.zutils.entity.audit.AuditEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.sir.appgestionstock.zutils.entity.audit.AuditEntity;
 
 @Entity
 @Table(name = "app_users")
@@ -39,6 +37,7 @@ public class AppUser extends AuditEntity implements UserDetails {
     protected List<Role> roles = new ArrayList<>();
     @Transient
     protected List<Authority> authorities;
+
 
     public AppUser() {
         super();
@@ -166,4 +165,6 @@ public class AppUser extends AuditEntity implements UserDetails {
     public void setAuthorities(List<Authority> authorities) {
         this.authorities = authorities;
     }
+
+
 }

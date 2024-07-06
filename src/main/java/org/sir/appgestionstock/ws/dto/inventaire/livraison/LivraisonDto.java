@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.ws.dto.inventaire.livraison;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.sir.appgestionstock.ws.dto.inventaire.boncommande.BonCommandeDto;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.ws.dto.contacts.FournisseurDto;
 import org.sir.appgestionstock.ws.dto.parametres.TaxeDto;
@@ -22,6 +23,7 @@ private TaxeDto taxeExpedition;
 private FournisseurDto fournisseur;
 private List<LivraisonProduitDto> livraisonProduit;
 private EntrepriseDto entreprise;
+private BonCommandeDto bonCommande;
 public Long getId() {
 return id;
 }
@@ -100,4 +102,11 @@ return entreprise;
 public void setEntreprise(EntrepriseDto value) {
 this.entreprise = value;
 }
+
+public BonCommandeDto getBonCommande() {
+        return bonCommande;
+    }
+public void setBonCommande(BonCommandeDto value) {
+        this.bonCommande = value;
+    }
 }

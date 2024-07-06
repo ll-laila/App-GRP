@@ -4,12 +4,12 @@ import {
   FormFloatingDirective, FormLabelDirective, RowComponent,
   CardComponent, CardBodyComponent, CardHeaderComponent, SpinnerComponent,
   InputGroupComponent, ButtonDirective, NavComponent, NavItemComponent,
-  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent
+  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
 } from "@coreui/angular";
 import {FormsModule} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
-import {NgTemplateOutlet} from "@angular/common";
+import {NgForOf, NgTemplateOutlet} from "@angular/common";
 
 
 import {LivraisonService} from "src/app/controller/services/inventaire/livraison/livraison.service";
@@ -24,6 +24,9 @@ import {LivraisonProduit} from "src/app/controller/entities/inventaire/livraison
 import {EntrepriseService} from "src/app/controller/services/parametres/entreprise.service";
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {StatutLivraisonEnum} from "src/app/controller/enums/statut-livraison-enum";
+import {BonCommande} from "../../../../../controller/entities/inventaire/boncommande/bon-commande";
+import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {BonCommandeService} from "../../../../../controller/services/inventaire/boncommande/bon-commande.service";
 
 @Component({
   selector: 'app-livraison-update',
@@ -33,7 +36,7 @@ import {StatutLivraisonEnum} from "src/app/controller/enums/statut-livraison-enu
     FormsModule, FormLabelDirective, FormFloatingDirective, CardComponent, NgTemplateOutlet,
     CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
     RouterLink, NavComponent, NavItemComponent, FormCheckComponent, SpinnerComponent,
-    FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, IconDirective,
+    FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, IconDirective, NgForOf, TableDirective,
 
   ],
   templateUrl: './livraison-update.component.html',
@@ -56,17 +59,21 @@ export class LivraisonUpdateComponent {
     this.validator = validator
   }
 
-  private router = inject(Router)
-  private service = inject(LivraisonService)
-  private taxeService = inject(TaxeService)
-  private fournisseurService = inject(FournisseurService)
-  private entrepriseService = inject(EntrepriseService)
+  private router = inject(Router);
+  private service = inject(LivraisonService);
+  private bonCommandeService = inject(BonCommandeService);
+  private taxeService = inject(TaxeService);
+  private toasterService = inject(ToasterService);
+  private fournisseurService = inject(FournisseurService);
+  private entrepriseService = inject(EntrepriseService);
 
   protected validator = LivraisonValidator.init(() => this.item)
 
-  protected taxeList!: Taxe[]
-  protected fournisseurList!: Fournisseur[]
-  protected entrepriseList!: Entreprise[]
+  protected taxeList!: Taxe[];
+  protected fournisseurList!: Fournisseur[];
+  protected entrepriseList!: Entreprise[];
+  protected bonCommandeList: BonCommande[] = [];
+  protected bonCommandeSelected: BonCommande = new BonCommande();
 
   ngAfterContentInit() {
     if (!this.isPartOfUpdateForm && this.item.id == null) this.router.navigate(["/inventaire/livraison/livraison"]).then()
@@ -84,16 +91,20 @@ export class LivraisonUpdateComponent {
         this.item.fournisseur = fournisseurCreated.item
         this.validator.fournisseur.validate()
       }
-     /* let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
+      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
       if (entrepriseCreated.created) {
         this.item.entreprise = entrepriseCreated.item
         this.validator.entreprise.validate()
-      }*/
+      }
+
     } else { this.validator.reset() }
 
-    this.loadTaxeList()
-    this.loadFournisseurList()
-    this.loadEntrepriseList()
+    this.loadTaxeList();
+    this.loadFournisseurList();
+    this.loadEntrepriseList();
+    // @ts-ignore
+    this.boncmds(this.item.fournisseur.id);
+   // this.findBncmd();
   }
 
   // LOAD DATA
@@ -119,13 +130,15 @@ export class LivraisonUpdateComponent {
   // METHODS
   update() {
     console.log(this.item)
-    if (!this.validator.validate()) return;
-    this.sending = true;
+    //if (!this.validator.validate()) return;
+  //  this.sending = true;
     this.service.update().subscribe({
       next: data => {
-        this.sending = false
-        if (data == null) return
-        this.router.navigate(["/inventaire/livraison/livraison"]).then()
+     //   this.sending = false
+      //  if (data == null) return
+        this.router.navigate(["/inventaire/livraison/livraison"]).then();
+        this.toasterService.toast({message: "le livraison a été modifié", color: "success"})
+
       },
       error: err => {
         this.sending = false
@@ -133,6 +146,73 @@ export class LivraisonUpdateComponent {
       }
     })
   }
+
+
+  selectBonComd(event: any) {
+    const selectedId = event.target.value;
+    const selectedBonCommande = this.bonCommandeList.find(it => it.id === parseInt(selectedId, 10));
+    if (selectedBonCommande) {
+      this.bonCommandeSelected = selectedBonCommande;
+      this.mapBonCommandeToLivraison(selectedBonCommande);
+    }
+  }
+
+  mapBonCommandeToLivraison(bonCommande: BonCommande) {
+    this.item.bonCommande = bonCommande;
+    this.item.fournisseur = bonCommande.fournisseur;
+    this.item.dateCreation = bonCommande.dateCreation;
+    this.item.dateExpedition = bonCommande.dateExpedition;
+    this.item.entreprise = bonCommande.entreprise;
+    this.item.totalUnites = bonCommande.totalUnites;
+    this.item.remiseGlobal = bonCommande.remiseGlobal;
+    this.item.sousTotal = bonCommande.sousTotal;
+    this.item.total = bonCommande.total;
+    this.item.taxeExpedition = bonCommande.taxeExpedition;
+
+    this.item.livraisonProduit = bonCommande.bonCommandeProduit?.map(bonCommandeProduit => {
+      const livraisonProduit = new LivraisonProduit();
+      livraisonProduit.id = bonCommandeProduit.id;
+      livraisonProduit.total = bonCommandeProduit.total;
+      livraisonProduit.quantite = bonCommandeProduit.quantite;
+      livraisonProduit.disque = bonCommandeProduit.disque;
+      livraisonProduit.produit = bonCommandeProduit.produit;
+      livraisonProduit.prix = bonCommandeProduit.prix;
+      return livraisonProduit;
+    }) || [];
+  }
+
+  trackById(index: number, item: BonCommande): number {
+    return item.id;
+  }
+
+  selectFournisseur() {
+    this.boncmds(this.fournisseur.id);
+  }
+
+  boncmds(id: number): void {
+    this.bonCommandeService.findByIdFor(id).subscribe({
+      next: (data) => {
+        this.bonCommandeList = data;
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+  }
+
+  findBncmd() {
+    this.bonCommandeService.findById(this.item.bonCommande?.id).subscribe({
+      next: data => {
+        this.item.bonCommande = data;
+        this.item.fournisseur = data.fournisseur;
+        this.item.dateCreation = data.dateCreation;
+        this.item.dateExpedition = data.dateExpedition;
+        this.item.entreprise = data.entreprise;
+      },
+      error: err => console.log(err)
+    })
+  }
+
 
   reset() {
     this.resetting = true

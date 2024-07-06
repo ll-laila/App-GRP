@@ -2,6 +2,7 @@ package org.sir.appgestionstock.zsecurity.ws.converter;
 
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
 import org.sir.appgestionstock.zsecurity.ws.dto.AppUserDto;
+import org.sir.appgestionstock.zsecurity.ws.dto.RoleDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -43,7 +44,7 @@ public class AppUserConverter {
         dto.setAccountNonLocked(item.isAccountNonLocked());
         dto.setUsername(item.getUsername());
         dto.setPasswordChanged(item.isPasswordChanged());
-        dto.setRoles(role ? roleConverter.toDto(item.getRoles()) : null);
+        dto.setRoles(role ? (List<RoleDto>) roleConverter.toDto(item.getRoles()) : null);
         this.configure(true);
         return dto;
     }
@@ -126,4 +127,6 @@ public class AppUserConverter {
     public void setRole(boolean role) {
         this.role = role;
     }
+
+
 }

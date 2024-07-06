@@ -9,7 +9,7 @@ import {
 } from "@coreui/angular";
 import {BonCommandeService} from "src/app/controller/services/inventaire/boncommande/bon-commande.service";
 import {BonCommande} from "src/app/controller/entities/inventaire/boncommande/bon-commande";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
 
@@ -33,7 +33,8 @@ export class BonCommandeListComponent {
   protected currentIndex: number  = 0
   protected deleteModel = false
 
-  private service = inject(BonCommandeService)
+  private service = inject(BonCommandeService);
+  private router = inject(Router);
 
   ngOnInit() {
     this.findAll()
@@ -102,6 +103,12 @@ export class BonCommandeListComponent {
     return generatePageNumbers(this.pagination)
   }
 
-  /////
+
   protected readonly paginationSizes = paginationSizes;
+
+
+  public navigateToPdfCreate() {
+    this.service.keepData = true
+    this.router.navigate(['/inventaire/boncommande/bon-commande/boncmdpdf']).then()
+  }
 }

@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.service.facade.parametres;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
+import org.sir.appgestionstock.zsecurity.entity.AppUser;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface EntrepriseService {
@@ -17,4 +18,5 @@ void delete(List<Entreprise> items);
 void deleteByIdIn(List<Long> ids);
 int deleteByAdresseId(Long id);
 Entreprise findByAdresseId(Long id);
+List<Entreprise> findEntrepriseByAdmin(String idAdmin);
 }

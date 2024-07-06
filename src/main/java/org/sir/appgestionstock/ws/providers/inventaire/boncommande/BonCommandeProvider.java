@@ -22,6 +22,15 @@ var result = service.findById(id);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+
+    @GetMapping("/idFor/{idFor}")
+    public ResponseEntity<List<BonCommandeDto>> findAllByFor(@PathVariable Long idFor) {
+        var result = service.findAllByIdFor(idFor);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping
 public ResponseEntity<List<BonCommandeDto>> findAll() {
 var result = service.findAll();
@@ -43,6 +52,9 @@ var result = service.findPaginated(page, size);
 var pagination = result.convert(converter::toDto);
 return ResponseEntity.ok(pagination);
 }
+
+
+
 @PostMapping
 public ResponseEntity<BonCommandeDto> save(@RequestBody BonCommandeDto dto) {
 if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();

@@ -13,6 +13,8 @@ public interface BonCommandeService {
 BonCommande findById(Long id);
 List<BonCommande> findAllOptimized();
 List<BonCommande> findAll();
+List<BonCommande> findAllByIdFor(Long id);
+
 Pagination<BonCommande> findPaginated(int page, int size);
 BonCommande create(BonCommande item);
 List<BonCommande> create(List<BonCommande> item);

@@ -34,7 +34,7 @@ export class LivraisonValidator extends Validator< Livraison> {
         ?.valid()
     }
   )
-  remiseGlobal = new ValidatorItem<number>(
+ /* remiseGlobal = new ValidatorItem<number>(
     () => this.item().remiseGlobal,
     (value) => this.item().remiseGlobal = value  || 0,
     (value) => {
@@ -69,7 +69,7 @@ export class LivraisonValidator extends Validator< Livraison> {
         ?.required()
         ?.valid()
     }
-  )
+  )*/
  /* statut = new ValidatorItem<StatutLivraisonEnum>(
     () => this.item().statut,
     (value) => this.item().statut = value,
@@ -111,10 +111,10 @@ export class LivraisonValidator extends Validator< Livraison> {
     this.code,
     this.dateCreation,
     this.dateExpedition,
-    this.remiseGlobal,
+  /*  this.remiseGlobal,
     this.totalUnites,
     this.sousTotal,
-    this.total,
+    this.total,*/
  //   this.statut,
     this.taxeExpedition,
     this.fournisseur,

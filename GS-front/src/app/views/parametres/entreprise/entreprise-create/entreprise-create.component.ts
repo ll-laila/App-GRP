@@ -60,6 +60,9 @@ import {EntrepriseDevises} from "src/app/controller/entities/parametres/entrepri
 import {AdresseCreateComponent} from "src/app/views/adresse/adresse/adresse-create/adresse-create.component";
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {AppUserService} from "../../../../controller/auth/services/app-user.service";
+import {AppUser} from "../../../../controller/auth/entities/app-user";
+import {UserInfosService} from "../../../../controller/shared/user-infos.service";
 
 @Component({
   selector: 'app-entreprise-create',
@@ -97,20 +100,33 @@ export class EntrepriseCreateComponent {
   protected validator = EntrepriseValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
 
+  private userInfosService = inject(UserInfosService);
+  private appUserService = inject(AppUserService);
+  public admin! : AppUser;
 
   ngOnInit() {
     if(this.service.keepData) {
     } else { this.reset(false) }
     this.service.keepData = false
     this.item.adresse = new Adresse()
-
+    this.getAdminByUsername(this.userInfosService.getUsername());
   }
 
   // LOAD DATA
 
+  getAdminByUsername(username: string) {
+    this.appUserService.findByUsernameWithRoles(username).subscribe(res => {
+      console.log(res);
+      this.admin = res;
+    }, error => {
+      console.log(error);
+    });
+  }
+
   // METHODS
   create() {
     console.log(this.item)
+    this.item.idAdmin = this.admin.id;
     if (!this.validator.validate()) {
       console.log(this.validator);
       return;

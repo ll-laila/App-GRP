@@ -41,7 +41,7 @@ export class LivraisonProduitValidator extends Validator< LivraisonProduit> {
         ?.valid()
     }
   )
-  livraison = new ValidatorItem<Livraison>(
+/*  livraison = new ValidatorItem<Livraison>(
     () => this.item().livraison,
     (value) => this.item().livraison = value,
     (value) => {
@@ -49,14 +49,14 @@ export class LivraisonProduitValidator extends Validator< LivraisonProduit> {
         ?.errorIf(value?.id == null, "No Livraison Was Provided!")
         ?.valid()
     }
-  )
+  )*/
 
   override validatorItems: ValidatorItem< any>[] = [
     this.total,
     this.quantite,
     this.disque,
     this.produit,
-    this.livraison,
+   // this.livraison,
   ]
 
   getValidatorItem(fieldName: string): ValidatorItem< any> {

@@ -18,6 +18,7 @@ import { Devises } from 'src/app/controller/entities/parametres/devises';
 import { NouvelleDevise } from 'src/app/controller/entities/parametres/nouvelle-devise';
 import { Devis } from 'src/app/controller/entities/ventes/devis/devis';
 import { EntrepriseDevises } from 'src/app/controller/entities/parametres/entreprise-devises';
+import {AppUser} from "../../auth/entities/app-user";
 export class Entreprise {
 id!: number;
 nom?: string ;
@@ -45,4 +46,5 @@ devisesList?: Array<Devises> ;
 nouvelleDevises?: Array<NouvelleDevise> ;
 devisList?: Array<Devis> ;
 entrepriseDevises?: Array<EntrepriseDevises> ;
+idAdmin?: number;
 }

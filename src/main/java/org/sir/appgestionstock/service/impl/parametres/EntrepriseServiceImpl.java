@@ -33,6 +33,8 @@ import org.sir.appgestionstock.bean.core.ventes.devis.Devis;
 import org.sir.appgestionstock.service.facade.ventes.devis.DevisService;
 import org.sir.appgestionstock.bean.core.parametres.EntrepriseDevises;
 import org.sir.appgestionstock.service.facade.parametres.EntrepriseDevisesService;
+import org.sir.appgestionstock.zsecurity.entity.AppUser;
+import org.sir.appgestionstock.zsecurity.service.facade.AppUserService;
 import org.sir.appgestionstock.zutils.service.ServiceHelper;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import org.sir.appgestionstock.exception.NotFoundException;
@@ -295,6 +297,14 @@ entrepriseDevisesService.deleteByEntrepriseId(item.getId());
 public void deleteAssociatedObjects(Entreprise item) {
 
 }
+public List<Entreprise> findEntrepriseByAdmin(String username){
+    AppUser admin = appUserService.findByUsername(username);
+    System.out.println(admin);
+    return dao.getEntrepriseByIdAdmin(admin.getId());
+}
+
+
+
 //----------------------------------------------------------
 @Autowired private EntrepriseDao dao;
 @Lazy @Autowired private AdresseService adresseService;
@@ -313,5 +323,6 @@ public void deleteAssociatedObjects(Entreprise item) {
 @Lazy @Autowired private NouvelleDeviseService nouvelleDeviseService;
 @Lazy @Autowired private DevisService devisService;
 @Lazy @Autowired private EntrepriseDevisesService entrepriseDevisesService;
+@Lazy @Autowired private AppUserService appUserService;
 
 }
