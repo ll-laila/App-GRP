@@ -9,8 +9,7 @@ export class TaxeValidator extends Validator< Taxe> {
     (value) => {
       this.nom.stringValidators
         ?.required()
-        ?.pattern(/^[a-zA-Z]+$/,'Nom invalide,Veuillez entrer un nom contenant uniquement des lettres alphabétiques')
-
+          ?.pattern(/^[a-zA-Z0-9]+$/, 'Nom invalide, Veuillez entrer un nom contenant uniquement des lettres et/ou des chiffres')
         ?.valid()
     }
   )

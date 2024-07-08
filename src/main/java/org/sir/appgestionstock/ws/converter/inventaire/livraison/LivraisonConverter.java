@@ -63,7 +63,11 @@ item.setTaxeExpedition(taxeConverter.toItem(dto.getTaxeExpedition()));
 item.setFournisseur(fournisseurConverter.toItem(dto.getFournisseur()));
 item.setLivraisonProduit(livraisonProduitConverter.toItem(dto.getLivraisonProduit()));
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
-item.setIdBonCom(dto.getBonCommande().getId());
+    if (dto.getBonCommande() != null) {
+        item.setIdBonCom(dto.getBonCommande().getId());
+    } else {
+        item.setIdBonCom(null); // ou une valeur par défaut
+    }
 return item;
 }
 protected LivraisonDto convertToDto(Livraison item) {

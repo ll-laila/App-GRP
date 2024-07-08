@@ -65,6 +65,7 @@ var result = service.create(item);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
 @PutMapping()
 public ResponseEntity<EntrepriseDto> update(@RequestBody EntrepriseDto dto) {
 if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -73,6 +74,7 @@ var result = service.update(item);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
 @PutMapping("/all")
 public ResponseEntity<List<EntrepriseDto>> update(@RequestBody List<EntrepriseDto> dtos) {
 if (dtos == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
