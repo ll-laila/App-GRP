@@ -1,91 +1,47 @@
-<c-row class="mb-2">
-    <c-nav class="hstack gap">
-        <c-nav-item class="p-2 ms-auto">
-            @if (!loading) {
-            <button cButton color="info" (click)="paginate()">
-                @if (paginating) {
-            <c-spinner aria-hidden="true" size="sm"></c-spinner>
-            } @else {
-            <svg cIcon name="cilReload"></svg>
-            }
-            Actualiser
-        </button>
-            } @else {
-            <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="info" disabled style="width: 100px"></button></p>
-            }
-        </c-nav-item>
-    </c-nav>
-</c-row>
-
-<c-row >
-    <c-col xs>
-        @if (loading) {
-        <p cPlaceholderAnimation="glow">
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-        </p>
-        } @else {
-        <c-card class="mb-4" >
-            <c-card-body>
-                <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border" >
-                    <thead class="text-nowrap text-truncate">
-                    <tr>
-                      <th class="bg-body-tertiary">Nom d'utilisateur </th>
-                      <th class="bg-body-tertiary">Email</th>
-                      <th class="bg-body-tertiary">Téléphone</th>
-                        <th class="bg-body-tertiary" style="display: flex; justify-content: end;">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for (it of pagination.data; track it; let i = $index) {
-        <tr>
-            <td>{{ it.nom }}</td>
-
-            <td>{{ it.email }}</td>
-            <td>{{ it.telephone }}</td>
-            <td style="display: flex; justify-content: end;">
-                <button cButton color routerLink="update" (click)="item = it">
-                    <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
-                </button>
-            </td>
-        </tr>
-        }
-        </tbody>
-    </table>
-    <div class="mt-2 hstack gap">
-        <button cButton disabled color="secondary" variant="outline" style="width: fit-content">
-        {{ pagination.data.length }} / {{ pagination.totalElements }}
-        </button>
-        <c-dropdown class="p-2 ms-auto" style="width: fit-content">
-            <button cButton cDropdownToggle color="secondary" variant="outline">
-        {{ pagination.size }}
-        </button>
-        <ul cDropdownMenu>
-            @for(size of paginationSizes; track size) {
-        <li><a cDropdownItem (click)="paginate(0, size)">{{ size }}</a></li>
-        }
-        </ul>
-    </c-dropdown>
-    @if(pagination.totalPages > 1 && pagination.data.length > 0) {
-        <c-pagination class="p-2" align="end" style="width: fit-content">
-            <li cPageItem [disabled]="paginating || pagination.first" (click)="(loading || pagination.first) || paginate(pagination.page - 1)">
-                <a cPageLink>Previous</a>
-            </li>
-            @for(page of generatePageNumbers; track page) {
-            <li cPageItem [disabled]="paginating" [active]="page === pagination.page + 1"  (click)="(page === pagination.page + 1) || paginate(page - 1)">
-                <a cPageLink>{{ page }}</a>
-                        </li>
-            }
-            <li cPageItem [disabled]="paginating || pagination.last" (click)="(loading || pagination.last) || paginate(pagination.page + 1)">
-                <a cPageLink>Next</a>
-            </li>
-        </c-pagination>
-        }
+<section class="vh-100 d-flex align-items-start" style="background-color: #f4f5f7;">
+    <div class="container py-5 h-100">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card mb-3" style="border-radius: .5rem;">
+                    <div class="row g-0">
+                        <div class="col-md-4 gradient-custom text-center text-white"
+                             style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
+                            <i class="far fa-edit mb-5"></i>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body p-4">
+                                <h6>Information</h6>
+                                <hr class="mt-0 mb-4">
+                                <div class="row pt-1">
+                                    <div class="col-md-6 mb-3">
+                                        <h6>Email</h6>
+                                        <p class="text-muted">{{ admin.email }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <h6>Phone</h6>
+                                        <p class="text-muted">{{ admin.phone }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <h6>Nom d'utilisateur</h6>
+                                        <p class="text-muted">{{ admin.username }}</p>
+                                    </div>
+                                </div>
+                                <h6>Mes entreprises</h6>
+                                <hr class="mt-0 mb-4">
+                                <div class="row pt-1">
+                                    <div class="col-12">
+                                        <ul class="list-unstyled">
+                                            <li *ngFor="let entreprise of entreprises">
+                                                <h6>{{ entreprise.nom }}</h6>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-    </c-card-body>
-</c-card>
-        }
-    </c-col>
-</c-row>
+    </div>
+</section>

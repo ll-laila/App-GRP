@@ -1,136 +1,106 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import {
-  ButtonDirective,
-  CardBodyComponent,
-  CardComponent,
-  ColComponent,
-  ColDirective,
-  NavComponent,
-  NavItemComponent,
-  PlaceholderAnimationDirective,
-  RowComponent,
-  SpinnerComponent,
-  TableDirective,
-  PlaceholderDirective,
-  PageItemDirective,
-  PageLinkDirective,
-  PaginationComponent,
-  DropdownComponent,
-  DropdownToggleDirective,
-  DropdownMenuDirective,
-  DropdownHeaderDirective,
-  DropdownItemDirective,
-  ModalComponent,
-  ModalToggleDirective,
-  ModalHeaderComponent,
-  ModalBodyComponent,
-  TooltipDirective,
-  ModalFooterComponent,
-  PopoverDirective,
-  ModalTitleDirective,
-  ButtonCloseDirective,
-  ContainerComponent, FormControlDirective, InputGroupComponent, InputGroupTextDirective,
+  FormSelectDirective, ColComponent, FormControlDirective,
+  FormFloatingDirective, FormLabelDirective, RowComponent,
+  CardComponent, CardBodyComponent, CardHeaderComponent, SpinnerComponent,
+  InputGroupComponent, ButtonDirective, NavComponent, NavItemComponent,
+  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
 } from "@coreui/angular";
 import { IconDirective } from "@coreui/icons-angular";
 import { RouterLink } from "@angular/router";
-import {AppUserService} from "../../../controller/auth/services/app-user.service";
-import {ClientService} from "../../../controller/services/contacts/client.service";
-import {Client} from "../../../controller/entities/contacts/client";
-import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import { AppUserService } from "../../../controller/auth/services/app-user.service";
+import { UserInfosService } from "../../../controller/shared/user-infos.service";
+import { AppUser } from "../../../controller/auth/entities/app-user";
+import {NgForOf,NgIf, NgTemplateOutlet} from "@angular/common";
+import {FormsModule} from "@angular/forms";
+import {EntrepriseService} from "../../../controller/services/parametres/entreprise.service";
+import {Entreprise} from "../../../controller/entities/parametres/entreprise";
 
 @Component({
   selector: 'app-profil',
   standalone: true,
   imports: [
-    RowComponent, ColComponent, CardComponent, CardBodyComponent, TableDirective,
-    ButtonDirective, RouterLink, IconDirective, IconDirective, NavComponent,
-    NavItemComponent, SpinnerComponent, PlaceholderAnimationDirective, PlaceholderDirective,
-    ColDirective, PageItemDirective, PageLinkDirective, PaginationComponent,
-    DropdownComponent, DropdownToggleDirective, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective,
-    ModalComponent, ModalToggleDirective, ModalHeaderComponent, ModalBodyComponent, TooltipDirective, ModalFooterComponent, PopoverDirective, ModalTitleDirective, ButtonCloseDirective, ContainerComponent, FormControlDirective, InputGroupComponent, InputGroupTextDirective,
+    FormSelectDirective, RowComponent, ColComponent, FormControlDirective,
+    FormsModule, FormLabelDirective, FormFloatingDirective, CardComponent, NgTemplateOutlet,
+    CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
+    RouterLink, NavComponent, NavItemComponent, FormCheckComponent, SpinnerComponent,
+    FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, IconDirective, NgForOf,NgIf, TableDirective,
   ],
   templateUrl: './profil.component.html',
   styleUrls: ['./profil.component.scss']
 })
-export class ProfilComponent {
+export class ProfilComponent implements OnInit {
 
-  protected loading = false
-  protected paginating = false
-  protected currentIndex: number  = 0
-  protected deleteModel = false
+  private _loading = false;
+ protected admin!: AppUser;
+  private entrepriseService = inject(EntrepriseService);
+  public entreprises!: Entreprise[];
+  private _userInfosService = inject(UserInfosService);
+  private _appUserService = inject(AppUserService);
 
-
-  private service = inject(ClientService)
+  pagination = { data: [], totalElements: 0, size: 10, totalPages: 1, page: 0, first: true, last: true };
+  paginationSizes = [10, 20, 50];
+  paginating = false;
 
   ngOnInit() {
-    this.findAll()
+    this.getAdminByUsername(this._userInfosService.getUsername());
+    this.getEntreprises();
   }
-
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
+  getEntreprises(){
+    this.entrepriseService.findByAdmin(this._userInfosService.getUsername()).subscribe(res => {
+      console.log(res);
+      this.entreprises = res;
+    }, error => {
+      console.log(error);
+    });
   }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  getAdminByUsername(username: string) {
+    this._loading = true;
+    this._appUserService.findByUsernameWithRoles(username).subscribe({
+      next: (res) => {
+        this.admin = res;
+        console.log('Admin data:', this.admin);
+        this._loading = false;
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
+      error: (err) => {
+        console.error('Error fetching admin data:', err);
+        this._loading = false;
       }
-    })
+    });
+  }
+
+  get loading(): boolean {
+    return this._loading;
+  }
+
+  set loading(value: boolean) {
+    this._loading = value;
   }
 
 
-  delete() {
-    this.service.deleteById(this.item.id).subscribe({
-      next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
-        this.item = new Client()
-        this.currentIndex = -1
-        this.deleteModel = false
-      },
-      error: err => {
-        console.log(err)
-      }
-    })
+
+  get userInfosService(): UserInfosService {
+    return this._userInfosService;
   }
 
-  // GETTERS AND SETTERS
-  public get items() {
-    return this.service.items;
+  set userInfosService(value: UserInfosService) {
+    this._userInfosService = value;
   }
 
-  public set items(value) {
-    this.service.items = value;
+  get appUserService(): AppUserService {
+    return this._appUserService;
   }
 
-  public get pagination() {
-    return this.service.pagination;
+  set appUserService(value: AppUserService) {
+    this._appUserService = value;
   }
 
-  public set pagination(value) {
-    this.service.pagination = value;
+  paginate(page: number, size?: number) {
+    // Implement your pagination logic here
   }
 
-  public get item(): Client {
-    return this.service.item;
+  generatePageNumbers() {
+    // Implement your logic to generate page numbers here
+    return [];
   }
-
-  public set item(value: Client ) {
-    this.service.item = value;
-  }
-
-  public get generatePageNumbers() {
-    return generatePageNumbers(this.pagination)
-  }
-
-
-  /////
-  protected readonly paginationSizes = paginationSizes;
 }
