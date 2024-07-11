@@ -75,7 +75,7 @@
               <c-input-group>
                   <select cSelect id="entreprise" name="entreprise" [(ngModel)]="entreprise.id" [valid]="validator.entreprise.valid" (blur)="validator.entreprise.validate()">
                       @for (it of entrepriseList; track it) {
-                      <option [value]="it.id">{{ it.id }}</option>
+                      <option [value]="it.id">{{ it.nom }}</option>
                       }
                   </select>
                   <button cButton color="secondary" type="button" variant="outline" (click)="navigateToEntrepriseCreate()">

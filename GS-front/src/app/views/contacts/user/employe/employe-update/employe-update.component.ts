@@ -4,7 +4,7 @@ import {
   FormFloatingDirective, FormLabelDirective, RowComponent,
   CardComponent, CardBodyComponent, CardHeaderComponent, SpinnerComponent,
   InputGroupComponent, ButtonDirective, NavComponent, NavItemComponent,
-  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent
+  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
 } from "@coreui/angular";
 import {FormsModule} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
@@ -23,6 +23,9 @@ import {EntrepriseService} from "src/app/controller/services/parametres/entrepri
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {AdresseUpdateComponent} from "src/app/views/adresse/adresse/adresse-update/adresse-update.component";
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
+import {RolesListComponent} from "../roles-list/roles-list.component";
+import * as bootstrap from "bootstrap";
+import {PermissionsAcces} from "../../../../../controller/entities/contacts/user/PermissionsAcces";
 
 @Component({
   selector: 'app-employe-update',
@@ -33,7 +36,7 @@ import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.va
     CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
     RouterLink, NavComponent, NavItemComponent, FormCheckComponent, SpinnerComponent,
     FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, IconDirective,
-    AdresseUpdateComponent,
+    AdresseUpdateComponent, RolesListComponent, TableDirective,
   ],
   templateUrl: './employe-update.component.html',
   styleUrl: './employe-update.component.scss'
@@ -55,6 +58,9 @@ export class EmployeUpdateComponent {
     this.validator = validator
   }
 
+  @Input() permissions: any = [];
+
+
   private router = inject(Router)
   private service = inject(EmployeService)
   private entrepriseService = inject(EntrepriseService)
@@ -62,7 +68,9 @@ export class EmployeUpdateComponent {
   protected validator = EmployeValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
 
-  protected entrepriseList!: Entreprise[]
+  protected entrepriseList!: Entreprise[];
+  protected selectedEntreprise!: Entreprise;
+
 
   ngAfterContentInit() {
     if (!this.isPartOfUpdateForm && this.item.id == null) this.router.navigate(["/contacts/user/employe"]).then()
@@ -107,6 +115,43 @@ export class EmployeUpdateComponent {
     })
   }
 
+
+
+  public addToPermessions(entreprise: Entreprise): void {
+    if (this.item.entreprisesAdroitAcces == null) {
+      this.item.entreprisesAdroitAcces = [];
+    }
+    this.item.entreprisesAdroitAcces = [...this.item.entreprisesAdroitAcces, entreprise];
+    console.log(this.item.entreprisesAdroitAcces);
+  }
+
+  removeFromPermissions(entreprise: Entreprise) {
+    this.item.entreprisesAdroitAcces = this.item.entreprisesAdroitAcces?.filter(e => e !== entreprise);
+  }
+
+
+  openRolesModal(item: any) {
+    this.selectedEntreprise = item;
+    const modalElement = document.getElementById('confirmationModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+
+  handleRoles(confirmedPermissions: any) {
+    this.permissions = confirmedPermissions;
+    this.item.permissionsAcces = this.permissions.map((permission: { nom: string | undefined; etat: boolean; entrepriseId: number; }) => {
+      const access = new PermissionsAcces();
+      access.nom = permission.nom;
+      access.etat = permission.etat;
+      access.entrepriseId = this.selectedEntreprise.id;
+      return access;
+    });
+  }
+
+
   reset() {
     this.resetting = true
     this.service.findById(this.item.id).subscribe({
@@ -123,6 +168,23 @@ export class EmployeUpdateComponent {
   }
 
   // GETTERS AND SETTERS
+  public get entreprisesAdroitAcces(): Entreprise[] {
+    if (this.item.entreprisesAdroitAcces == null)
+      this.item.entreprisesAdroitAcces = []
+    return this.item.entreprisesAdroitAcces;
+  }
+  public set entreprisesAdroitAcces(value: Entreprise[]) {
+    this.item.entreprisesAdroitAcces = value;
+  }
+
+  public get permissionsAcces(): PermissionsAcces[] {
+    if (this.item.permissionsAcces == null)
+      this.item.permissionsAcces = []
+    return this.item.permissionsAcces;
+  }
+  public set permissionsAcces(value: PermissionsAcces[]) {
+    this.item.permissionsAcces = value;
+  }
   public get items() {
     return this.service.items;
   }

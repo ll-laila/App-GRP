@@ -3,8 +3,6 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Employe } from 'src/app/controller/entities/contacts/user/employe';
-import { EmployeValidator } from 'src/app/controller/validators/contacts/user/employe.validator';
-import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
 
 @Injectable({ providedIn: 'root' })
@@ -20,13 +18,17 @@ export class EmployeService {
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
 
-  public findAll() {
+    public findAll() {
     return this.http.get<Array<Employe>>(this.api);
   }
 
   public findById(id: number) {
     return this.http.get<Employe>(`${this.api}/id/${id}`);
   }
+
+    public findByUserName(username: string) {
+        return this.http.get<Employe>(`${this.api}/${username}`);
+    }
 
   public findAllOptimized() {
     return this.http.get<Array<Employe>>(`${this.api}/optimized`);

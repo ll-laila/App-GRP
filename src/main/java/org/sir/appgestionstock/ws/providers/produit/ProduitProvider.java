@@ -1,6 +1,6 @@
 package org.sir.appgestionstock.ws.providers.produit;
 
-import org.sir.appgestionstock.bean.core.produit.Produit;
+
 import org.sir.appgestionstock.service.facade.produit.ProduitService;
 import org.sir.appgestionstock.ws.converter.produit.ProduitConverter;
 import org.sir.appgestionstock.ws.dto.produit.ProduitDto;
@@ -14,6 +14,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/produit")
+//@PreAuthorize("hasRole('ADMIN')")
+//@PreAuthorize("hasRole('EMPLOYE')")
 public class ProduitProvider {
     @Autowired
     private ProduitService service;
@@ -41,7 +43,9 @@ public class ProduitProvider {
         return ResponseEntity.ok(resultDto);
     }
 
+
     @GetMapping("/paginated")
+   // @PreAuthorize("hasAuthority('produit:read')")
     public ResponseEntity<Pagination<ProduitDto>> findPaginated(
             @RequestParam(name = "page", defaultValue = "0", required = false) int page,
             @RequestParam(name = "size", defaultValue = "10", required = false) int size
@@ -51,16 +55,20 @@ public class ProduitProvider {
         return ResponseEntity.ok(pagination);
     }
 
+
     @PostMapping
+    //@PreAuthorize("hasAuthority('produit:read')")
     public ResponseEntity<ProduitDto> save(@RequestBody ProduitDto dto) {
-        if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
-        var item = converter.toItem(dto);
-        var result = service.create(item);
-        var resultDto = converter.toDto(result);
-        return ResponseEntity.ok(resultDto);
+            if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            var item = converter.toItem(dto);
+            var result = service.create(item);
+            var resultDto = converter.toDto(result);
+            return ResponseEntity.ok(resultDto);
     }
 
+
     @PostMapping("/all")
+   // @PreAuthorize("hasRole('ADMIN') and hasAuthority('produit:create')")
     public ResponseEntity<List<ProduitDto>> save(@RequestBody List<ProduitDto> dtos) {
         if (dtos == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
         var item = converter.toItem(dtos);

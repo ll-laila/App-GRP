@@ -38,6 +38,8 @@ private AdresseDto addressFacturation;
 private AdresseDto addressExpedition;
 private List<FactureProduitDto> factureProduit;
 private EntrepriseDto entreprise;
+
+
 public Long getId() {
 return id;
 }
@@ -176,4 +178,5 @@ return entreprise;
 public void setEntreprise(EntrepriseDto value) {
 this.entreprise = value;
 }
+
 }

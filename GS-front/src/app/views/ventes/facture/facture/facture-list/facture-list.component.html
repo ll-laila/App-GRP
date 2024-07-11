@@ -4,19 +4,19 @@
             @if (!loading) {
             <button cButton color="info" (click)="paginate()">
                 @if (paginating) {
-                <c-spinner aria-hidden="true" size="sm"></c-spinner>
-                } @else {
-                <svg cIcon name="cilReload"></svg>
-                }
-               Actualiser
-            </button>
+            <c-spinner aria-hidden="true" size="sm"></c-spinner>
+            } @else {
+            <svg cIcon name="cilReload"></svg>
+            }
+            Actualiser
+         </button>
             } @else {
             <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="info" disabled style="width: 100px"></button></p>
             }
         </c-nav-item>
         <c-nav-item class="p-2">
             @if (!loading) {
-            <button cButton color="primary" routerLink="create">Ajouter une nouvelle facture</button>
+            <button cButton color="primary" (click)="create()" >Ajouter une nouvelle facture</button>
             } @else {
             <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="primary" disabled style="width: 100px"></button></p>
             }
@@ -58,76 +58,76 @@
                     </thead>
                     <tbody>
                     @for (it of pagination.data; track it; let i = $index) {
-                    <tr>
+        <tr>
 
-                            <td>{{ it.code }}</td>
+            <td>{{ it.code }}</td>
 
-                            <td>{{ it.total }}</td>
-                            <td>{{ it.taxe != null ? it.taxe.nom: "null" }}</td>
-                            <td>{{ it.client != null ? it.client.nom: "null" }}</td>
-                            <td>{{ it.devises != null ? it.devises.nouvelleDevise?.labelle: "null" }}</td>
-                            <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
-                      <td >
-                        <button cButton color="secondary">
-                          {{ it.statut}}                        </button>
-                      </td>
-                        <td style="display: flex; justify-content: end;">
-                            <button cButton color routerLink="update" (click)="item = it">
-                                <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
-                            </button>
-                            <button cButton color (click)="item = it; currentIndex = i; deleteModel=true">
-                                <svg cIcon name="cil-trash" size="xl" style="color: #ef0a34"></svg>
-                            </button>
+            <td>{{ it.total }}</td>
+            <td>{{ it.taxe != null ? it.taxe.nom: "null" }}</td>
+            <td>{{ it.client != null ? it.client.nom: "null" }}</td>
+            <td>{{ it.devises != null ? it.devises.nouvelleDevise?.labelle: "null" }}</td>
+            <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
+            <td >
+                <button cButton color="secondary">
+                    {{ it.statut}}                        </button>
+            </td>
+            <td style="display: flex; justify-content: end;">
+                <button cButton color (click)=updateFacture(it)>
+                    <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
+                </button>
+                <button cButton color (click)="item = it; currentIndex = i; deleteModel=true">
+                    <svg cIcon name="cil-trash" size="xl" style="color: #ef0a34"></svg>
+                </button>
 
-                        </td>
-                    </tr>
-                    }
-                    </tbody>
-                </table>
-                <div class="mt-2 hstack gap">
-                    <button cButton disabled color="secondary" variant="outline" style="width: fit-content">
-                        {{ pagination.data.length }} / {{ pagination.totalElements }}
-                    </button>
-                    <c-dropdown class="p-2 ms-auto" style="width: fit-content">
-                        <button cButton cDropdownToggle color="secondary" variant="outline">
-                            {{ pagination.size }}
-                        </button>
-                        <ul cDropdownMenu>
-                            @for(size of paginationSizes; track size) {
-                            <li><a cDropdownItem (click)="paginate(0, size)">{{ size }}</a></li>
-                            }
-                        </ul>
-                    </c-dropdown>
-                    @if(pagination.totalPages > 1 && pagination.data.length > 0) {
-                    <c-pagination class="p-2" align="end" style="width: fit-content">
-                        <li cPageItem [disabled]="paginating || pagination.first" (click)="(loading || pagination.first) || paginate(pagination.page - 1)">
-                            <a cPageLink>Previous</a>
+            </td>
+        </tr>
+        }
+        </tbody>
+    </table>
+    <div class="mt-2 hstack gap">
+        <button cButton disabled color="secondary" variant="outline" style="width: fit-content">
+        {{ pagination.data.length }} / {{ pagination.totalElements }}
+        </button>
+        <c-dropdown class="p-2 ms-auto" style="width: fit-content">
+            <button cButton cDropdownToggle color="secondary" variant="outline">
+        {{ pagination.size }}
+        </button>
+        <ul cDropdownMenu>
+            @for(size of paginationSizes; track size) {
+        <li><a cDropdownItem (click)="paginate(0, size)">{{ size }}</a></li>
+        }
+        </ul>
+    </c-dropdown>
+    @if(pagination.totalPages > 1 && pagination.data.length > 0) {
+        <c-pagination class="p-2" align="end" style="width: fit-content">
+            <li cPageItem [disabled]="paginating || pagination.first" (click)="(loading || pagination.first) || paginate(pagination.page - 1)">
+                <a cPageLink>Previous</a>
+            </li>
+            @for(page of generatePageNumbers; track page) {
+            <li cPageItem [disabled]="paginating" [active]="page === pagination.page + 1"  (click)="(page === pagination.page + 1) || paginate(page - 1)">
+                <a cPageLink>{{ page }}</a>
                         </li>
-                        @for(page of generatePageNumbers; track page) {
-                        <li cPageItem [disabled]="paginating" [active]="page === pagination.page + 1"  (click)="(page === pagination.page + 1) || paginate(page - 1)">
-                            <a cPageLink>{{ page }}</a>
-                        </li>
-                        }
-                        <li cPageItem [disabled]="paginating || pagination.last" (click)="(loading || pagination.last) || paginate(pagination.page + 1)">
-                            <a cPageLink>Next</a>
-                        </li>
-                    </c-pagination>
-                    }
-                </div>
-            </c-card-body>
-        </c-card>
+            }
+            <li cPageItem [disabled]="paginating || pagination.last" (click)="(loading || pagination.last) || paginate(pagination.page + 1)">
+                <a cPageLink>Next</a>
+            </li>
+        </c-pagination>
+        }
+        </div>
+    </c-card-body>
+</c-card>
         }
     </c-col>
 </c-row>
 
 <c-modal [visible]="deleteModel" alignment="center" backdrop="static">
     <c-modal-header>
-      <h5 cModalTitle style="color: black ; font-size: 20px ;font-family: 'Arial Black'">Confirmation de suppression</h5>
+        <h5 cModalTitle style="color: black ; font-size: 20px ;font-family: 'Arial Black'">Confirmation de suppression</h5>
         <button cButtonClose (click)="deleteModel = false"></button>
     </c-modal-header>
-  <c-modal-body style="color: #ef0a34 ;font-size: 18px; " >
-    Êtes-vous sûr de vouloir supprimer cette facture ?
-  </c-modal-body>
+    <c-modal-body style="color: #ef0a34 ;font-size: 18px; " >
+        Êtes-vous sûr de vouloir supprimer cette facture ?
+    </c-modal-body>
     <c-modal-footer>
         <button (click)="deleteModel = false" cButton color="secondary" variant="ghost">Fermer</button>
         <button cButton color="danger" (click)="delete()">Supprimer</button>

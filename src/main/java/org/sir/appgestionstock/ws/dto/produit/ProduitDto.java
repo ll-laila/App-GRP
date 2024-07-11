@@ -11,6 +11,8 @@ import org.sir.appgestionstock.ws.dto.inventaire.livraison.LivraisonProduitDto;
 import org.sir.appgestionstock.ws.dto.parametres.DevisesDto;
 import org.sir.appgestionstock.ws.dto.ventes.commande.CommandeProduitDto;
 import org.sir.appgestionstock.ws.dto.parametres.TaxeDto;
+import org.sir.appgestionstock.zsecurity.entity.AppUser;
+
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.List;
@@ -186,11 +188,12 @@ public void setEntreprise(EntrepriseDto value) {
 this.entreprise = value;
 }
 
-    public double getDisponible() {
+public double getDisponible() {
         return disponible;
     }
 
-    public void setDisponible(double disponible) {
+public void setDisponible(double disponible) {
         this.disponible = disponible;
     }
+
 }

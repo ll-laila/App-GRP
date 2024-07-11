@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.ws.converter.contacts.user;
 import org.sir.appgestionstock.bean.core.contacts.user.Employe;
+import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
 import org.sir.appgestionstock.ws.dto.contacts.user.EmployeDto;
 import org.sir.appgestionstock.zsecurity.ws.converter.AppUserConverter;
 import org.sir.appgestionstock.ws.converter.adresse.AdresseConverter;
@@ -16,9 +17,12 @@ public class EmployeConverter {
 @Autowired private AdresseConverter adresseConverter;
 @Autowired private EntrepriseConverter entrepriseConverter;
 @Autowired private DestinataireEmployeConverter destinataireEmployeConverter;
+@Autowired private PermissionsAccesConverter permissionsAccesConverter;
 private boolean adresse = true;
 private boolean destinataireEmploye = true;
 private boolean entreprise = true;
+private boolean permissionsAcces = true;
+
 protected void configure(boolean value) {
 this.entrepriseConverter.setEmployes(value);
 this.destinataireEmployeConverter.setEmploye(value);
@@ -54,6 +58,8 @@ item.setTelephone(dto.getTelephone());
 item.setAdresse(adresseConverter.toItem(dto.getAdresse()));
 item.setDestinataireEmploye(destinataireEmployeConverter.toItem(dto.getDestinataireEmploye()));
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
+item.setEntreprisesAdroitAcces(entrepriseConverter.toItem(dto.getEntreprisesAdroitAcces()));
+item.setPermissionsAcces(permissionsAccesConverter.toItem(dto.getPermissionsAcces()));
 return item;
 }
 protected EmployeDto convertToDto(Employe item) {
@@ -66,11 +72,17 @@ dto.setTelephone(item.getTelephone());
 dto.setAdresse(adresse? adresseConverter.toDto(item.getAdresse()): null);
 dto.setDestinataireEmploye(destinataireEmploye? destinataireEmployeConverter.toDto(item.getDestinataireEmploye()): null);
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
+dto.setEntreprisesAdroitAcces(entreprise? entrepriseConverter.toDto(item.getEntreprisesAdroitAcces()): null);
+dto.setPermissionsAcces(permissionsAcces? permissionsAccesConverter.toDto(item.getPermissionsAcces()):null);
 return dto;
 }
 public void setAdresse(boolean value) {
 this.adresse = value;
 }
+public void setPermissionsAcces(boolean value) {
+        this.permissionsAcces = value;
+    }
+
 public void setDestinataireEmploye(boolean value) {
 this.destinataireEmploye = value;
 }
@@ -95,4 +107,6 @@ this.destinataireEmployeConverter = value;
 public DestinataireEmployeConverter getDestinataireEmployeConverter() {
 return destinataireEmployeConverter;
 }
+
+
 }

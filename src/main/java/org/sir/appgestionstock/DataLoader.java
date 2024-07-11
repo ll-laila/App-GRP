@@ -1,4 +1,5 @@
 package org.sir.appgestionstock;
+import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
 import org.sir.appgestionstock.dao.adresse.AdresseDao;
 import org.sir.appgestionstock.dao.adresse.PaysDao;
 import org.sir.appgestionstock.dao.contacts.ClientDao;

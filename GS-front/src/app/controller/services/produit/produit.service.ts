@@ -1,11 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
+import {HttpClient, HttpErrorResponse} from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
-import { Produit } from 'src/app/controller/entities/produit/produit';
-import { ProduitValidator } from 'src/app/controller/validators/produit/produit.validator';
-import { NiveauStockValidator } from 'src/app/controller/validators/inventaire/niveau-stock.validator';
-import {Adresse} from "../../entities/adresse/adresse";
+import { Produit } from 'src/app/controller/entities/produit/produit'
+import { CookieService } from 'ngx-cookie-service';
+import {catchError, throwError} from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class ProduitService {
@@ -19,8 +18,11 @@ export class ProduitService {
   public keepData: boolean = false
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
+ private authorization = this.cookieService.get('Authorization');
 
-  public findAll() {
+ constructor(private httpClient: HttpClient, private cookieService: CookieService) {}
+
+    public findAll() {
     return this.http.get<Array<Produit>>(this.api);
   }
 
@@ -32,12 +34,22 @@ export class ProduitService {
     return this.http.get<Array<Produit>>(`${this.api}/optimized`);
   }
 
+
   public findPaginated(page: number = 0, size: number = 10) {
-    return this.http.get<Pagination<Produit>>(`${this.api}/paginated?page=${page}&size=${size}`);
-  }
+    /*  const headers = {
+          'Authorization': `${this.authorization}`
+      };*/
+     //return this.http.get<Pagination<Produit>>(`${this.api}/paginated?page=${page}&size=${size}`,{headers}).pipe(catchError(this.handleError));
+      return this.http.get<Pagination<Produit>>(`${this.api}/paginated?page=${page}&size=${size}`);
+ }
 
   public create() {
-    return this.http.post<Produit>(this.api, this.item);
+    /* const headers = {
+          'Authorization': `${this.authorization}`
+      };
+     return this.http.post<Produit>(this.api, this.item,{headers}).pipe(catchError(this.handleError));
+*/
+   return this.http.post<Produit>(this.api, this.item);
   }
 
   public createList() {
@@ -144,5 +156,16 @@ export class ProduitService {
     this.item = new Produit()
     return created
   }
+
+    public handleError(error: HttpErrorResponse) {
+        let errorMessage = '';
+        if (error.error instanceof ErrorEvent) {
+            errorMessage = `Error : ${error.error.message}`;
+        } else {
+            errorMessage = `Status : ${error.status} \n Message: ${error.message}`;
+
+        }
+        return throwError(errorMessage);
+    }
 }
 

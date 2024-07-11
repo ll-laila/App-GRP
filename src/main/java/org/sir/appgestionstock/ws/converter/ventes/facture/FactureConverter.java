@@ -66,7 +66,6 @@ return list;
 protected Facture convertToItem(FactureDto dto) {
 var item = new Facture();
 item.setId(dto.getId());
-item.setCode(dto.getCode());
 item.setDateExperation(dto.getDateExperation());
 item.setDateCreation(dto.getDateCreation());
 item.setDateExpedition(dto.getDateExpedition());
@@ -117,6 +116,7 @@ dto.setAddressFacturation(addressFacturation? adresseConverter.toDto(item.getAdd
 dto.setAddressExpedition(addressExpedition? adresseConverter.toDto(item.getAddressExpedition()): null);
 dto.setFactureProduit(factureProduit? factureProduitConverter.toDto(item.getFactureProduit()): null);
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
+
 return dto;
 }
 public void setPaiement(boolean value) {

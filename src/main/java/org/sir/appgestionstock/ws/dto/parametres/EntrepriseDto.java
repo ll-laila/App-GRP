@@ -42,6 +42,8 @@ private List<NouvelleDeviseDto> nouvelleDevises;
 private List<DevisDto> devisList;
 private List<EntrepriseDevisesDto> entrepriseDevises;
 private Long idAdmin;
+
+
 public Long getId() {
 return id;
 }

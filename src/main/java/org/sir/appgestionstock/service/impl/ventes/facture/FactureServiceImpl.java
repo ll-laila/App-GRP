@@ -1,8 +1,10 @@
 package org.sir.appgestionstock.service.impl.ventes.facture;
 
+import org.sir.appgestionstock.bean.core.contacts.user.Employe;
 import org.sir.appgestionstock.bean.core.ventes.facture.Facture;
 import org.sir.appgestionstock.bean.enums.StatutFactureEnum;
 import org.sir.appgestionstock.dao.ventes.facture.FactureDao;
+import org.sir.appgestionstock.service.facade.contacts.user.EmployeService;
 import org.sir.appgestionstock.service.facade.ventes.facture.FactureService;
 import org.sir.appgestionstock.bean.core.ventes.Paiement;
 import org.sir.appgestionstock.service.facade.ventes.PaiementService;
@@ -28,6 +30,9 @@ import org.sir.appgestionstock.zutils.service.ServiceHelper;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import org.sir.appgestionstock.exception.NotFoundException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -70,13 +75,8 @@ public class FactureServiceImpl implements FactureService {
     //--------------- CREATE -----------------------------------
     @Transactional(rollbackFor = Exception.class)
     public Facture create(Facture item) {
+
         if (item == null) return null;
- /* if(item.set().StatutFactureEnumgetMontantPaye() == (item.getFactureProduit().getFirst().getTotal())){
-            item.setStatut(StatutFactureEnum.PAYE);
-        } else if (item.getPaiement().getMontantPaye() < (item.getFactureProduit().getFirst().getTotal())) {
-            item.setStatut(StatutFactureEnum.PARTIEL);
-        }else if (item.getPaiement().getMontantPaye() == 0) {
-            item.setStatut(StatutFactureEnum.NONPAYE);}*/
         item.setStatut(StatutFactureEnum.NONPAYE);
 
 // check if taxe exists
@@ -485,4 +485,7 @@ public class FactureServiceImpl implements FactureService {
     @Lazy
     @Autowired
     private CommandeService commandeService;
+    @Lazy
+    @Autowired
+    private EmployeService employeService;
 }

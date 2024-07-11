@@ -1,14 +1,17 @@
 package org.sir.appgestionstock.service.impl.contacts.user;
 
 import org.sir.appgestionstock.bean.core.contacts.user.Employe;
+import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
 import org.sir.appgestionstock.bean.core.parametres.DestinataireEmploye;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.dao.contacts.user.EmployeDao;
+import org.sir.appgestionstock.dao.contacts.user.PermissionsAccesDao;
 import org.sir.appgestionstock.exception.NotFoundException;
 import org.sir.appgestionstock.service.facade.adresse.AdresseService;
 import org.sir.appgestionstock.service.facade.contacts.user.EmployeService;
+import org.sir.appgestionstock.service.facade.contacts.user.PermissionsAccesService;
 import org.sir.appgestionstock.service.facade.parametres.DestinataireEmployeService;
 import org.sir.appgestionstock.service.facade.parametres.EntrepriseService;
-import org.sir.appgestionstock.zsecurity.entity.Role;
 import org.sir.appgestionstock.zsecurity.permissions.RoleEnum;
 import org.sir.appgestionstock.zsecurity.service.facade.AppUserService;
 import org.sir.appgestionstock.zsecurity.service.facade.RoleService;
@@ -22,10 +25,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmployeServiceImpl implements EmployeService {
+
     //--------------- FIND -------------------------------------
+
+    @Override
+    public Employe findByUsername(String username){
+        return dao.findByUsername(username);
+    }
+
+
     public Employe findById(Long id) {
         return dao.findById(id).orElse(null);
     }
@@ -59,7 +71,7 @@ public class EmployeServiceImpl implements EmployeService {
     public Employe create(Employe item) {
         if (item == null) return null;
 
-// check if entreprise exists
+    // check if entreprise exists
         var entreprise = item.getEntreprise();
         if (entreprise != null) {
             if (entreprise.getId() == null) item.setEntreprise(null);
@@ -69,16 +81,48 @@ public class EmployeServiceImpl implements EmployeService {
                 item.setEntreprise(found);
             }
         }
+
+        List<Entreprise> entreprisesAcces = item.getEntreprisesAdroitAcces();
+        item.setEntreprisesAdroitAcces(entreprisesAcces);
+
         createAssociatedObject(item);
         item.setRoles(List.of(RoleEnum.EMPLOYE.getRole()));
 
         item.setPhone(item.getTelephone());
         item.setUsername(item.getEmail());
+
+        // Save PermissionsAcces, ensure it's not null
+        List<PermissionsAcces> permissionsAccesList = item.getPermissionsAcces();
+        if (permissionsAccesList != null) {
+            permissionsAccesList = permissionsAccesDao.saveAll(permissionsAccesList);
+            item.setPermissionsAcces(permissionsAccesList);
+        }
+
         appUserService.save(item);
         Employe saved = dao.save(item);
         createAssociatedList(saved);
+
+      /*  if (entreprisesAcces != null) {
+            for (Entreprise e : entreprisesAcces) {
+                if (e.getEmployesAdroitAcces() == null) {
+                    e.setEmployesAdroitAcces(new ArrayList<>());
+                }
+                e.getEmployesAdroitAcces().add(saved);
+                entrepriseService.update(e);
+            }
+        }
+
+
+        if (  item.getEntreprise().getEmployesAdroitAcces() == null) {
+               item.getEntreprise().setEmployesAdroitAcces(new ArrayList<>());
+        }
+        item.getEntreprise().getEmployesAdroitAcces().add(saved);
+        entrepriseService.update(item.getEntreprise());
+        */
         return saved;
     }
+
+
 
     @Transactional(rollbackFor = Exception.class)
     public List<Employe> create(List<Employe> items) {
@@ -88,28 +132,85 @@ public class EmployeServiceImpl implements EmployeService {
         return result;
     }
 
-    //--------------- UPDATE -----------------------------------
+   //--------------- UPDATE -----------------------------------
+
     @Transactional(rollbackFor = Exception.class)
     public Employe update(Employe item) {
         if (item == null || item.getId() == null) return null;
+
+        // Récupérer l'ancien employé
         var oldItem = findById(item.getId());
         if (oldItem == null) throw new NotFoundException("Unknown Employe To Be Updated!");
-// update adresse
+
+        // Mise à jour de l'adresse
         var adresse = item.getAdresse();
         var oldAdresse = oldItem.getAdresse();
         if (oldAdresse == null) {
             if (adresse != null) adresseService.create(adresse);
         } else {
-// if (adresse == null) adresseService.delete(oldAdresse);
-            if (adresse != null) {
+            if (adresse == null) adresseService.delete(oldAdresse);
+            else {
                 adresse.setId(oldAdresse.getId());
                 adresseService.update(adresse);
             }
         }
+
+        // Mise à jour de l'entreprise
+        var entreprise = item.getEntreprise();
+        if (entreprise != null) {
+            if (entreprise.getId() == null) item.setEntreprise(null);
+            else {
+                var found = entrepriseService.findById(entreprise.getId());
+                if (found == null) throw new NotFoundException("Unknown Given Entreprise");
+                item.setEntreprise(found);
+            }
+        }
+
+        // Mise à jour des permissionsAcces
+        List<PermissionsAcces> permissionsAccesList = item.getPermissionsAcces();
+        if (permissionsAccesList != null) {
+            permissionsAccesList = permissionsAccesDao.saveAll(permissionsAccesList);
+            item.setPermissionsAcces(permissionsAccesList);
+        }
+
+        // Mise à jour de entreprisesAcces
+//        List<Entreprise> entreprisesAcces = item.getEntreprisesAdroitAcces();
+//        if (entreprisesAcces != null) {
+//            item.setEntreprisesAdroitAcces(entreprisesAcces);
+//            for (Entreprise e : entreprisesAcces) {
+//                e.getEmployesAdroitAcces().add(item);
+//            }
+//        }
+
+        // Enregistrer les modifications de l'employé
         Employe saved = dao.save(item);
         updateAssociatedList(saved);
+
         return saved;
     }
+
+
+ //   @Transactional(rollbackFor = Exception.class)
+//    public Employe update(Employe item) {
+//        if (item == null || item.getId() == null) return null;
+//        var oldItem = findById(item.getId());
+//        if (oldItem == null) throw new NotFoundException("Unknown Employe To Be Updated!");
+//// update adresse
+//        var adresse = item.getAdresse();
+//        var oldAdresse = oldItem.getAdresse();
+//        if (oldAdresse == null) {
+//            if (adresse != null) adresseService.create(adresse);
+//        } else {
+//// if (adresse == null) adresseService.delete(oldAdresse);
+//            if (adresse != null) {
+//                adresse.setId(oldAdresse.getId());
+//                adresseService.update(adresse);
+//            }
+//        }
+//        Employe saved = dao.save(item);
+//        updateAssociatedList(saved);
+//        return saved;
+//    }
 
     @Transactional(rollbackFor = Exception.class)
     public List<Employe> update(List<Employe> items) {
@@ -119,12 +220,37 @@ public class EmployeServiceImpl implements EmployeService {
         return result;
     }
 
-    //--------------- DELETE -----------------------------------
+
     @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long id) {
-        Employe item = findById(id);
-        if (item != null) delete(item);
+        if (id == null) return;
+
+        // Find the employee by id
+        Optional<Employe> optionalEmploye = dao.findById(id);
+        if (!optionalEmploye.isPresent()) throw new NotFoundException("Employee not found");
+
+        Employe employe = optionalEmploye.get();
+
+        // Remove the employee from entreprise's droit acces list
+        List<Entreprise> entreprisesAcces = employe.getEntreprisesAdroitAcces();
+        if (entreprisesAcces != null) {
+            for (Entreprise entreprise : entreprisesAcces) {
+                entreprise.getEmployesAdroitAcces().remove(employe);
+            }
+        }
+
+        // Remove associated permissions
+        List<PermissionsAcces> permissionsAccesList = employe.getPermissionsAcces();
+        if (permissionsAccesList != null) {
+            permissionsAccesDao.deleteAll(permissionsAccesList);
+            employe.setPermissionsAcces(null);
+        }
+
+        // Delete the employee
+        appUserService.delete(employe);
+        dao.delete(employe);
     }
+
 
     @Transactional(rollbackFor = Exception.class)
     public void delete(Employe item) {
@@ -231,4 +357,13 @@ public class EmployeServiceImpl implements EmployeService {
     @Lazy
     @Autowired
     private RoleService roleService;
+
+    @Lazy
+    @Autowired
+    private PermissionsAccesDao permissionsAccesDao;
+
+    @Lazy
+    @Autowired
+    private PermissionsAccesService permissionsAccesService;
+
 }

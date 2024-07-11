@@ -23,4 +23,5 @@ public enum ProduitPermission implements PermissionResource {
     public String authority() {
         return value;
     }
+
 }

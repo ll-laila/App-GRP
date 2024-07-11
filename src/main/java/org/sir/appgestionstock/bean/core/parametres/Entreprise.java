@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.bean.core.parametres;
 import org.sir.appgestionstock.bean.core.adresse.Adresse;
+import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
 import org.sir.appgestionstock.bean.core.ventes.Paiement;
 import org.sir.appgestionstock.bean.core.inventaire.NiveauStock;
 import org.sir.appgestionstock.bean.core.ventes.retourproduit.RetourProduit;
@@ -31,8 +32,13 @@ private Long idAdmin;
 
 @OneToOne()
 private Adresse adresse;
-@OneToMany(mappedBy = "entreprise")
-private List<Employe> employes;
+
+    @OneToMany(mappedBy = "entreprise", fetch = FetchType.LAZY)
+    private List<Employe> employes;
+
+    @ManyToMany
+    private List<Employe> employesAdroitAcces;
+
 @OneToMany(mappedBy = "entreprise")
 private List<Produit> produits;
 @OneToMany(mappedBy = "entreprise")
@@ -61,7 +67,10 @@ private List<NouvelleDevise> nouvelleDevises;
 private List<Devis> devisList;
 @OneToMany(mappedBy = "entreprise")
 private List<EntrepriseDevises> entrepriseDevises;
+
+
 public Entreprise() {
+    this.employesAdroitAcces = new ArrayList<>();
 }
 public Long getId() {
 return id;
@@ -111,6 +120,12 @@ return employes;
 public void setEmployes(List<Employe> value) {
 this.employes = value;
 }
+public List<Employe> getEmployesAdroitAcces() {
+        return employesAdroitAcces;
+    }
+public void setEmployesAdroitAcces(List<Employe> value) {
+        this.employesAdroitAcces = value;
+    }
 public List<Produit> getProduits() {
 return produits;
 }

@@ -1,5 +1,7 @@
 package org.sir.appgestionstock.ws.dto.contacts.user;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.zsecurity.ws.dto.AppUserDto;
 import org.sir.appgestionstock.ws.dto.adresse.AdresseDto;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
@@ -17,6 +19,10 @@ private String telephone;
 private AdresseDto adresse;
 private List<DestinataireEmployeDto> destinataireEmploye;
 private EntrepriseDto entreprise;
+private List<EntrepriseDto>  entreprisesAdroitAcces;
+private List<PermissionsAccesDto> permissionsAcces;
+
+
 public Long getId() {
 return id;
 }
@@ -65,4 +71,19 @@ return entreprise;
 public void setEntreprise(EntrepriseDto value) {
 this.entreprise = value;
 }
+public  List<EntrepriseDto>  getEntreprisesAdroitAcces() {
+        return entreprisesAdroitAcces;
+    }
+public void setEntreprisesAdroitAcces( List<EntrepriseDto>  value) {
+        this.entreprisesAdroitAcces = value;
+    }
+
+public  List<PermissionsAccesDto>  getPermissionsAcces() {
+        return permissionsAcces;
+    }
+public void setPermissionsAcces( List<PermissionsAccesDto>  value) {
+        this.permissionsAcces = value;
+    }
+
+
 }

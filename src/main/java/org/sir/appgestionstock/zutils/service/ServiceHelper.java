@@ -1,5 +1,7 @@
 package org.sir.appgestionstock.zutils.service;
 
+import org.sir.appgestionstock.bean.core.contacts.user.Employe;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.zutils.entity.BaseEntity;
 import org.sir.appgestionstock.zutils.util.ListUtil;
 
@@ -90,4 +92,6 @@ public class ServiceHelper {
         setter.accept(found, null);
         updater.accept(found);
     }
+
+
 }

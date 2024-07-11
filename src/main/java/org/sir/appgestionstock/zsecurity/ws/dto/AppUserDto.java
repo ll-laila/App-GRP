@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppUserDto extends AuditBaseDto {
+    protected Long id;
     protected boolean credentialsNonExpired = true;
     protected boolean enabled = true;
     protected String email;
@@ -17,7 +18,11 @@ public class AppUserDto extends AuditBaseDto {
     protected String username;
     protected String password;
     protected boolean passwordChanged = false;
-    protected List<RoleDto> roles = new ArrayList<>();
+    protected String confirmPassword;
+
+
+
+     protected List<RoleDto> roles = new ArrayList<>();
 
     public AppUserDto() {
     }
@@ -100,5 +105,14 @@ public class AppUserDto extends AuditBaseDto {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+
+    public String getConfirmPassword() {
+        return this.confirmPassword;
+    }
+
+    public String setConfirmPassword() {
+        return this.confirmPassword;
     }
 }

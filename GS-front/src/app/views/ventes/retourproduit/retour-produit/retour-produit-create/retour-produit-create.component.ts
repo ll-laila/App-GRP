@@ -146,7 +146,7 @@ export class RetourProduitCreateComponent {
   }
   // LOAD DATA
   loadClientList() {
-    this.clientService.findAllOptimized().subscribe({
+    this.clientService.findAll().subscribe({
       next: data => this.clientList = data,
       error: err => console.log(err)
     })

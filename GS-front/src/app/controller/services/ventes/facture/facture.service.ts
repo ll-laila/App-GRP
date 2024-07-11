@@ -39,9 +39,11 @@ export class FactureService {
     return this.http.get<Pagination<Facture>>(`${this.api}/paginated?page=${page}&size=${size}`);
   }
 
+
   public create() {
     return this.http.post<Facture>(this.api, this.item);
   }
+
   public facturePaiement(  idF : number,   idP: number){
   return this.http.put<Facture>(this.api + "/idF/" + idF + "/idP/" + idP,null);
 }

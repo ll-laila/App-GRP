@@ -20,7 +20,7 @@ export class AppUserService {
   }
 
   public findByUsernameWithRoles(username: string) {
-    return this.http.get< AppUser>(`${this.api}/username/${username}`);
+    return this.http.get<AppUser>(`${this.api}/username/${username}`);
   }
 
   public findByUsername(username: string){

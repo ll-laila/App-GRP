@@ -1,4 +1,5 @@
 package org.sir.appgestionstock.bean.core.contacts.user;
+import org.sir.appgestionstock.ws.dto.contacts.user.PermissionsAccesDto;
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
 import org.sir.appgestionstock.bean.core.adresse.Adresse;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
@@ -18,11 +19,33 @@ private String telephone;
 private Adresse adresse;
 @OneToMany(mappedBy = "employe")
 private List<DestinataireEmploye> destinataireEmploye;
-@ManyToOne(fetch = FetchType.LAZY)
-private Entreprise entreprise;
-public Employe() {
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Entreprise entreprise;
+
+    @ManyToMany
+    @JoinTable(
+            name = "entreprise_employe_acces",
+            joinColumns = @JoinColumn(name = "employe_id"),
+            inverseJoinColumns = @JoinColumn(name = "entreprise_id")
+    )
+    private List<Entreprise> entreprisesAdroitAcces;
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "employe_permissions_acces",
+            joinColumns = @JoinColumn(name = "employe_id"),
+            inverseJoinColumns = @JoinColumn(name = "permissionsAcces_id")
+    )
+    private List<PermissionsAcces> permissionsAcces;
+
+
+    public Employe() {
 super();
 }
+
+
 public Employe(Long id, String label) {
 // constructor to get optimized fields
 this.id = id;
@@ -64,12 +87,28 @@ return destinataireEmploye;
 public void setDestinataireEmploye(List<DestinataireEmploye> value) {
 this.destinataireEmploye = value;
 }
+public  List<Entreprise>  getEntreprisesAdroitAcces() {
+return entreprisesAdroitAcces;
+}
+public void setEntreprisesAdroitAcces( List<Entreprise>  value) {
+this.entreprisesAdroitAcces = value;
+}
+
+public  List<PermissionsAcces>  getPermissionsAcces() {
+    return permissionsAcces;
+}
+public void setPermissionsAcces(List<PermissionsAcces>  value) {
+    this.permissionsAcces = value;
+}
+
+
 public Entreprise getEntreprise() {
-return entreprise;
-}
-public void setEntreprise(Entreprise value) {
-this.entreprise = value;
-}
+        return entreprise;
+    }
+public void setEntreprise(Entreprise  value) {
+        this.entreprise = value;
+    }
+
 @Override
 public boolean equals(Object object) {
 if (object instanceof Employe employe) {
@@ -79,4 +118,7 @@ return false;
 }
 @Override
 public int hashCode() {return (id == null) ? 0 : id.hashCode();}
+
+
+
 }

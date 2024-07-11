@@ -4,7 +4,7 @@ import {
   FormFloatingDirective, FormLabelDirective, RowComponent,
   CardComponent, CardBodyComponent, CardHeaderComponent, SpinnerComponent,
   InputGroupComponent, ButtonDirective, NavComponent, NavItemComponent,
-  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent
+  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
 } from "@coreui/angular";
 import {FormBuilder, FormGroup, FormsModule} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
@@ -16,15 +16,15 @@ import {EmployeService} from "src/app/controller/services/contacts/user/employe.
 import {Employe} from "src/app/controller/entities/contacts/user/employe";
 import {EmployeValidator} from "src/app/controller/validators/contacts/user/employe.validator";
 import {ValidatorResult} from "@bshg/validation";
-import {AdresseService} from "src/app/controller/services/adresse/adresse.service";
 import {Adresse} from "src/app/controller/entities/adresse/adresse";
-import {DestinataireEmployeService} from "src/app/controller/services/parametres/destinataire-employe.service";
-import {DestinataireEmploye} from "src/app/controller/entities/parametres/destinataire-employe";
 import {EntrepriseService} from "src/app/controller/services/parametres/entreprise.service";
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {AdresseCreateComponent} from "src/app/views/adresse/adresse/adresse-create/adresse-create.component";
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {RolesListComponent} from "../roles-list/roles-list.component";
+import * as bootstrap from 'bootstrap';
+import {PermissionsAcces} from "../../../../../controller/entities/contacts/user/PermissionsAcces";
 
 @Component({
   selector: 'app-employe-create',
@@ -35,7 +35,7 @@ import {ToasterService} from "../../../../../toaster/controller/toaster.service"
     CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
     RouterLink, NavComponent, NavItemComponent, SpinnerComponent, IconDirective,
     FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent,
-    AdresseCreateComponent,
+    AdresseCreateComponent, TableDirective, RolesListComponent,
   ],
   templateUrl: './employe-create.component.html',
   styleUrl: './employe-create.component.scss'
@@ -43,6 +43,8 @@ import {ToasterService} from "../../../../../toaster/controller/toaster.service"
 export class EmployeCreateComponent {
   protected sending = false
   protected standAlon = true
+
+  @Input() permissions: any = [];
 
   @Input("getter") set setItemGetter(getter: () => Employe) {
     this.itemGetter = getter
@@ -59,12 +61,15 @@ export class EmployeCreateComponent {
   private service = inject(EmployeService)
   private entrepriseService = inject(EntrepriseService)
   private formBuilder: FormBuilder= inject(FormBuilder)
-
   protected validator = EmployeValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
-
-  protected entrepriseList!: Entreprise[]
+  protected entrepriseList!: Entreprise[];
+  protected selectedEntreprise!: Entreprise;
   private toasterService = inject(ToasterService)
+  currentCodeNumber: number = 1;
+  clientForm !: FormGroup;
+  protected Entrep!: Entreprise;
+
 
   ngOnInit() {
     if(this.service.keepData) {
@@ -80,7 +85,6 @@ export class EmployeCreateComponent {
 
     this.loadEntrepriseList()
 
-
     this.clientForm = this.formBuilder.group({
       code: [{value: this.generateCode(), disabled: true}]
 
@@ -90,12 +94,13 @@ export class EmployeCreateComponent {
       error: err => console.log(err)
     })
   }
-  currentCodeNumber: number = 1;
 
-  clientForm !: FormGroup;
+
+
   generateCode(): string {
     return 'I' + this.currentCodeNumber.toString().padStart(7, '0');
   }
+
 
   // LOAD DATA
   loadEntrepriseList() {
@@ -105,9 +110,12 @@ export class EmployeCreateComponent {
     })
   }
 
+
+
   // METHODS
   create() {
-    console.log(this.item)
+    console.log(this.item);
+   // this.item.entreprisesAdroitAcces = [...this.item.entreprisesAdroitAcces,  this.Entrep];
     if (this.toasterService.validateThenToast(this.validator)) {
       return;
     }
@@ -133,12 +141,76 @@ export class EmployeCreateComponent {
     })
   }
 
+  public getEntrepriseById(id: number): void {
+    this.entrepriseService.findById(id).subscribe(
+        (data: Entreprise) => {
+          this.Entrep = data;
+        }
+    );
+  }
+
+
+  public addToPermessions(entreprise: Entreprise): void {
+    if (this.item.entreprisesAdroitAcces == null) {
+      this.item.entreprisesAdroitAcces = [];
+    }
+    this.item.entreprisesAdroitAcces = [...this.item.entreprisesAdroitAcces, entreprise];
+    console.log(this.item.entreprisesAdroitAcces);
+  }
+
+  removeFromPermissions(entreprise: Entreprise) {
+    this.item.entreprisesAdroitAcces = this.item.entreprisesAdroitAcces?.filter(e => e !== entreprise);
+  }
+
+
+
+  openRolesModal(item: any) {
+    this.selectedEntreprise = item;
+    const modalElement = document.getElementById('confirmationModal');
+    if (modalElement) {
+      const modal = new bootstrap.Modal(modalElement);
+      modal.show();
+    }
+  }
+
+
+  handleRoles(confirmedPermissions: any) {
+    this.permissions = confirmedPermissions;
+    this.item.permissionsAcces = this.permissions.map((permission: { nom: string | undefined; etat: boolean; entrepriseId: number; }) => {
+      const access = new PermissionsAcces();
+      access.nom = permission.nom;
+      access.etat = permission.etat;
+      access.entrepriseId = this.selectedEntreprise.id;
+      return access;
+    });
+  }
+
+
   reset(force = true) {
     if (force || this.item == null) this.item = new Employe()
     this.validator.reset()
   }
 
   // GETTERS AND SETTERS
+
+  public get entreprisesAdroitAcces(): Entreprise[] {
+    if (this.item.entreprisesAdroitAcces == null)
+      this.item.entreprisesAdroitAcces = []
+    return this.item.entreprisesAdroitAcces;
+  }
+  public set entreprisesAdroitAcces(value: Entreprise[]) {
+    this.item.entreprisesAdroitAcces = value;
+  }
+
+  public get permissionsAcces(): PermissionsAcces[] {
+    if (this.item.permissionsAcces == null)
+      this.item.permissionsAcces = []
+    return this.item.permissionsAcces;
+  }
+  public set permissionsAcces(value: PermissionsAcces[]) {
+    this.item.permissionsAcces = value;
+  }
+
   public get items() {
     return this.service.items;
   }
@@ -184,9 +256,7 @@ export class EmployeCreateComponent {
     this.item.entreprise = value;
   }
 
-
-
-  public get returnUrl() {
+ public get returnUrl() {
     return this.service.returnUrl;
   }
 
@@ -205,5 +275,7 @@ export class EmployeCreateComponent {
   retour(){
     this.router.navigate(['/contacts/user/employe/list']).then()
   }
-  ////
+
+
+
 }

@@ -96,6 +96,7 @@ http.authorizeHttpRequests(auth -> auth
 .requestMatchers("/api/admin/**").hasAnyRole(RoleEnum.ADMIN.name(),RoleEnum.EMPLOYE.name())
 );
 }
+
 private static void employeAuthorizeHttpRequests() throws Exception {
 http.authorizeHttpRequests(auth -> auth
 .requestMatchers(GET, "/api/employe/**").hasAnyAuthority(EmployePermission.READ.authority())
@@ -120,7 +121,8 @@ http.authorizeHttpRequests(auth -> auth
 .requestMatchers(POST, "/api/produit/**").hasAnyAuthority(ProduitPermission.CREATE.authority())
 .requestMatchers(PUT, "/api/produit/**").hasAnyAuthority(ProduitPermission.EDIT.authority())
 .requestMatchers(DELETE, "/api/produit/**").hasAnyAuthority(ProduitPermission.DELETE.authority())
-.requestMatchers("/api/produit/**").hasAnyRole(RoleEnum.ADMIN.name(),RoleEnum.EMPLOYE.name())
+//.requestMatchers("/api/produit/**").hasAnyRole(RoleEnum.ADMIN.name(),RoleEnum.EMPLOYE.name())
+ .requestMatchers("/api/produit/**").hasAnyRole(RoleEnum.ADMIN.name())
 );
 }
 private static void commandeExpeditionAuthorizeHttpRequests() throws Exception {

@@ -1,11 +1,15 @@
 package org.sir.appgestionstock.service.facade.contacts.user;
 import org.sir.appgestionstock.bean.core.contacts.user.Employe;
 import org.sir.appgestionstock.bean.core.adresse.Adresse;
+import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.core.parametres.DestinataireEmploye;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
+import org.springframework.data.repository.query.Param;
+
 import java.util.List;
 public interface EmployeService {
+Employe findByUsername(String username);
 Employe findById(Long id);
 List<Employe> findAllOptimized();
 List<Employe> findAll();

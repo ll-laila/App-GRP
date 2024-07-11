@@ -10,6 +10,9 @@ import { Entreprise } from 'src/app/controller/entities/parametres/entreprise';
 import { TypeRabaisEnum } from 'src/app/controller/enums/type-rabais-enum'
 import { StatutFactureEnum } from 'src/app/controller/enums/statut-facture-enum'
 import {Commande} from "../commande/commande";
+import {AppUser} from "../../../auth/entities/app-user";
+
+
 export class Facture {
 id!: number;
 code?: string ;

@@ -1,5 +1,4 @@
 package org.sir.appgestionstock.ws.providers.contacts.user;
-import org.sir.appgestionstock.bean.core.contacts.user.Employe;
 import org.sir.appgestionstock.service.facade.contacts.user.EmployeService;
 import org.sir.appgestionstock.ws.converter.contacts.user.EmployeConverter;
 import org.sir.appgestionstock.ws.dto.contacts.user.EmployeDto;
@@ -16,33 +15,41 @@ import java.util.List;
 public class EmployeProvider {
 @Autowired private EmployeService service;
 @Autowired private EmployeConverter converter;
-@GetMapping("/id/{id}")
-public ResponseEntity<EmployeDto> findById(@PathVariable Long id) {
-var result = service.findById(id);
-var resultDto = converter.toDto(result);
-return ResponseEntity.ok(resultDto);
-}
-@GetMapping
-public ResponseEntity<List<EmployeDto>> findAll() {
-var result = service.findAll();
-var resultDto = converter.toDto(result);
-return ResponseEntity.ok(resultDto);
-}
-@GetMapping("/optimized")
-public ResponseEntity<List<EmployeDto>> findAllOptimized() {
-var result = service.findAllOptimized();
-var resultDto = converter.toDto(result);
-return ResponseEntity.ok(resultDto);
-}
-@GetMapping("/paginated")
-public ResponseEntity<Pagination<EmployeDto>> findPaginated(
-@RequestParam(name = "page", defaultValue = "0", required = false) int page,
-@RequestParam(name = "size", defaultValue = "10", required = false) int size
-) {
-var result = service.findPaginated(page, size);
-var pagination = result.convert(converter::toDto);
-return ResponseEntity.ok(pagination);
-}
+
+    @GetMapping("/{username}")
+    public ResponseEntity<EmployeDto> findByUsername(@PathVariable String username) {
+        var result = service.findByUsername(username);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
+    @GetMapping("/id/{id}")
+    public ResponseEntity<EmployeDto> findById(@PathVariable Long id) {
+    var result = service.findById(id);
+    var resultDto = converter.toDto(result);
+    return ResponseEntity.ok(resultDto);
+    }
+    @GetMapping
+    public ResponseEntity<List<EmployeDto>> findAll() {
+    var result = service.findAll();
+    var resultDto = converter.toDto(result);
+    return ResponseEntity.ok(resultDto);
+    }
+    @GetMapping("/optimized")
+    public ResponseEntity<List<EmployeDto>> findAllOptimized() {
+    var result = service.findAllOptimized();
+    var resultDto = converter.toDto(result);
+    return ResponseEntity.ok(resultDto);
+    }
+    @GetMapping("/paginated")
+    public ResponseEntity<Pagination<EmployeDto>> findPaginated(
+    @RequestParam(name = "page", defaultValue = "0", required = false) int page,
+    @RequestParam(name = "size", defaultValue = "10", required = false) int size
+    ) {
+    var result = service.findPaginated(page, size);
+    var pagination = result.convert(converter::toDto);
+    return ResponseEntity.ok(pagination);
+    }
 @PostMapping
 public ResponseEntity<EmployeDto> save(@RequestBody EmployeDto dto) {
 if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
@@ -126,4 +133,6 @@ return ResponseEntity.ok(resultDto);
         var generated = CodeGenerator.generate("E", service.findMaxId());
         return ResponseEntity.ok(generated);
     }
+
+
 }

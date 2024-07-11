@@ -113,10 +113,10 @@ export class FactureCreateComponent implements OnChanges {
   private commandeProduitService= inject(CommandeProduitService)
   private formBuilder: FormBuilder = inject(FormBuilder)
   protected validator = FactureValidator.init(() => this.item)
-   // .setPaiement(PaiementValidator.init(() => this.paiement))
-   // .setRetourProduit(RetourProduitValidator.init(() => this.retourProduit))
-    //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
-    //.setAddressExpedition(AdresseValidator.init(() => this.addressExpedition))
+  // .setPaiement(PaiementValidator.init(() => this.paiement))
+  // .setRetourProduit(RetourProduitValidator.init(() => this.retourProduit))
+  //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
+  //.setAddressExpedition(AdresseValidator.init(() => this.addressExpedition))
 
   protected taxeList!: Taxe[]
   protected clientList!: Client[]
@@ -136,11 +136,11 @@ export class FactureCreateComponent implements OnChanges {
         this.item.taxe = taxeCreated.item
         this.validator.taxe.validate()
       }
-     /* let taxeExpeditionCreated = this.taxeService.createdItemAfterReturn;
-      if (taxeExpeditionCreated.created) {
-        this.item.taxeExpedition = taxeExpeditionCreated.item
-        this.validator.taxeExpedition.validate()
-      }*/
+      /* let taxeExpeditionCreated = this.taxeService.createdItemAfterReturn;
+       if (taxeExpeditionCreated.created) {
+         this.item.taxeExpedition = taxeExpeditionCreated.item
+         this.validator.taxeExpedition.validate()
+       }*/
       let clientCreated = this.clientService.createdItemAfterReturn;
       if (clientCreated.created) {
         this.item.client = clientCreated.item
@@ -195,13 +195,13 @@ export class FactureCreateComponent implements OnChanges {
 
   loadClientList() {
     this.clientService.findAll()
-      .subscribe({
-        next: data => {
-          this.clientList = data
-          this.loadProduitList()
-        },
-        error: err => console.log(err)
-      })
+        .subscribe({
+          next: data => {
+            this.clientList = data
+            this.loadProduitList()
+          },
+          error: err => console.log(err)
+        })
   }
 
   loadDevisesList() {
@@ -258,13 +258,13 @@ export class FactureCreateComponent implements OnChanges {
         this.validator.import(err.error as ValidatorResult<any>[])
       }
     })
-   // this.router.navigate(["/ventes/facture/autre"]).then()
+    // this.router.navigate(["/ventes/facture/autre"]).then()
   }
   reset(force = true) {
     if (force || this.item == null) this.item = new Facture()
     this.validator.reset()
   }
- // GETTERS AND SETTERS
+  // GETTERS AND SETTERS
   public get items() {
     return this.service.items;
   }
@@ -623,7 +623,7 @@ export class FactureCreateComponent implements OnChanges {
     let number = factureProduitList.reduce((sommeQuantite, factureProduit) => {
       return sommeQuantite + (factureProduit.quantite || 0);
     }, 0);
-      this.item.totalUnites = number
+    this.item.totalUnites = number
     return number;
   }
 

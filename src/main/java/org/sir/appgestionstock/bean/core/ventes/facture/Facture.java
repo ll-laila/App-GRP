@@ -53,6 +53,7 @@ private Adresse addressExpedition;
 private List<FactureProduit> factureProduit;
 @ManyToOne(fetch = FetchType.LAZY)
 private Entreprise entreprise;
+
 public Facture() {
 }
 public Facture(Long id, String label) {
@@ -199,6 +200,9 @@ return entreprise;
 public void setEntreprise(Entreprise value) {
 this.entreprise = value;
 }
+
+
+
 @Override
 public boolean equals(Object object) {
 if (object instanceof Facture facture) {
