@@ -28,6 +28,9 @@ export class FacturePdfComponent {
     this.factureService.findById(this.item.id).subscribe({
         next: data => {
             this.factureService.item = data
+          console.log( this.item.id );
+
+          console.log( this.factureService.item );
         },
         error: err => console.log(err)
     })

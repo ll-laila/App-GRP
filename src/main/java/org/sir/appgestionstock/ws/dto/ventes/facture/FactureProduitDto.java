@@ -13,6 +13,7 @@ private double disque;
 private double disponible;
 private ProduitDto produit;
 private FactureDto facture;
+ private double prix;
 public Long getId() {
 return id;
 }
@@ -56,5 +57,12 @@ this.facture = value;
 
     public void setDisponible(double disponible) {
         this.disponible = disponible;
+    }
+
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double prix) {
+        this.prix = prix;
     }
 }

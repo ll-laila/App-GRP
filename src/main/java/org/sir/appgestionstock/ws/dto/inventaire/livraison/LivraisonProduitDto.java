@@ -12,6 +12,8 @@ private int quantite;
 private double disque;
 private ProduitDto produit;
 private LivraisonDto livraison;
+private double prix;
+
 public Long getId() {
 return id;
 }
@@ -48,4 +50,12 @@ return livraison;
 public void setLivraison(LivraisonDto value) {
 this.livraison = value;
 }
+
+
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double value) {
+        this.prix = value;
+    }
 }

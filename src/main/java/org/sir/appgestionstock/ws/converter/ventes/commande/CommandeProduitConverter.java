@@ -46,6 +46,8 @@ item.setQuantite(dto.getQuantite());
 item.setDisque(dto.getDisque());
 item.setProduit(produitConverter.toItem(dto.getProduit()));
 item.setCommande(commandeConverter.toItem(dto.getCommande()));
+item.setPrix(dto.getPrix());
+item.setQuantite(dto.getQuantite());
 return item;
 }
 protected CommandeProduitDto convertToDto(CommandeProduit item) {
@@ -56,6 +58,8 @@ dto.setQuantite(item.getQuantite());
 dto.setDisque(item.getDisque());
 dto.setProduit(produit? produitConverter.toDto(item.getProduit()): null);
 dto.setCommande(commande? commandeConverter.toDto(item.getCommande()): null);
+dto.setPrix(item.getPrix());
+dto.setQuantite(item.getQuantite());
 return dto;
 }
 public void setProduit(boolean value) {

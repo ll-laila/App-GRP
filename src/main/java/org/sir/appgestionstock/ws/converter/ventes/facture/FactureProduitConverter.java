@@ -47,6 +47,7 @@ item.setDisque(dto.getDisque());
 item.setDisponible(dto.getDisponible());
 item.setProduit(produitConverter.toItem(dto.getProduit()));
 item.setFacture(factureConverter.toItem(dto.getFacture()));
+item.setPrix(dto.getPrix());
 return item;
 }
 protected FactureProduitDto convertToDto(FactureProduit item) {
@@ -58,6 +59,7 @@ dto.setDisque(item.getDisque());
 dto.setDisponible(item.getDisponible());
 dto.setProduit(produit? produitConverter.toDto(item.getProduit()): null);
 dto.setFacture(facture? factureConverter.toDto(item.getFacture()): null);
+dto.setPrix(item.getPrix());
 return dto;
 }
 public void setProduit(boolean value) {

@@ -19,6 +19,9 @@ private double disque;
 private Produit produit;
 @ManyToOne(fetch = FetchType.LAZY)
 private Livraison livraison;
+private double prix;
+
+
 public LivraisonProduit() {
 }
 public Long getId() {
@@ -57,6 +60,14 @@ return livraison;
 public void setLivraison(Livraison value) {
 this.livraison = value;
 }
+
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double value) {
+        this.prix = value;
+    }
+
 @Override
 public boolean equals(Object object) {
 if (object instanceof LivraisonProduit livraisonProduit) {

@@ -21,6 +21,8 @@ private double disque;
 private Produit produit;
 @ManyToOne(fetch = FetchType.LAZY)
 private Facture facture;
+ private double prix;
+
 public FactureProduit() {
 }
 public Long getId() {
@@ -59,6 +61,12 @@ return facture;
 public void setFacture(Facture value) {
 this.facture = value;
 }
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
 
     public double getDisponible() {
         return disponible;

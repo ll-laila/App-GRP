@@ -26,6 +26,7 @@ private commandeService = inject(CommandeService)
     this.commandeService.findById(this.item.id).subscribe({
       next: data => {
         this.commandeService.item = data
+        console.log(this.commandeService.item);
       },
       error: err => console.log(err)
     })

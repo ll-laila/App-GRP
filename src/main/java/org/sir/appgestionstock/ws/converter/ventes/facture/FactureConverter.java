@@ -66,6 +66,7 @@ return list;
 protected Facture convertToItem(FactureDto dto) {
 var item = new Facture();
 item.setId(dto.getId());
+item.setCode(dto.getCode());
 item.setDateExperation(dto.getDateExperation());
 item.setDateCreation(dto.getDateCreation());
 item.setDateExpedition(dto.getDateExpedition());

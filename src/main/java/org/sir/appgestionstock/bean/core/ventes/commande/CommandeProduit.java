@@ -20,6 +20,10 @@ private Produit produit;
 @ManyToOne(fetch = FetchType.LAZY)
 private Commande commande;
 
+    private double prix;
+    private double disponible;
+
+
 public CommandeProduit() {
 }
 public Long getId() {
@@ -59,6 +63,20 @@ return commande;
 public void setCommande(Commande value) {
 this.commande = value;
 }
+
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public double getDisponible() {
+        return disponible;
+    }
+    public void setDisponible(double disponible) {
+        this.disponible = disponible;
+    }
 @Override
 public boolean equals(Object object) {
 if (object instanceof CommandeProduit commandeProduit) {

@@ -46,6 +46,7 @@ item.setQuantite(dto.getQuantite());
 item.setDisque(dto.getDisque());
 item.setProduit(produitConverter.toItem(dto.getProduit()));
 item.setLivraison(livraisonConverter.toItem(dto.getLivraison()));
+item.setPrix(dto.getPrix());
 return item;
 }
 protected LivraisonProduitDto convertToDto(LivraisonProduit item) {
@@ -56,6 +57,7 @@ dto.setQuantite(item.getQuantite());
 dto.setDisque(item.getDisque());
 dto.setProduit(produit? produitConverter.toDto(item.getProduit()): null);
 dto.setLivraison(livraison? livraisonConverter.toDto(item.getLivraison()): null);
+dto.setPrix(item.getPrix());
 return dto;
 }
 public void setProduit(boolean value) {

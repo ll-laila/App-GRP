@@ -169,22 +169,16 @@ export class FactureCreateComponent implements OnChanges {
     this.loadNiveauPrixList()
     this.loadEntrepriseList()
     this.findProduitCommande()
-    this.clientForm = this.formBuilder.group({
-      code: [{value: this.generateCode(), disabled: true}]
-    });
-    this.service.getNextCode().subscribe({
-      next: value => this.item.code = value.code,
-      error: err => console.log(err)
-    })
+    this.generateCode();
+
   }
 
-  currentCodeNumber: number = 1;
 
-  clientForm !: FormGroup;
-
-  generateCode(): string {
-    return 'I' + this.currentCodeNumber.toString().padStart(7, '0');
+  generateCode(): void {
+    const randomNumber = Math.floor(Math.random() * 1000000);
+    this.item.code = 'F' + randomNumber.toString().padStart(6, '0');
   }
+
   // LOAD DATA
   loadTaxeList() {
     this.taxeService.findAll().subscribe({
@@ -231,6 +225,7 @@ export class FactureCreateComponent implements OnChanges {
       error: err => console.log(err)
     })
   }
+
   create() {
     console.log(this.item)
     if (!this.validator.validate()) {
@@ -250,7 +245,6 @@ export class FactureCreateComponent implements OnChanges {
         this.router.navigate(["/ventes/facture/facture/factureautre"]).then()
         this.toasterService.toast({message: "Une nouvelle facture a été ajouté", color: "success"})
 
-        //  this.router.navigate(["/ventes/facture/facture"]).then()
       },
       error: err => {
         this.sending = false
@@ -258,12 +252,15 @@ export class FactureCreateComponent implements OnChanges {
         this.validator.import(err.error as ValidatorResult<any>[])
       }
     })
-    // this.router.navigate(["/ventes/facture/autre"]).then()
   }
+
+
   reset(force = true) {
     if (force || this.item == null) this.item = new Facture()
     this.validator.reset()
   }
+
+
   // GETTERS AND SETTERS
   public get items() {
     return this.service.items;
@@ -435,26 +432,14 @@ export class FactureCreateComponent implements OnChanges {
     if (this.item.factureProduit == null) {
       this.item.factureProduit = [];
     }
-
-// this.produitniveauxPrix.findByProduitId(produit.id).subscribe(data => produit.produitNiveauPrix = data);
     let factureProduit = new FactureProduit();
     factureProduit.produit = produit
-    console.log("produit", produit);
     factureProduit.disque = 0
     factureProduit.quantite = 1
     produit.disponible = produit?.niveauStockInitial - factureProduit?.quantite;
-    console.log("disponible", produit.disponible);
     factureProduit.disponible = produit.disponible
-    console.log(factureProduit.disponible);
-// factureProduit.prix = produit.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.item.niveauPrix?.id)[0]?.prix
-
     factureProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.client?.niveauPrix?.id)[0]?.prix || produit.prixGros;
-    console.log("client", this.client);
-    console.log("niveau prix du client", this?.client.niveauPrix);
-    console.log(factureProduit.prix);
     factureProduit.total = this.calculerTotal(factureProduit);
-    console.log(factureProduit.total);
-
     this.item.factureProduit = [...this.item.factureProduit, factureProduit]
     console.log(this.item.factureProduit)
   }
@@ -463,22 +448,6 @@ export class FactureCreateComponent implements OnChanges {
     return this.service.returnUrl;
   }
 
-
-  /* calculerTotal(): number {
-     if (this.factureProduit) {
-       console.log(this.factureProduit);
-
-       this.factureProduitService.calculerTotal(this.itemFP).subscribe({
-         next: value => {
-           this.itemFP.total = value.total;
-           console.log('Total:', this.itemFP.total);
-         },
-         error: err => console.log(err)
-       });
-     }
-     return this.itemFP.total;
-
-   }*/
 
   public get toReturn() {
     return this.service.toReturn();

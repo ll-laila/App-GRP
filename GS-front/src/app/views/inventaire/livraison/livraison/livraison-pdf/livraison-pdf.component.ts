@@ -32,16 +32,19 @@ export class LivraisonPdfComponent {
     this.livraisonService.findById(this.item.id).subscribe({
       next: data => {
         this.livraisonService.item = data
+        console.log(this.livraisonService.item);
       },
       error: err => console.log(err)
     })
 
-    this.bonCommandeService.findByLivraisonId(this.item.id).subscribe({
-      next: data => {
-        this.livraisonService.item.bonCommande = data
-      },
-      error: err => console.log(err)
-    })
+    // this.bonCommandeService.findByLivraisonId(this.item.id).subscribe({
+    //   next: data => {
+    //     this.livraisonService.item.bonCommande = data
+    //     console.log( this.livraisonService.item.bonCommande);
+    //   },
+    //   error: err => console.log(err)
+    // })
+
 
   }
 

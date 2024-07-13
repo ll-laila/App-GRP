@@ -685,7 +685,7 @@
               <th class="bg-body-tertiary">{{it.produit?.nom}}</th>
               <th class="bg-body-tertiary">{{ it.prix }}</th>
               <th class="bg-body-tertiary">{{ it.quantite }}</th>
-              <th class="bg-body-tertiary">{{ it.produit?.taxe }}</th>
+              <th class="bg-body-tertiary">{{ it.produit?.taxe?.tauxImposition }}</th>
               <th class="bg-body-tertiary">{{ it.total }}</th>
             </tr>
           }
@@ -703,7 +703,7 @@
                         <div class="whitespace-nowrap text-slate-400" style="color: #1d0528 ;font-size: 17px">Sous total:</div>
                       </td>
                       <td class="border-b p-3 text-right">
-                        <div class="whitespace-nowrap font-bold text-main">{{ itemCmdPr.sousTotal }}</div>
+                        <div class="whitespace-nowrap font-bold text-main">{{ item.sousTotal }}</div>
                       </td>
                     </tr>
 
@@ -712,7 +712,7 @@
                         <div class="whitespace-nowrap font-bold text-white" style="color: #1d0528 ;font-size: 17px">Total:</div>
                       </td>
                       <td class="bg-main p-3 text-right">
-                        <div class="whitespace-nowrap font-bold text-white">{{ itemCmdPr.total }}</div>
+                        <div class="whitespace-nowrap font-bold text-white">{{ item.total }}</div>
                       </td>
                     </tr>
                     </tbody>
