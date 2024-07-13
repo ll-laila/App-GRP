@@ -76,7 +76,7 @@ export class ProduitValidator extends Validator< Produit> {
         ?.valid()
     }
   )
-/*
+
   prixAchat = new ValidatorItem<number>(
     () => this.item().prixAchat,
     (value) => this.item().prixAchat = value || 0,
@@ -85,7 +85,7 @@ export class ProduitValidator extends Validator< Produit> {
         ?.required()
         ?.valid()
     }
-  )*/
+  )
   devises = new ValidatorItem<Devises>(
     () => this.item().devises,
     (value) => this.item().devises = value,

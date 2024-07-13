@@ -2,8 +2,13 @@ import {
   IconDirective
 } from "./chunk-QKQZRIZS.js";
 import {
-  createPopper
-} from "./chunk-7SLWANJ2.js";
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-E6L7OGOH.js";
 import {
   Platform,
   _getEventTarget,
@@ -15,6 +20,9 @@ import {
   coerceNumberProperty,
   normalizePassiveListenerOptions
 } from "./chunk-7AYMQ7VL.js";
+import {
+  createPopper
+} from "./chunk-7SLWANJ2.js";
 import {
   takeUntilDestroyed,
   toObservable
@@ -31,14 +39,6 @@ import {
   trigger,
   useAnimation
 } from "./chunk-EDA3OQ7P.js";
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-E6L7OGOH.js";
 import "./chunk-FTAX4KUG.js";
 import "./chunk-26AHTUER.js";
 import {
@@ -162,11 +162,11 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-QOEBSMWA.js";
+import "./chunk-CMVSEVK2.js";
 import {
   fromEvent,
   merge
 } from "./chunk-BA5VUNYH.js";
-import "./chunk-CMVSEVK2.js";
 import {
   BehaviorSubject,
   Observable,

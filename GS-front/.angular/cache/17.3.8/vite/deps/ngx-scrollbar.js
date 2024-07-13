@@ -64,12 +64,12 @@ import {
   ɵɵtemplate,
   ɵɵviewQuery
 } from "./chunk-QOEBSMWA.js";
+import "./chunk-CMVSEVK2.js";
 import {
   animationFrameScheduler,
   fromEvent,
   merge
 } from "./chunk-BA5VUNYH.js";
-import "./chunk-CMVSEVK2.js";
 import {
   BehaviorSubject,
   EMPTY,

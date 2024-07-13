@@ -48,7 +48,7 @@
                             <th class="bg-body-tertiary">Niveau Stock Initial</th>
                             <th class="bg-body-tertiary">Point Commande</th>
                             <th class="bg-body-tertiary">Prix Gros</th>
-                            <th class="bg-body-tertiary"> Niveau Stock</th>
+                            <th class="bg-body-tertiary"> Disponible</th>
                             <th class="bg-body-tertiary"> Taxe</th>
                             <th class="bg-body-tertiary"> Fournisseur</th>
                             <th class="bg-body-tertiary"> Entreprise</th>
@@ -64,7 +64,7 @@
                             <td>{{ it.niveauStockInitial }}</td>
                             <td>{{ it.pointCommande }}</td>
                             <td>{{ it.prixGros }}</td>
-                            <td>{{ it.niveauStock != null ? it.niveauStock.nom: "null" }}</td>
+                            <td>{{ it.disponible}}</td>
                             <td>{{ it.taxe != null ? it.taxe.nom: "null" }}</td>
                             <td>{{ it.fournisseur != null ? it.fournisseur.nom: "null" }}</td>
                             <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
