@@ -12,6 +12,9 @@ private int quantite;
 private double disque;
 private ProduitDto produit;
 private BonCommandeDto bonCommande;
+private double prix;
+private double disponible;
+
 public Long getId() {
 return id;
 }
@@ -24,6 +27,20 @@ return total;
 public void setTotal(double value) {
 this.total = value;
 }
+
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public double getDisponible() {
+        return disponible;
+    }
+    public void setDisponible(double disponible) {
+        this.disponible = disponible;
+    }
 public int getQuantite() {
 return quantite;
 }

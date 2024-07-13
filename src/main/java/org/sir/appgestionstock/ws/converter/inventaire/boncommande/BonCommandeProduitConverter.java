@@ -46,6 +46,9 @@ item.setQuantite(dto.getQuantite());
 item.setDisque(dto.getDisque());
 item.setProduit(produitConverter.toItem(dto.getProduit()));
 item.setBonCommande(bonCommandeConverter.toItem(dto.getBonCommande()));
+ item.setPrix(dto.getPrix());
+item.setTotal(dto.getTotal());
+
 return item;
 }
 protected BonCommandeProduitDto convertToDto(BonCommandeProduit item) {
@@ -56,6 +59,8 @@ dto.setQuantite(item.getQuantite());
 dto.setDisque(item.getDisque());
 dto.setProduit(produit? produitConverter.toDto(item.getProduit()): null);
 dto.setBonCommande(bonCommande? bonCommandeConverter.toDto(item.getBonCommande()): null);
+dto.setPrix(item.getPrix());
+dto.setDisponible(item.getDisponible());
 return dto;
 }
 public void setProduit(boolean value) {

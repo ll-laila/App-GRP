@@ -151,23 +151,23 @@ Créer
     <c-card-body>
       <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
         <thead class="text-nowrap text-truncate">
-          <tr>
-            <th class="bg-body-tertiary">Unités total</th>
-            <th class="bg-body-tertiary">Remise Global</th>
-            <th class="bg-body-tertiary">Taxe</th>
-            <th class="bg-body-tertiary">Sous total</th>
-            <th class="bg-body-tertiary">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>{{item.totalUnites}}</td>
-              <td>{{item.remiseGlobal}}</td>
-              <td>{{item.taxeExpedition?.nom}}</td>
-              <td>{{item.sousTotal}}</td>
-              <td>{{item.total }}</td>
-            </tr>
-          </tbody>
+        <tr>
+          <th class="bg-body-tertiary">Unités total</th>
+          <th class="bg-body-tertiary">Remise Global</th>
+          <th class="bg-body-tertiary">Taxe</th>
+          <th class="bg-body-tertiary">Sous total</th>
+          <th class="bg-body-tertiary">Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{item.totalUnites}}</td>
+          <td>{{item.remiseGlobal}}</td>
+          <td>{{item.taxeExpedition?.nom}}</td>
+          <td>{{item.sousTotal}}</td>
+          <td>{{item.total }}</td>
+        </tr>
+        </tbody>
       </table>
     </c-card-body>
   </c-card>

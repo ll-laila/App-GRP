@@ -8,7 +8,7 @@ disque!: number;
 produit?: Produit ;
 bonCommande?: BonCommande ;
 prix?:number;
-  disponible?: number;
-  sousTotal?: number;
+disponible?: number;
+sousTotal?: number;
 
 }

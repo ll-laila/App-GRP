@@ -19,6 +19,10 @@ private double disque;
 private Produit produit;
 @ManyToOne(fetch = FetchType.LAZY)
 private BonCommande bonCommande;
+
+    private double prix;
+    private double disponible;
+
 public BonCommandeProduit() {
 }
 public Long getId() {
@@ -57,6 +61,19 @@ return bonCommande;
 public void setBonCommande(BonCommande value) {
 this.bonCommande = value;
 }
+    public double getPrix() {
+        return prix;
+    }
+    public void setPrix(double prix) {
+        this.prix = prix;
+    }
+
+    public double getDisponible() {
+        return disponible;
+    }
+    public void setDisponible(double disponible) {
+        this.disponible = disponible;
+    }
 @Override
 public boolean equals(Object object) {
 if (object instanceof BonCommandeProduit bonCommandeProduit) {

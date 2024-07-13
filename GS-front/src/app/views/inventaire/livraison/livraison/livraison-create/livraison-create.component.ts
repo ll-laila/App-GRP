@@ -108,7 +108,7 @@ export class LivraisonCreateComponent {
         this.item.fournisseur = fournisseurCreated.item
         this.validator.fournisseur.validate()
       }
-     let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
+      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
       if (entrepriseCreated.created) {
         this.item.entreprise = entrepriseCreated.item
         this.validator.entreprise.validate()
@@ -127,7 +127,7 @@ export class LivraisonCreateComponent {
 
   //////////////////////////////////  Create ////////////////////////////////////////
   create() {
-   // this.findBncmd();
+    // this.findBncmd();
     console.log(this.item)
     this.service.create().subscribe({
       next: data => {
@@ -246,6 +246,8 @@ export class LivraisonCreateComponent {
 
   mapBonCommandeToLivraison(bonCommande: BonCommande) {
     this.item.bonCommande = bonCommande;
+    console.log(bonCommande);
+
     this.item.fournisseur = bonCommande.fournisseur;
     this.item.dateCreation = bonCommande.dateCreation;
     this.item.dateExpedition = bonCommande.dateExpedition;
@@ -264,6 +266,7 @@ export class LivraisonCreateComponent {
       livraisonProduit.disque = bonCommandeProduit.disque;
       livraisonProduit.produit = bonCommandeProduit.produit;
       livraisonProduit.prix = bonCommandeProduit.prix;
+      console.log( livraisonProduit.prix );
       return livraisonProduit;
     }) || [];
   }
@@ -283,16 +286,16 @@ export class LivraisonCreateComponent {
     this.boncmds(this.fournisseur.id);
   }
 
-   boncmds(id: number): void {
-     this.bonCommandeService.findByIdFor(id).subscribe({
-     next: (data) => {
-       this.bonCommandeList = data;
-     },
-     error: (err) => {
-       console.log(err);
-     }
+  boncmds(id: number): void {
+    this.bonCommandeService.findByIdFor(id).subscribe({
+      next: (data) => {
+        this.bonCommandeList = data;
+      },
+      error: (err) => {
+        console.log(err);
+      }
     });
-   }
+  }
 
 
 
@@ -354,57 +357,57 @@ export class LivraisonCreateComponent {
   }
 
 
- /* public get bonCmd(): BonCommande {
-    if (this.item.bonCommande == null)
-      this.item.bonCommande = new BonCommande()
-    return this.item.bonCommande;
-  }
+  public get bonCmd(): BonCommande {
+     if (this.item.bonCommande == null)
+       this.item.bonCommande = new BonCommande()
+     return this.item.bonCommande;
+   }
 
-  public set bonCmd(value: BonCommande ) {
-    this.item.bonCommande = value;
-  }
+   public set bonCmd(value: BonCommande ) {
+     this.item.bonCommande = value;
+   }
 
 
- public set itemsLP(value:LivraisonProduit[]) {
-    this.livraisonProduitService.items = value;
-  }
+  public set itemsLP(value:LivraisonProduit[]) {
+     this.livraisonProduitService.items = value;
+   }
 
-  public get itemLP(): LivraisonProduit {
-    return this.livraisonProduitService.item;
-  }
+   public get itemLP(): LivraisonProduit {
+     return this.livraisonProduitService.item;
+   }
 
-  public set itemLP(value: LivraisonProduit ) {
-    this.livraisonProduitService.item = value;
-  }
-  public set cmdprds(value: BonCommandeProduit[]) {
-    this.bonCommandeProduitService.items = value;
-  }
+   public set itemLP(value: LivraisonProduit ) {
+     this.livraisonProduitService.item = value;
+   }
+   public set cmdprds(value: BonCommandeProduit[]) {
+     this.bonCommandeProduitService.items = value;
+   }
 
-  public get cmdprd(): BonCommandeProduit {
-    return this.bonCommandeProduitService.item;
-  }
+   public get cmdprd(): BonCommandeProduit {
+     return this.bonCommandeProduitService.item;
+   }
 
-  public set cmdprd(value: BonCommandeProduit ) {
-    this.bonCommandeProduitService.item = value;
-  }
-  public set bnCmds(value:BonCommande[])  {
-    this.bonCommandeService.items = value;
-  }
+   public set cmdprd(value: BonCommandeProduit ) {
+     this.bonCommandeProduitService.item = value;
+   }
+   public set bnCmds(value:BonCommande[])  {
+     this.bonCommandeService.items = value;
+   }
 
-  public get bnCmd(): BonCommande {
-    console.log(this.bonCommandeService.item);
-    return this.bonCommandeService.item;
-  }
+   public get bnCmd(): BonCommande {
+     console.log(this.bonCommandeService.item);
+     return this.bonCommandeService.item;
+   }
 
-  public get bonCommandeProduit() {
-    console.log(this.bonCommandeService.item.bonCommandeProduit);
-    return this.bonCommandeService.item.bonCommandeProduit;
-  }
+   public get bonCommandeProduit() {
+     console.log(this.bonCommandeService.item.bonCommandeProduit);
+     return this.bonCommandeService.item.bonCommandeProduit;
+   }
 
-  public set bnCmd(value: BonCommande ) {
-    this.bonCommandeService.item = value;
-  }
-*/
+   public set bnCmd(value: BonCommande ) {
+     this.bonCommandeService.item = value;
+   }
+
 
 
 

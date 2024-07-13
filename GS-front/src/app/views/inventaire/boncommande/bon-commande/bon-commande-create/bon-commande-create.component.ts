@@ -208,6 +208,146 @@ export class BonCommandeCreateComponent {
     this.validator.reset()
   }
 
+
+
+
+
+  calculerTotal(bonCommandeProduit: BonCommandeProduit): number {
+    console.log(this.item);
+    // Vérifier si factureProduit1.produit existe
+    if (bonCommandeProduit.produit) {
+      let prix = bonCommandeProduit.prix || 0;
+
+      bonCommandeProduit.produit.produitNiveauPrix?.forEach(e => {
+        if (this.item.niveauPrix?.id == e.niveauPrix?.id) {
+          console.log("Niveau de prix trouvé...");
+          prix = e.prix;
+        }
+      });
+      console.log("prixProduit", prix);
+      let sousTotal = (bonCommandeProduit.quantite * prix);
+
+      let taxeProduit = bonCommandeProduit.produit.taxe ? bonCommandeProduit.produit.taxe.tauxImposition : 0.0;
+
+      let totalFinal = 0;
+
+      // Si le type de rabais est un pourcentage
+      if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
+        let totalAvecTaxe = sousTotal * (1 + ((taxeProduit) / 100));
+        let disque = totalAvecTaxe * (bonCommandeProduit.disque / 100);
+        totalFinal = totalAvecTaxe - disque;
+      }
+      // Si le type de rabais est un montant fixe
+      else if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.MONTANT) {
+        let totalAvecTaxe = sousTotal * (1 + (( taxeProduit) / 100));
+        let disque = bonCommandeProduit.disque;
+        totalFinal = totalAvecTaxe - disque;
+      }
+      totalFinal *= bonCommandeProduit.quantite || 1;
+      totalFinal -= bonCommandeProduit.disque || 0;
+      totalFinal = parseFloat(totalFinal.toFixed(2));
+      bonCommandeProduit.total = totalFinal;
+      return totalFinal;
+    }
+    return 0;
+  }
+
+
+  deleteBonCmdProduit(itemFP: FactureProduit): void {
+    if (itemFP.produit) {
+      itemFP.produit.disponible = itemFP.produit.disponible + itemFP.quantite;
+    }
+    this.item.bonCommandeProduit = this.item.bonCommandeProduit?.filter(item => item !== itemFP);
+  }
+
+
+  public addBonCmdProduits(produit: Produit): void {
+    console.log(produit);
+    if (this.item.bonCommandeProduit == null) {
+      this.item.bonCommandeProduit = [];
+    }
+
+    let bonCommandeProduit = new BonCommandeProduit();
+    bonCommandeProduit.produit = produit
+    bonCommandeProduit.disque = 0
+    bonCommandeProduit.quantite = 1
+    produit.disponible = produit?.niveauStockInitial - bonCommandeProduit?.quantite;
+    bonCommandeProduit.disponible = produit.disponible
+    bonCommandeProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.fournisseur?.niveauPrix?.id)[0]?.prix || produit.prixGros;
+    bonCommandeProduit.total = this.calculerTotal(bonCommandeProduit);
+    console.log(bonCommandeProduit.total);
+    this.item.bonCommandeProduit = [...this.item.bonCommandeProduit, bonCommandeProduit]
+    console.log(this.item.bonCommandeProduit)
+  }
+
+
+  calculerSommeSousTotal(bonCmdProduits: BonCommandeProduit[]): string {
+    const somme = bonCmdProduits.reduce((total, bonCmdProduit) => {
+      if (bonCmdProduit?.quantite && bonCmdProduit?.prix) {
+        return total + (bonCmdProduit.quantite * bonCmdProduit.prix);
+      } else {
+        return total;
+      }
+    }, 0);
+    this.item.sousTotal = somme
+    return somme.toFixed(2);
+  }
+
+
+  calculerSommeTotale(bonCommandeProduitList: BonCommandeProduit[]): number {
+    const sommeTotale = bonCommandeProduitList.reduce((somme, bonCmdProduit) => {
+      const total = this.calculerTotal(bonCmdProduit);
+      console.log(`Total pour ${bonCmdProduit.produit?.nom}: ${total}`);
+      return somme + total;
+    }, 0);
+
+    let taxeFacture = this.taxeList?.find(it => it.id == this.item.taxe?.id)?.tauxImposition || 0.0;
+    let taxeExpedition = this.item.taxeExpedition?.tauxImposition != null ? this.item.taxeExpedition.tauxImposition : 0.0;
+
+    let sommeTotaleTaxe = 0;
+
+    // taxe rabais
+    if(this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = totalAvecTaxe * (this.item.rabais / 100);
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+    if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = this.item.rabais;
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+
+    const sommeTotaleFormatee = parseFloat(sommeTotaleTaxe.toFixed(2));
+    console.log(`Somme totale formatée: ${sommeTotaleFormatee}`);
+    this.item.total = sommeTotaleFormatee;
+    return sommeTotaleFormatee;
+  }
+
+
+  calculerSommeQuantite(bonCommandeProduitList: BonCommandeProduit[]): number {
+    let number = bonCommandeProduitList.reduce((sommeQuantite, bonCmdProduit) => {
+      return sommeQuantite + (bonCmdProduit.quantite || 0);
+    }, 0);
+    this.item.totalUnites = number
+    return number;
+  }
+
+
+  calculeRemiseGlobal(commandeProduitList: BonCommandeProduit[]): number {
+    let number = commandeProduitList.reduce((sommeRemise, boncommandeProduit) => {
+      return sommeRemise + (boncommandeProduit.disque || 0);
+    }, 0);
+    this.item.remiseGlobal = number + this.item.rabais;
+    return this.item.remiseGlobal;
+  }
+
+
+
+
+
+
+
   // GETTERS AND SETTERS
   public get items() {
     return this.service.items;
@@ -304,8 +444,6 @@ export class BonCommandeCreateComponent {
     this.item.entreprise = value;
   }
 
-
-
   public get returnUrl() {
     return this.service.returnUrl;
   }
@@ -340,7 +478,6 @@ export class BonCommandeCreateComponent {
     this.router.navigate(['/parametres/entreprise/create']).then()
   }
 
-  ////
     protected typeRabaisEnumList = Object.values(TypeRabaisEnum)
     protected statutBonCommandeEnumList = Object.values(StatutBonCommandeEnum)
   cancel(){
@@ -366,141 +503,6 @@ export class BonCommandeCreateComponent {
     if (this.item.bonCommandeProduit == null)
       this.item.bonCommandeProduit = []
     return this.item.bonCommandeProduit;
-  }
-
-
-  calculerTotal(bonCommandeProduit: BonCommandeProduit): number {
-    console.log(this.item);
-    // Vérifier si factureProduit1.produit existe
-    if (bonCommandeProduit.produit) {
-      let prix = bonCommandeProduit.prix || 0;
-
-      bonCommandeProduit.produit.produitNiveauPrix?.forEach(e => {
-        if (this.item.niveauPrix?.id == e.niveauPrix?.id) {
-          console.log("Niveau de prix trouvé...");
-          prix = e.prix;
-        }
-      });
-      console.log("prixProduit", prix);
-      let sousTotal = (bonCommandeProduit.quantite * prix);
-
-      let taxeProduit = bonCommandeProduit.produit.taxe ? bonCommandeProduit.produit.taxe.tauxImposition : 0.0;
-
-      let totalFinal = 0;
-
-      // Si le type de rabais est un pourcentage
-      if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
-        let totalAvecTaxe = sousTotal * (1 + ((taxeProduit) / 100));
-        let disque = totalAvecTaxe * (bonCommandeProduit.disque / 100);
-        totalFinal = totalAvecTaxe - disque;
-      }
-      // Si le type de rabais est un montant fixe
-      else if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.MONTANT) {
-        let totalAvecTaxe = sousTotal * (1 + (( taxeProduit) / 100));
-        let disque = bonCommandeProduit.disque;
-        totalFinal = totalAvecTaxe - disque;
-      }
-      totalFinal *= bonCommandeProduit.quantite || 1;
-      totalFinal -= bonCommandeProduit.disque || 0;
-      totalFinal = parseFloat(totalFinal.toFixed(2));
-      bonCommandeProduit.total = totalFinal;
-      return totalFinal;
-    }
-    return 0;
-  }
-
-  deleteBonCmdProduit(itemFP: FactureProduit): void {
-    if (itemFP.produit) {
-      itemFP.produit.disponible = itemFP.produit.disponible + itemFP.quantite;
-    }
-    this.item.bonCommandeProduit = this.item.bonCommandeProduit?.filter(item => item !== itemFP);
-  }
-
-  public addBonCmdProduits(produit: Produit): void {
-    console.log(produit);
-    if (this.item.bonCommandeProduit == null) {
-      this.item.bonCommandeProduit = [];
-    }
-
-// this.produitniveauxPrix.findByProduitId(produit.id).subscribe(data => produit.produitNiveauPrix = data);
-    let bonCommandeProduit = new BonCommandeProduit();
-    bonCommandeProduit.produit = produit
-    console.log("produit", produit);
-    bonCommandeProduit.disque = 0
-    bonCommandeProduit.quantite = 1
-    produit.disponible = produit?.niveauStockInitial - bonCommandeProduit?.quantite;
-    console.log("disponible", produit.disponible);
-    bonCommandeProduit.disponible = produit.disponible
-    console.log(bonCommandeProduit.disponible);
-// bonCommandeProduit.prix = produit.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.item.niveauPrix?.id)[0]?.prix
-
-    bonCommandeProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.fournisseur?.niveauPrix?.id)[0]?.prix || produit.prixGros;
-    console.log("client", this.fournisseur);
-    console.log("niveau prix du client", this?.fournisseur.niveauPrix);
-    console.log(bonCommandeProduit.prix);
-    bonCommandeProduit.total = this.calculerTotal(bonCommandeProduit);
-    console.log(bonCommandeProduit.total);
-
-    this.item.bonCommandeProduit = [...this.item.bonCommandeProduit, bonCommandeProduit]
-    console.log(this.item.bonCommandeProduit)
-  }
-
-  calculerSommeSousTotal(bonCmdProduits: BonCommandeProduit[]): string {
-    const somme = bonCmdProduits.reduce((total, bonCmdProduit) => {
-      if (bonCmdProduit?.quantite && bonCmdProduit?.prix) {
-        return total + (bonCmdProduit.quantite * bonCmdProduit.prix);
-      } else {
-        return total;
-      }
-    }, 0);
-    this.item.sousTotal = somme
-    return somme.toFixed(2);
-  }
-
-  calculerSommeTotale(bonCommandeProduitList: BonCommandeProduit[]): number {
-    const sommeTotale = bonCommandeProduitList.reduce((somme, bonCmdProduit) => {
-      const total = this.calculerTotal(bonCmdProduit);
-      console.log(`Total pour ${bonCmdProduit.produit?.nom}: ${total}`);
-      return somme + total;
-    }, 0);
-
-    let taxeFacture = this.taxeList?.find(it => it.id == this.item.taxe?.id)?.tauxImposition || 0.0;
-    let taxeExpedition = this.item.taxeExpedition?.tauxImposition != null ? this.item.taxeExpedition.tauxImposition : 0.0;
-
-    let sommeTotaleTaxe = 0;
-
-    // taxe rabais
-    if(this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
-      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
-      let rabais = totalAvecTaxe * (this.item.rabais / 100);
-      sommeTotaleTaxe = totalAvecTaxe - rabais;
-    }
-    if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
-      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
-      let rabais = this.item.rabais;
-      sommeTotaleTaxe = totalAvecTaxe - rabais;
-    }
-
-    const sommeTotaleFormatee = parseFloat(sommeTotaleTaxe.toFixed(2));
-    console.log(`Somme totale formatée: ${sommeTotaleFormatee}`);
-    this.item.total = sommeTotaleFormatee;
-    return sommeTotaleFormatee;
-  }
-
-  calculerSommeQuantite(bonCommandeProduitList: BonCommandeProduit[]): number {
-    let number = bonCommandeProduitList.reduce((sommeQuantite, bonCmdProduit) => {
-      return sommeQuantite + (bonCmdProduit.quantite || 0);
-    }, 0);
-    this.item.totalUnites = number
-    return number;
-  }
-
-  calculeRemiseGlobal(commandeProduitList: BonCommandeProduit[]): number {
-    let number = commandeProduitList.reduce((sommeRemise, boncommandeProduit) => {
-      return sommeRemise + (boncommandeProduit.disque || 0);
-    }, 0);
-    this.item.remiseGlobal = number + this.item.rabais;
-    return this.item.remiseGlobal;
   }
 
 
