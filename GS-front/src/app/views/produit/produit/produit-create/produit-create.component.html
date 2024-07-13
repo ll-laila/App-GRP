@@ -82,11 +82,12 @@
                 <c-form-feedback [valid]="false">{{ validator.prixGros.message }}</c-form-feedback>
             </c-col>
 
-           <!-- <c-col sm="4">
-                <label cLabel for="prixAchat">PrixAchat</label>
-                <input cFormControl id="prixAchat" type="number" placeholder="PrixAchat" [(ngModel)]="item.prixAchat" name="prixAchat" [valid]="validator.prixAchat.valid" (blur)="validator.prixAchat.validate()"/>
+          <c-col sm="4">
+              <svg cIcon name="cil-ruble"  style="color: blue ;font-size: 30px"></svg>
+                <label cLabel for="prixAchat" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">PrixAchat</label>
+                <input cFormControl id="prixAchat" type="number"  [(ngModel)]="item.prixAchat" name="prixAchat" [valid]="validator.prixAchat.valid" (blur)="validator.prixAchat.validate()"/>
                 <c-form-feedback [valid]="false">{{ validator.prixAchat.message }}</c-form-feedback>
-            </c-col>-->
+          </c-col>
             <c-col sm="4">
               <svg cIcon name="cil-dollar"  style="color: blue ;font-size: 30px"></svg>
 
