@@ -145,6 +145,7 @@ export class ProduitCreateComponent {
     })
   }
   create() {
+    this.item.disponible = this.item.niveauStockInitial;
     console.log(this.item)
     if (!this.validator.validate()) {
       console.log(this.validator);

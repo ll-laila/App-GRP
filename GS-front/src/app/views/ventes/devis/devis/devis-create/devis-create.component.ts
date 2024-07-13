@@ -456,7 +456,8 @@ export class DevisCreateComponent {
     console.log(devisProduit.disponible);
     // factureProduit.prix = produit.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.item.niveauPrix?.id)[0]?.prix
 
-    devisProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this?.client?.niveauPrix)[0]?.prix || produit.prixGros;
+    devisProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this?.client?.niveauPrix?.id)[0]?.prix || produit.prixGros;
+
 
     console.log( "niveau prix du client",this?.client?.niveauPrix?.id);
     console.log(devisProduit.prix);

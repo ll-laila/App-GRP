@@ -41,5 +41,5 @@ bonCommandeProduit?: Array<BonCommandeProduit> ;
 livraisonProduit?: Array<LivraisonProduit> ;
 fournisseur?: Fournisseur ;
 entreprise?: Entreprise ;
-disponible ?: number;
+disponible!: number;
 }

@@ -520,7 +520,7 @@ export class FactureCreateComponent implements OnChanges {
     this.router.navigate(['/ventes/facture/create']).then()
   }
 
-  ////
+
   protected typeRabaisEnumList = Object.values(TypeRabaisEnum)
   protected statutFactureEnumList = Object.values(StatutFactureEnum)
 
@@ -533,6 +533,9 @@ export class FactureCreateComponent implements OnChanges {
   }
 
   deleteFactureProduit(itemFP: FactureProduit): void {
+    if (itemFP.produit) {
+      itemFP.produit.disponible = itemFP.produit.disponible + itemFP.quantite;
+    }
     this.item.factureProduit = this.item.factureProduit?.filter(item => item !== itemFP);
   }
 
@@ -549,53 +552,50 @@ export class FactureCreateComponent implements OnChanges {
         }
       });
       console.log("prixProduit", prix);
-      // Calculer le sous-total
+
       let sousTotal = (factureProduit1.quantite * prix);
-      console.log("sousTotal", sousTotal);
-
-      // Obtenir la taxe du produit
       let taxeProduit = factureProduit1.produit.taxe ? factureProduit1.produit.taxe.tauxImposition : 0.0;
-      console.log("taxeProduit", taxeProduit);
-
-      // Obtenir la taxe de la facture
-      let taxeFacture = this.taxeList?.find(it => it.id == this.item.taxe?.id)?.tauxImposition || 0.0;
-      console.log("taxeFacture", taxeFacture);
-
-      let totalFinal = 0; // Initialisation par défaut
-
+      let totalFinal = 0;
       // Si le type de rabais est un pourcentage
       if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
-        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit) / 100));
-        console.log("totalAvecTaxe (pourcentage)", totalAvecTaxe);
-
-        let disque = totalAvecTaxe * (this.item.rabais / 100);
-        console.log("disque (pourcentage)", disque);
-
-        totalFinal = totalAvecTaxe - disque; // Calcul du total final
-        console.log("totalFinal (pourcentage)", totalFinal);
+        let totalAvecTaxe = sousTotal * (1 + ((taxeProduit) / 100));
+        let disque = totalAvecTaxe * (factureProduit1.disque / 100);
+        totalFinal = totalAvecTaxe - disque;
       }
       // Si le type de rabais est un montant fixe
       else if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.MONTANT) {
-        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit) / 100));
-        console.log("totalAvecTaxe (montant)", totalAvecTaxe);
-
-        let disque = this.item.rabais;
-        console.log("disque (montant)", disque);
-
-        totalFinal = totalAvecTaxe - disque; // Calcul du total final
-        console.log("totalFinal (montant)", totalFinal);
+        let totalAvecTaxe = sousTotal * (1 + ((  taxeProduit) / 100));
+        let disque = factureProduit1.disque;
+        totalFinal = totalAvecTaxe - disque; //
       }
 
       totalFinal *= factureProduit1.quantite || 1;
       totalFinal -= factureProduit1.disque || 0;
-      totalFinal = parseFloat(totalFinal.toFixed(2)); // Formater le total avec 2 chiffres après la virgule
+      totalFinal = parseFloat(totalFinal.toFixed(2));
       factureProduit1.total = totalFinal;
-      return totalFinal; // Retourne la valeur correcte de totalFinal
+      return totalFinal;
     }
 
     console.log("Produit non trouvé...");
     return 0; // Si aucun produit n'est trouvé, retourne 0
   }
+
+  calculerSommeQuantite(factureProduitList: FactureProduit[]): number {
+    let number = factureProduitList.reduce((sommeQuantite, factureProduit) => {
+      return sommeQuantite + (factureProduit.quantite || 0);
+    }, 0);
+    this.item.totalUnites = number
+    return number;
+  }
+
+  calculeRemiseGlobal(factureProduitList: FactureProduit[]): number {
+    let number = factureProduitList.reduce((sommeRemise, factureProduit) => {
+      return sommeRemise + (factureProduit.disque || 0);
+    }, 0);
+    this.item.remiseGlobal = number + this.item.rabais;
+    return this.item.remiseGlobal;
+  }
+
   calculerSommeSousTotal(factureProduits: FactureProduit[]): string {
     const somme = factureProduits.reduce((total, factureProduit) => {
       if (factureProduit?.quantite && factureProduit?.prix) {
@@ -607,6 +607,7 @@ export class FactureCreateComponent implements OnChanges {
     this.item.sousTotal = somme
     return somme.toFixed(2);
   }
+
   calculerSommeTotale(factureProduitList: FactureProduit[]): number {
     const sommeTotale = factureProduitList.reduce((somme, factureProduit) => {
       const total = this.calculerTotal(factureProduit);
@@ -614,18 +615,30 @@ export class FactureCreateComponent implements OnChanges {
       return somme + total;
     }, 0);
 
-    const sommeTotaleFormatee = parseFloat(sommeTotale.toFixed(2));
+
+    let taxeFacture =this.taxeList?.filter(it => it.id == this.item.taxe?.id)[0]?.tauxImposition;
+    let taxeExpedition = this.item.taxeExpedition?.tauxImposition != null ? this.item.taxeExpedition.tauxImposition : 0.0;
+
+    let sommeTotaleTaxe = 0;
+
+    // taxe rabais
+    if(this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = totalAvecTaxe * (this.item.rabais / 100);
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+    if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = this.item.rabais;
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+
+    const sommeTotaleFormatee = parseFloat(sommeTotaleTaxe.toFixed(2));
     console.log(`Somme totale formatée: ${sommeTotaleFormatee}`);
     this.item.total = sommeTotaleFormatee;
     return sommeTotaleFormatee;
   }
-  calculerSommeQuantite(factureProduitList: FactureProduit[]): number {
-    let number = factureProduitList.reduce((sommeQuantite, factureProduit) => {
-      return sommeQuantite + (factureProduit.quantite || 0);
-    }, 0);
-    this.item.totalUnites = number
-    return number;
-  }
+
 
 
   public get itemFP(): FactureProduit {

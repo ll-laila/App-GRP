@@ -190,15 +190,15 @@
                 <td>{{ it.prix }}</td>
                 <td>{{ it.total }}</td>
                 <td>
-                  <input type="number" [(ngModel)]="it.quantite">
+                  <input type="number" [(ngModel)]="it.quantite" (ngModelChange)="onInputChange(it)">
                 </td>
                 <td>{{ it.produit?.taxe?.nom }}</td>
-                <td>{{ it.disponible }}</td>
+                <td>{{ it.produit?.disponible }}</td>
                 <td>
-                  <input type="number" [(ngModel)]="it.disque"/>
+                  <input type="number" [(ngModel)]="it.disque"  (ngModelChange)="onInputChange(it)"/>
                 </td>
                 <td style="display: flex; justify-content: end;">
-                  <button (click)="deleteCommandeProduit(itemCP)" cButton color>
+                  <button (click)="deleteCommandeProduit(it)" cButton color>
                     <svg cIcon name="cil-trash" size="lg"></svg>
                   </button>
                 </td>
@@ -224,24 +224,23 @@
 
       <c-col sm="4">
         <label cLabel for="qte"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Unités total </label>
-        <input cFormControl id="qte" type="number" [value]="calculerSommeQuantite(commandeProduit)" readonly name="qte"/>
+        <input cFormControl id="qte" type="number" [value]="calculeSommeQuantite(commandeProduit)" readonly name="qte"/>
         <c-form-feedback [valid]="false">{{ validator.totalUnites.message }}</c-form-feedback>
       </c-col>
 
       <c-col sm="4">
-        <label cLabel for="remiseGlobal"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise Global</label>
-        <input cFormControl id="remiseGlobal" type="number"  [(ngModel)]="item.remiseGlobal"
-               name="remiseGlobal" [valid]="validator.remiseGlobal.valid" (blur)="validator.remiseGlobal.validate()"/>
-        <c-form-feedback [valid]="false">{{ validator.remiseGlobal.message }}</c-form-feedback>
+          <label cLabel for="sommeRemise"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise Global</label>
+          <input cFormControl id="sommeRemise" type="number" [value]="calculeRemiseGlobal(commandeProduit)" readonly name="sommeRemise"/>
       </c-col>
+
       <c-col sm="4">
         <label cLabel for="stotal"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Sous total</label>
-        <input cFormControl id="stotal" type="number" [value]="calculerSommeSousTotal(commandeProduit)" readonly name="stotal"/>
+        <input cFormControl id="stotal" type="number" [value]="calculeSommeSousTotal(commandeProduit)" readonly name="stotal"/>
         <c-form-feedback [valid]="false">{{ validator.sousTotal.message }}</c-form-feedback>
       </c-col>
       <c-col sm="4">
         <label cLabel for="total"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Total</label>
-        <input cFormControl id="total" type="number" [value]="calculerSommeTotale(commandeProduit)" readonly name="total"/>
+        <input cFormControl id="total" type="number" [value]="calculeSommeTotale(commandeProduit)" readonly name="total"/>
         <c-form-feedback [valid]="false">{{ validator.total.message }}</c-form-feedback>
       </c-col>
 

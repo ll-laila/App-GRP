@@ -8,7 +8,7 @@ export class CommandeProduit {
   disque!: number;
   produit?: Produit;
   commande?: Commande;
-  prix ?: number;
-  disponible ?: number;
+  prix!: number;
+  disponible!: number;
 
 }

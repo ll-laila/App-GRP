@@ -1,10 +1,24 @@
-import { Component, inject, Input } from '@angular/core';
+import {Component, inject, Input} from '@angular/core';
 import {
-  FormSelectDirective, ColComponent, FormControlDirective,
-  FormFloatingDirective, FormLabelDirective, RowComponent,
-  CardComponent, CardBodyComponent, CardHeaderComponent, SpinnerComponent,
-  InputGroupComponent, ButtonDirective, NavComponent, NavItemComponent,
-  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
+  ButtonDirective,
+  CardBodyComponent,
+  CardComponent,
+  CardHeaderComponent,
+  ColComponent,
+  FormCheckComponent,
+  FormCheckInputDirective,
+  FormCheckLabelDirective,
+  FormControlDirective,
+  FormFeedbackComponent,
+  FormFloatingDirective,
+  FormLabelDirective,
+  FormSelectDirective,
+  InputGroupComponent,
+  NavComponent,
+  NavItemComponent,
+  RowComponent,
+  SpinnerComponent,
+  TableDirective
 } from "@coreui/angular";
 import {FormBuilder, FormGroup, FormsModule} from "@angular/forms";
 import {Router, RouterLink} from "@angular/router";
@@ -18,7 +32,6 @@ import {CommandeValidator} from "src/app/controller/validators/ventes/commande/c
 import {ValidatorResult} from "@bshg/validation";
 import {FactureService} from "src/app/controller/services/ventes/facture/facture.service";
 import {Facture} from "src/app/controller/entities/ventes/facture/facture";
-import {CommandeExpedition} from "src/app/controller/entities/ventes/commande-expedition";
 import {TaxeService} from "src/app/controller/services/parametres/taxe.service";
 import {Taxe} from "src/app/controller/entities/parametres/taxe";
 import {ClientService} from "src/app/controller/services/contacts/client.service";
@@ -27,22 +40,19 @@ import {DevisesService} from "src/app/controller/services/parametres/devises.ser
 import {Devises} from "src/app/controller/entities/parametres/devises";
 import {NiveauPrixService} from "src/app/controller/services/parametres/niveau-prix.service";
 import {NiveauPrix} from "src/app/controller/entities/parametres/niveau-prix";
-import {AdresseService} from "src/app/controller/services/adresse/adresse.service";
 import {Adresse} from "src/app/controller/entities/adresse/adresse";
 import {CommandeProduitService} from "src/app/controller/services/ventes/commande/commande-produit.service";
 import {CommandeProduit} from "src/app/controller/entities/ventes/commande/commande-produit";
 import {EntrepriseService} from "src/app/controller/services/parametres/entreprise.service";
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {FactureCreateComponent} from "src/app/views/ventes/facture/facture/facture-create/facture-create.component";
-import {FactureValidator} from "src/app/controller/validators/ventes/facture/facture.validator";
 import {AdresseCreateComponent} from "src/app/views/adresse/adresse/adresse-create/adresse-create.component";
-import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {TypeRabaisEnum} from "src/app/controller/enums/type-rabais-enum";
 import {StatutCommandeEnum} from "src/app/controller/enums/statut-commande-enum";
-import {FactureProduit} from "../../../../../controller/entities/ventes/facture/facture-produit";
 import {Produit} from "../../../../../controller/entities/produit/produit";
 import {ProduitService} from "../../../../../controller/services/produit/produit.service";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {ProduitNiveauPrix} from "../../../../../controller/entities/produit/produit-niveau-prix";
 
 @Component({
   selector: 'app-commande-create',
@@ -98,6 +108,7 @@ export class CommandeCreateComponent {
   protected entrepriseList!: Entreprise[]
   protected produitList!: Produit[]
   protected readonly TypeRabaisEnum = TypeRabaisEnum;
+  protected  clientP! : Client;
 
 
   ngOnInit() {
@@ -211,17 +222,12 @@ export class CommandeCreateComponent {
         this.sending = false
         if (data == null) return
         this.item = data
-
         if (this.toReturn) {
           this.router.navigate([this.returnUrl]).then()
           return;
-
-
         }
         this.router.navigate(["/ventes/commande/commande/autre"]).then()
         this.toasterService.toast({message: "Une nouvelle commande a été ajouté", color: "success"})
-
-        // this.router.navigate(["/ventes/commande/commande"]).then()
       },
       error: err => {
         this.sending = false
@@ -231,7 +237,90 @@ export class CommandeCreateComponent {
     })
   }
 
-  calculerSommeSousTotal(commandeProduits: CommandeProduit[]): string {
+///////////////////////////////////////////////////////////////////////////////////////
+
+  protected dispo = 0;
+
+  public addCommandeProduits(produit: Produit): void {
+    console.log(produit);
+    if (this.item.commandeProduit == null) {
+      this.item.commandeProduit = [];
+    }
+    let commandeProduit = new CommandeProduit();
+    commandeProduit.produit = produit;
+
+    commandeProduit.produit = produit;
+    commandeProduit.disque = 0
+    commandeProduit.quantite = 1
+    this.dispo = produit.disponible;
+    produit.disponible = produit?.disponible - commandeProduit?.quantite;
+    commandeProduit.disponible = produit.disponible;
+
+    commandeProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.client?.niveauPrix?.id)[0]?.prix || produit.prixGros;
+    console.log("prix",commandeProduit.prix);
+
+    commandeProduit.total = this.calculerTotal(commandeProduit);
+    this.item.commandeProduit = [...this.item.commandeProduit, commandeProduit]
+    console.log(this.item.commandeProduit);
+  }
+
+  public onInputChange(commandeProduit: CommandeProduit): void {
+    if (commandeProduit.quantite > 0 && commandeProduit.disque > 0) {
+      if (commandeProduit.produit) {
+        commandeProduit.produit.disponible = this.dispo - commandeProduit.quantite;
+      }
+      commandeProduit.total = this.calculerTotal(commandeProduit);
+    }
+  }
+
+  calculerTotal(commandeProduit: CommandeProduit):number {
+
+    console.log(this.item);
+    let total = 0;
+    if (commandeProduit.produit) {
+       let prixProduit = 0;
+       let id = this.client.id;
+       this.findClient(id);
+       prixProduit = commandeProduit.produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.nom == this?.clientP?.niveauPrix?.nom)[0]?.prix || commandeProduit.produit.prixGros;
+
+      console.log("prixProduit", prixProduit);
+
+
+      let sousTotal = commandeProduit.quantite * prixProduit;
+      let taxeProduit = commandeProduit.produit.taxe ? commandeProduit.produit.taxe?.tauxImposition : 0.0;
+
+      if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
+        let totalAvecTaxe = sousTotal * (1 + ((taxeProduit) / 100));
+        let disque = totalAvecTaxe * (commandeProduit.disque / 100);
+        total = totalAvecTaxe - disque;
+      }
+
+      if (this.item?.typeRabais != null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
+        let totalAvecTaxe = sousTotal * (1 + ((taxeProduit) / 100));
+        let disque = commandeProduit.disque;
+        total = totalAvecTaxe - disque;
+      }
+    }
+    return  parseFloat(total.toFixed(2));
+  }
+
+  calculeSommeQuantite(commandeProduitList: CommandeProduit[]): number {
+    let number = commandeProduitList.reduce((sommeQuantite, commandeProduit) => {
+      return sommeQuantite + (commandeProduit.quantite || 0);
+    }, 0);
+    this.item.totalUnites = number
+    return number;
+  }
+
+  calculeRemiseGlobal(commandeProduitList: CommandeProduit[]): number {
+    let number = commandeProduitList.reduce((sommeRemise, commandeProduit) => {
+      return sommeRemise + (commandeProduit.disque || 0);
+    }, 0);
+    this.item.remiseGlobal = number + this.item.rabais;
+    return this.item.remiseGlobal;
+  }
+
+  calculeSommeSousTotal(commandeProduits: CommandeProduit[]): string {
     const somme = commandeProduits.reduce((total, commandeProduit) => {
       if (commandeProduit?.quantite && commandeProduit?.prix) {
         return total + (commandeProduit.quantite * commandeProduit.prix);
@@ -242,24 +331,49 @@ export class CommandeCreateComponent {
     this.item.sousTotal = somme
     return somme.toFixed(2);
   }
-  calculerSommeTotale(commandeProduitList: CommandeProduit[]): number {
+
+  calculeSommeTotale(commandeProduitList: CommandeProduit[]): number {
     const sommeTotale = commandeProduitList.reduce((somme, commandeProduit) => {
       const total = this.calculerTotal(commandeProduit);
-      console.log(`Total pour ${commandeProduit.produit?.nom}: ${total}`);
       return somme + total;
     }, 0);
 
-    const sommeTotaleFormatee = parseFloat(sommeTotale.toFixed(2));
-    console.log(`Somme totale formatée: ${sommeTotaleFormatee}`);
+    let taxeFacture =this.taxeList?.filter(it => it.id == this.item.taxe?.id)[0]?.tauxImposition;
+    let taxeExpedition = this.item.taxeExpedition?.tauxImposition != null ? this.item.taxeExpedition.tauxImposition : 0.0;
+
+    let sommeTotaleTaxe = 0;
+
+    // taxe rabais
+    if(this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = totalAvecTaxe * (this.item.rabais / 100);
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+    if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = this.item.rabais;
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+    const sommeTotaleFormatee = parseFloat(sommeTotaleTaxe.toFixed(2));
     this.item.total = sommeTotaleFormatee;
     return sommeTotaleFormatee;
   }
-  calculerSommeQuantite(commandeProduitList: CommandeProduit[]): number {
-    let number = commandeProduitList.reduce((sommeQuantite, commandeProduit) => {
-      return sommeQuantite + (commandeProduit.quantite || 0);
-    }, 0);
-    this.item.totalUnites = number
-    return number;
+
+  deleteCommandeProduit(itemFP: CommandeProduit): void {
+    if (itemFP.produit) {
+      itemFP.produit.disponible = itemFP.produit.disponible + itemFP.quantite;
+    }
+    this.item.commandeProduit = this.item.commandeProduit?.filter(item => item !== itemFP);
+  }
+
+
+   public findClient(id: number){
+    this.clientService.findById(id).subscribe(res => {
+      console.log(res);
+      this.clientP = res;
+    }, error => {
+      console.log(error);
+    });
   }
 
 
@@ -305,86 +419,12 @@ export class CommandeCreateComponent {
   public set facture(value: Facture ) {
     this.item.facture = value;
   }
-  public addCommandeProduits(produit: Produit): void {
-    console.log(produit);
-    if (this.item.commandeProduit == null) {
-      this.item.commandeProduit = [];
-    }
-
-    // this.produitniveauxPrix.findByProduitId(produit.id).subscribe(data => produit.produitNiveauPrix = data);
-    let commandeProduit = new CommandeProduit();
-    commandeProduit.produit = produit
-    console.log("produit",produit);
-    commandeProduit.disque = 0
-    commandeProduit.quantite = 1
-    produit.disponible = produit?.niveauStockInitial - commandeProduit?.quantite;
-    console.log("disponible",produit.disponible);
-    commandeProduit.disponible = produit.disponible
-    console.log(commandeProduit.disponible);
-    // factureProduit.prix = produit.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.item.niveauPrix?.id)[0]?.prix
-
-    commandeProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this?.client?.niveauPrix)[0]?.prix || produit.prixGros;
-
-    console.log( "niveau prix du client",this?.client?.niveauPrix?.id);
-    console.log(commandeProduit.prix);
-    commandeProduit.total = this.calculerTotal(this.itemCP);
-    console.log(commandeProduit.total);
-
-    this.item.commandeProduit = [...this.item.commandeProduit, commandeProduit]
-    console.log(this.item.commandeProduit)
-  }
-  calculerTotal(  commandeProduit: CommandeProduit):number {
-
-    console.log(this.item)
-    if (commandeProduit.produit) {      console.log("...............")
-      let prixProduit = 0;
-      commandeProduit?.produit?.produitNiveauPrix?.forEach(e => {
-        if(this.item.niveauPrix?.id == e.niveauPrix?.id) {
-          console.log("hello");
-          prixProduit =  e.prix;
-        }
-
-      });
-      console.log("prixProduit",prixProduit)
-      let sousTotal = commandeProduit.quantite * prixProduit;
-      console.log("sousTotal",sousTotal)
-      let taxeProduit = commandeProduit.produit.taxe ? commandeProduit.produit.taxe?.tauxImposition : 0.0;
-      console.log("taxeProduit",taxeProduit)
-      let taxeFacture =this.taxeList?.filter(it => it.id == this.item.taxe?.id)[0]?.tauxImposition;
-      console.log(this.item.taxe)
-      let taxeExpedition = commandeProduit?.commande?.taxeExpedition != null ? commandeProduit?.commande?.taxeExpedition?.tauxImposition : 0.0;
-      console.log("taxeExpedition", taxeExpedition)
-      // let disponible = item.produit?.niveauStockInitial-item.quantite;
-      //nconsole.log("disponible", disponible)
-      if(this.item.typeRabais !=null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
-        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit + taxeExpedition) / 100));
-        console.log("totalAvecTaxe",totalAvecTaxe)
-        if (taxeFacture == undefined) taxeFacture=0;
-        let disque = totalAvecTaxe * (this.item.rabais / 100);
-        console.log("disque",disque)
-        let totalFinal = totalAvecTaxe - disque;
-        console.log("totalFinal",totalFinal)
-        return totalFinal;}
-      if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT){
-        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit + taxeExpedition) / 100));
-        console.log("totalAvecTaxe",totalAvecTaxe)
-        if (taxeFacture == undefined) taxeFacture=0;
-        let disque = this.item.rabais;
-        console.log("disque",disque)
-        let totalFinal = totalAvecTaxe - disque;
-        console.log("totalFinal",totalFinal)
-        return totalFinal;
-      }
-    }
-    return 0;
-  }
 
 
   protected factureGetter = () => this.facture;
   protected factureSetter = (value: Facture ) => this.facture = value;
-  deleteCommandeProduit(itemFP: CommandeProduit): void {
-    this.item.commandeProduit = this.item.commandeProduit?.filter(item => item !== itemFP);
-  }
+
+
   public get itemCP(): CommandeProduit {
     return this.commandeProduitService.item;
   }

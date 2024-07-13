@@ -193,7 +193,7 @@
                 <input type="number" [(ngModel)]="it.disque"/>
               </td>
               <td style="display: flex; justify-content: end;">
-                <button (click)="deleteBonCmdProduit(bonCmdProduit)" cButton color>
+                <button (click)="deleteBonCmdProduit(it)" cButton color>
                   <svg cIcon name="cil-trash" size="lg"></svg>
                 </button>
               </td>
@@ -225,12 +225,11 @@
           <c-form-feedback [valid]="false">{{ validator.totalUnites.message }}</c-form-feedback>
         </c-col>
 
-        <c-col sm="4">
-          <label cLabel for="remiseGlobal"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise Global</label>
-          <input cFormControl id="remiseGlobal" type="number"  [(ngModel)]="item.remiseGlobal"
-                 name="remiseGlobal" [valid]="validator.remiseGlobal.valid" (blur)="validator.remiseGlobal.validate()"/>
-          <c-form-feedback [valid]="false">{{ validator.remiseGlobal.message }}</c-form-feedback>
-        </c-col>
+          <c-col sm="4">
+              <label cLabel for="sommeRemise"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise Global</label>
+              <input cFormControl id="sommeRemise" type="number" [value]="calculeRemiseGlobal(bonCmdProduits)" readonly name="sommeRemise"/>
+          </c-col>
+
         <c-col sm="4">
           <label cLabel for="stotal"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Sous total</label>
           <input cFormControl id="stotal" type="number" [value]="calculerSommeSousTotal(bonCmdProduits)" readonly name="stotal"/>
@@ -241,8 +240,6 @@
           <input cFormControl id="total" type="number" [value]="calculerSommeTotale(bonCmdProduits)" readonly name="total"/>
           <c-form-feedback [valid]="false">{{ validator.total.message }}</c-form-feedback>
         </c-col>
-
-
 
       </c-card-body>
     </c-input-group>

@@ -256,7 +256,7 @@ Créer
           <td>
         {{ it.produit != null ? it.produit.nom : "null" }}
         </td>
-        <td>{{ it.prix }}</td>
+        <td>{{ it?.prix }}</td>
               <td>{{ calculerTotal(it) }}</td>
               <td>
                 <input type="number" [min]="0" [(ngModel)]="it.quantite" (ngModelChange)="it.disponible =  it.disponible?it.disponible - $event: it.disponible">
@@ -268,7 +268,7 @@ Créer
                 <input type="number" [(ngModel)]="it.disque"/>
               </td>
               <td style="display: flex; justify-content: end;">
-                <button (click)="deleteFactureProduit(itemFP)" cButton color>
+                <button (click)="deleteFactureProduit(it)" cButton color>
                   <svg cIcon name="cil-trash" size="lg"></svg>
                 </button>
               </td>
@@ -301,11 +301,10 @@ Créer
         </c-col>
 
         <c-col sm="4">
-          <label cLabel for="remiseGlobal"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise Global</label>
-          <input cFormControl id="remiseGlobal" type="number"  [(ngModel)]="item.remiseGlobal"
-                 name="remiseGlobal" [valid]="validator.remiseGlobal.valid" (blur)="validator.remiseGlobal.validate()"/>
-          <c-form-feedback [valid]="false">{{ validator.remiseGlobal.message }}</c-form-feedback>
+          <label cLabel for="sommeRemise"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Remise Global</label>
+          <input cFormControl id="sommeRemise" type="number" [value]="calculeRemiseGlobal(factureProduit)" readonly name="sommeRemise"/>
         </c-col>
+
         <c-col sm="4">
           <label cLabel for="stotal"  style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Sous total</label>
           <input cFormControl id="stotal" type="number" [value]="calculerSommeSousTotal(factureProduit)" readonly name="stotal"/>

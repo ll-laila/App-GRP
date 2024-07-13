@@ -63,6 +63,7 @@ export class FactureCommandeComponent {
   protected sending = false
   protected standAlon = true
   private factureService = inject(FactureService)
+
   private taxeService = inject(TaxeService)
   private commandeService = inject(CommandeService)
   private commandeProduitService = inject(CommandeProduitService)
@@ -143,10 +144,11 @@ export class FactureCommandeComponent {
   ngOnInit() {
     this.commandeService.findById(this.itemCommande.id).subscribe({
       next: data => {
-        this.commandeService.item = data
+        this.commandeService.item = data;
+        console.log(this.commandeService.item);
       },
       error: err => console.log(err)
-    })
+    });
   }
 
   retour() {

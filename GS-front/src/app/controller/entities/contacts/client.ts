@@ -19,7 +19,7 @@ export class Client {
   valeurCommandeMinimale!: number;
   adresse?: Adresse;
   devises?: Devises;
-  niveauPrix?: NiveauPrix;
+  niveauPrix!: NiveauPrix | undefined;
   taxe?: Taxe;
   entreprise?: Entreprise;
   clientProduitNiveauPrix ?: ClientProduitNiveauPrix [];

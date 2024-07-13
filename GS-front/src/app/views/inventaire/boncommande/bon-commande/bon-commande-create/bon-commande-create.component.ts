@@ -38,6 +38,7 @@ import {FactureProduit} from "../../../../../controller/entities/ventes/facture/
 import {Produit} from "../../../../../controller/entities/produit/produit";
 import {ProduitService} from "../../../../../controller/services/produit/produit.service";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {CommandeProduit} from "../../../../../controller/entities/ventes/commande/commande-produit";
 
 @Component({
   selector: 'app-bon-commande-create',
@@ -366,6 +367,8 @@ export class BonCommandeCreateComponent {
       this.item.bonCommandeProduit = []
     return this.item.bonCommandeProduit;
   }
+
+
   calculerTotal(bonCommandeProduit: BonCommandeProduit): number {
     console.log(this.item);
     // Vérifier si factureProduit1.produit existe
@@ -379,56 +382,40 @@ export class BonCommandeCreateComponent {
         }
       });
       console.log("prixProduit", prix);
-      // Calculer le sous-total
       let sousTotal = (bonCommandeProduit.quantite * prix);
-      console.log("sousTotal", sousTotal);
 
-      // Obtenir la taxe du produit
       let taxeProduit = bonCommandeProduit.produit.taxe ? bonCommandeProduit.produit.taxe.tauxImposition : 0.0;
-      console.log("taxeProduit", taxeProduit);
 
-      // Obtenir la taxe de la facture
-      let taxeFacture = this.taxeList?.find(it => it.id == this.item.taxe?.id)?.tauxImposition || 0.0;
-      console.log("taxeFacture", taxeFacture);
-
-      let totalFinal = 0; // Initialisation par défaut
+      let totalFinal = 0;
 
       // Si le type de rabais est un pourcentage
       if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
-        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit) / 100));
-        console.log("totalAvecTaxe (pourcentage)", totalAvecTaxe);
-
-        let disque = totalAvecTaxe * (this.item.rabais / 100);
-        console.log("disque (pourcentage)", disque);
-
-        totalFinal = totalAvecTaxe - disque; // Calcul du total final
-        console.log("totalFinal (pourcentage)", totalFinal);
+        let totalAvecTaxe = sousTotal * (1 + ((taxeProduit) / 100));
+        let disque = totalAvecTaxe * (bonCommandeProduit.disque / 100);
+        totalFinal = totalAvecTaxe - disque;
       }
       // Si le type de rabais est un montant fixe
       else if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.MONTANT) {
-        let totalAvecTaxe = sousTotal * (1 + ((taxeFacture + taxeProduit) / 100));
-        console.log("totalAvecTaxe (montant)", totalAvecTaxe);
-
-        let disque = this.item.rabais;
-        console.log("disque (montant)", disque);
-
-        totalFinal = totalAvecTaxe - disque; // Calcul du total final
-        console.log("totalFinal (montant)", totalFinal);
+        let totalAvecTaxe = sousTotal * (1 + (( taxeProduit) / 100));
+        let disque = bonCommandeProduit.disque;
+        totalFinal = totalAvecTaxe - disque;
       }
-
       totalFinal *= bonCommandeProduit.quantite || 1;
       totalFinal -= bonCommandeProduit.disque || 0;
-      totalFinal = parseFloat(totalFinal.toFixed(2)); // Formater le total avec 2 chiffres après la virgule
+      totalFinal = parseFloat(totalFinal.toFixed(2));
       bonCommandeProduit.total = totalFinal;
-      return totalFinal; // Retourne la valeur correcte de totalFinal
+      return totalFinal;
     }
-
-    console.log("Produit non trouvé...");
-    return 0; // Si aucun produit n'est trouvé, retourne 0
+    return 0;
   }
+
   deleteBonCmdProduit(itemFP: FactureProduit): void {
+    if (itemFP.produit) {
+      itemFP.produit.disponible = itemFP.produit.disponible + itemFP.quantite;
+    }
     this.item.bonCommandeProduit = this.item.bonCommandeProduit?.filter(item => item !== itemFP);
   }
+
   public addBonCmdProduits(produit: Produit): void {
     console.log(produit);
     if (this.item.bonCommandeProduit == null) {
@@ -469,6 +456,7 @@ export class BonCommandeCreateComponent {
     this.item.sousTotal = somme
     return somme.toFixed(2);
   }
+
   calculerSommeTotale(bonCommandeProduitList: BonCommandeProduit[]): number {
     const sommeTotale = bonCommandeProduitList.reduce((somme, bonCmdProduit) => {
       const total = this.calculerTotal(bonCmdProduit);
@@ -476,11 +464,29 @@ export class BonCommandeCreateComponent {
       return somme + total;
     }, 0);
 
-    const sommeTotaleFormatee = parseFloat(sommeTotale.toFixed(2));
+    let taxeFacture = this.taxeList?.find(it => it.id == this.item.taxe?.id)?.tauxImposition || 0.0;
+    let taxeExpedition = this.item.taxeExpedition?.tauxImposition != null ? this.item.taxeExpedition.tauxImposition : 0.0;
+
+    let sommeTotaleTaxe = 0;
+
+    // taxe rabais
+    if(this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = totalAvecTaxe * (this.item.rabais / 100);
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+    if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
+      let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
+      let rabais = this.item.rabais;
+      sommeTotaleTaxe = totalAvecTaxe - rabais;
+    }
+
+    const sommeTotaleFormatee = parseFloat(sommeTotaleTaxe.toFixed(2));
     console.log(`Somme totale formatée: ${sommeTotaleFormatee}`);
     this.item.total = sommeTotaleFormatee;
     return sommeTotaleFormatee;
   }
+
   calculerSommeQuantite(bonCommandeProduitList: BonCommandeProduit[]): number {
     let number = bonCommandeProduitList.reduce((sommeQuantite, bonCmdProduit) => {
       return sommeQuantite + (bonCmdProduit.quantite || 0);
@@ -488,10 +494,21 @@ export class BonCommandeCreateComponent {
     this.item.totalUnites = number
     return number;
   }
+
+  calculeRemiseGlobal(commandeProduitList: BonCommandeProduit[]): number {
+    let number = commandeProduitList.reduce((sommeRemise, boncommandeProduit) => {
+      return sommeRemise + (boncommandeProduit.disque || 0);
+    }, 0);
+    this.item.remiseGlobal = number + this.item.rabais;
+    return this.item.remiseGlobal;
+  }
+
+
   loadProduitList() {
     this.produitService.findAll().subscribe({
       next: data => this.produitList = data,
       error: err => console.log(err)
     })
   }
+
 }
