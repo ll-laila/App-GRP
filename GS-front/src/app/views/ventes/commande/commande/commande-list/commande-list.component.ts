@@ -9,7 +9,7 @@ import {
 } from "@coreui/angular";
 import {CommandeService} from "src/app/controller/services/ventes/commande/commande.service";
 import {Commande} from "src/app/controller/entities/ventes/commande/commande";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
 
@@ -34,6 +34,7 @@ export class CommandeListComponent {
   protected deleteModel = false
 
   private service = inject(CommandeService)
+  private router = inject(Router);
 
   ngOnInit() {
     this.findAll()
@@ -73,6 +74,12 @@ export class CommandeListComponent {
     })
   }
 
+  public navigateToPdfCreate() {
+    this.service.keepData = true
+    this.router.navigate(['/ventes/commande/commande/commandePdf']).then();
+  }
+
+
   // GETTERS AND SETTERS
   public get items() {
     return this.service.items;
@@ -102,6 +109,8 @@ export class CommandeListComponent {
     return generatePageNumbers(this.pagination)
   }
 
-  /////
+
   protected readonly paginationSizes = paginationSizes;
+
+
 }

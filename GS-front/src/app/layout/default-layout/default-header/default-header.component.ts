@@ -93,7 +93,9 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   isBonCmdPdfRoute(): boolean {
     return this.router.url === '/inventaire/boncommande/bon-commande/boncmdpdf'
-        || this.router.url === '/inventaire/livraison/livraison/livraisonpdf' ;
+        || this.router.url === '/inventaire/livraison/livraison/livraisonpdf'
+        || this.router.url === '/ventes/commande/commande/commandePdf'
+        || this.router.url === '/ventes/facture/facture/facturepdf';
   }
 
   getEntreprises(){

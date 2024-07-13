@@ -19,6 +19,7 @@ private double disque;
 private Produit produit;
 @ManyToOne(fetch = FetchType.LAZY)
 private Commande commande;
+
 public CommandeProduit() {
 }
 public Long getId() {
@@ -33,6 +34,7 @@ return total;
 public void setTotal(double value) {
 this.total = value;
 }
+
 public int getQuantite() {
 return quantite;
 }

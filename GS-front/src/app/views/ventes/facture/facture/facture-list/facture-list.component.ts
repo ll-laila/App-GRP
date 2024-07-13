@@ -141,6 +141,10 @@ export class FactureListComponent {
     }
   }
 
+  public navigateToPdfCreate() {
+    this.service.keepData = true
+    this.router.navigate(['/ventes/facture/facture/facturepdf']).then()
+  }
 
   create(){
     this.isEmploye = !!this.tokenService.getRole()?.some(it => it == "EMPLOYE");
