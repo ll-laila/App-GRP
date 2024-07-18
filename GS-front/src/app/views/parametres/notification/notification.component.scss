@@ -1,0 +1,26 @@
+body{
+  margin-top:20px;
+  background-color: #f0f2f5;
+}
+.dropdown-list-image {
+  position: relative;
+  height: 2.5rem;
+  width: 2.5rem;
+}
+.dropdown-list-image img {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+.btn-light {
+  color: #2cdd9b;
+  background-color: #e5f7f0;
+  border-color: #d8f7eb;
+}
+.date-container {
+  margin-left: 20px; /* Ajustez cette valeur selon vos besoins */
+}
+.icon-container {
+  font-size: 24px; /* Ajustez la taille de l'icône selon vos besoins */
+  margin-right: 15px; /* Espace entre l'icône et le message */
+  color: #007bff; /* Couleur de l'icône */
+}

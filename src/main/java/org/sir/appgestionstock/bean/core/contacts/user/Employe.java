@@ -1,4 +1,5 @@
 package org.sir.appgestionstock.bean.core.contacts.user;
+import org.sir.appgestionstock.bean.core.parametres.Notification;
 import org.sir.appgestionstock.ws.dto.contacts.user.PermissionsAccesDto;
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
 import org.sir.appgestionstock.bean.core.adresse.Adresse;
@@ -19,6 +20,8 @@ private String telephone;
 private Adresse adresse;
 @OneToMany(mappedBy = "employe")
 private List<DestinataireEmploye> destinataireEmploye;
+@OneToMany(mappedBy = "employee", cascade = CascadeType.ALL, orphanRemoval = true)
+private List<Notification> notifications;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Entreprise entreprise;
@@ -45,8 +48,15 @@ private List<DestinataireEmploye> destinataireEmploye;
 super();
 }
 
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
 
-public Employe(Long id, String label) {
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public Employe(Long id, String label) {
 // constructor to get optimized fields
 this.id = id;
 this.code = label;

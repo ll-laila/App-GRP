@@ -53,6 +53,8 @@ import {Produit} from "../../../../../controller/entities/produit/produit";
 import {ProduitService} from "../../../../../controller/services/produit/produit.service";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {ProduitNiveauPrix} from "../../../../../controller/entities/produit/produit-niveau-prix";
+import {NotificationService} from "../../../../../controller/services/parametres/notification.service";
+import {Employe} from "../../../../../controller/entities/contacts/user/employe";
 
 @Component({
   selector: 'app-commande-create',
@@ -95,6 +97,7 @@ export class CommandeCreateComponent {
   private factureService = inject(FactureService)
   private formBuilder: FormBuilder= inject(FormBuilder)
   private toasterService = inject(ToasterService)
+  private notificationService =inject(NotificationService)
 
   protected validator = CommandeValidator.init(() => this.item)
   //  .setFacture(FactureValidator.init(() => this.facture))
@@ -109,6 +112,7 @@ export class CommandeCreateComponent {
   protected produitList!: Produit[]
   protected readonly TypeRabaisEnum = TypeRabaisEnum;
   protected  clientP! : Client;
+  protected iSemploye = this.notificationService.isEmploye;
 
 
   ngOnInit() {
@@ -212,6 +216,37 @@ export class CommandeCreateComponent {
   }
 
   create() {
+    console.log('create() method called');
+    this.iSemploye = this.notificationService.isEmploye;
+    console.log(this.iSemploye);
+    // Vérifiez si l'utilisateur est un employé avant de créer la notification
+    if (this.iSemploye == 1) {
+      console.log('User is an employe');
+      this.notificationService.getEmployeByUsername().subscribe({
+        next: (employe: Employe) => {
+          const nomEmploye = employe?.nom || 'Nom Inconnu';
+          // Créez la notification une fois que l'employé est récupéré
+          this.notificationService.createNotification(
+              'Commande',
+              'Une nouvelle commande a été créée.',
+              nomEmploye,
+              employe
+          ).subscribe({
+            next: response => {
+              console.log('Notification envoyée avec succès', response);
+            },
+            error: error => {
+              console.error('Erreur lors de l\'envoi de la notification', error);
+            }
+          });
+        },
+        error: err => {
+          console.error('Erreur lors de la récupération de l\'employé pour la notification', err);
+        }
+      });
+    } else {
+      console.log('User is not an employe');
+    }
     console.log(this.item)
     if (!this.validator.validate()){
       console.log(this.validator);
@@ -237,7 +272,7 @@ export class CommandeCreateComponent {
     })
   }
 
-///////////////////////////////////////////////////////////////////////////////////////
+
 
   protected dispo = 0;
 

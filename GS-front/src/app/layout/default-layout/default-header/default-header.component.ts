@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, Input } from '@angular/core';
+import {Component, DestroyRef, inject, Input} from '@angular/core';
 import {
   AvatarComponent,
   BadgeComponent,
@@ -10,18 +10,22 @@ import {
   DropdownHeaderDirective,
   DropdownItemDirective,
   DropdownMenuDirective,
-  DropdownToggleDirective, FormSelectDirective,
+  DropdownToggleDirective,
+  FormSelectDirective,
   HeaderComponent,
   HeaderNavComponent,
-  HeaderTogglerDirective, InputGroupComponent,
+  HeaderTogglerDirective,
+  InputGroupComponent,
   NavItemComponent,
   NavLinkDirective,
   ProgressBarDirective,
   ProgressComponent,
-  SidebarToggleDirective, SpinnerComponent,
+  SidebarToggleDirective,
+  SpinnerComponent,
   TextColorDirective,
   ThemeDirective
 } from '@coreui/angular';
+
 import { NgForOf, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
@@ -34,12 +38,13 @@ import { FormsModule } from '@angular/forms';
 import { Entreprise } from '../../../controller/entities/parametres/entreprise';
 import { EntrepriseService } from '../../../controller/services/parametres/entreprise.service';
 import { EntrepriseSharedService } from '../../../controller/shared/entreprise-shared.service';
+import {NgForOf,NgIf, NgStyle, NgTemplateOutlet} from '@angular/common';
 
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
   standalone: true,
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, ThemeDirective, DropdownComponent, DropdownToggleDirective, TextColorDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ProgressBarDirective, ProgressComponent, NgStyle, SpinnerComponent, FormSelectDirective, FormsModule, InputGroupComponent, NgForOf]
+  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, ThemeDirective, DropdownComponent, DropdownToggleDirective, TextColorDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ProgressBarDirective, ProgressComponent, NgStyle, SpinnerComponent, FormSelectDirective, FormsModule, InputGroupComponent, NgForOf,NgIf]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
 
@@ -88,6 +93,9 @@ export class DefaultHeaderComponent extends HeaderComponent {
   profile() {
     this.router.navigate(['/profil']).then();
   }
+  notification(){
+    this.router.navigate(["/notification"]).then();
+  }
 
   printReport(): void {
     window.print();
@@ -130,4 +138,9 @@ export class DefaultHeaderComponent extends HeaderComponent {
   trackById(index: number, item: Entreprise): number {
     return item.id;
   }
+
+  public get adminRole() {
+    return !!this.tokenService.getRole()?.some(it => it == "ADMIN")
+  }
+
 }
