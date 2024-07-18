@@ -8,6 +8,8 @@ import { FactureValidator } from 'src/app/controller/validators/ventes/facture/f
 import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
 import {Facture} from "../../../entities/ventes/facture/facture";
+import {Entreprise} from "../../../entities/parametres/entreprise";
+
 
 @Injectable({ providedIn: 'root' })
 export class CommandeService {
@@ -21,6 +23,10 @@ export class CommandeService {
   public keepData: boolean = false
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
+
+    public getNbCommandes(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/commandes/${entrepriseId}`);
+    }
 
   public findAll() {
     return this.http.get<Array<Commande>>(this.api);

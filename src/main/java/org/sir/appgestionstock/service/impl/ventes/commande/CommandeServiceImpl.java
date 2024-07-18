@@ -1,5 +1,7 @@
 package org.sir.appgestionstock.service.impl.ventes.commande;
 
+import org.sir.appgestionstock.bean.core.contacts.Client;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.bean.core.ventes.commande.CommandeProduit;
 import org.sir.appgestionstock.bean.core.ventes.facture.Facture;
@@ -391,6 +393,17 @@ public class CommandeServiceImpl implements CommandeService {
     public Long findMaxId() {
         return dao.findMaxId();
     }
+
+
+
+
+    @Override
+    public double getNbCommandes(Long entrepriseId){
+        List<Commande> commandes = dao.findByEntrepriseId(entrepriseId);
+        return commandes.size();
+    }
+
+
 
     //----------------------------------------------------------
     @Autowired

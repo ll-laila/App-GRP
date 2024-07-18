@@ -24,4 +24,6 @@ public interface EmployeDao extends JpaRepository<Employe, Long> {
     @Query("SELECT MAX(item.id) FROM Employe item")
     Long findMaxId();
 
+    
+
 }

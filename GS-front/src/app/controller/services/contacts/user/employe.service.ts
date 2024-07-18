@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Employe } from 'src/app/controller/entities/contacts/user/employe';
 import {CodeResponse} from "../../../utils/code/code-response";
+import {Entreprise} from "../../../entities/parametres/entreprise";
 
 @Injectable({ providedIn: 'root' })
 export class EmployeService {
@@ -29,6 +30,7 @@ export class EmployeService {
     public findByUserName(username: string) {
         return this.http.get<Employe>(`${this.api}/${username}`);
     }
+
 
   public findAllOptimized() {
     return this.http.get<Array<Employe>>(`${this.api}/optimized`);

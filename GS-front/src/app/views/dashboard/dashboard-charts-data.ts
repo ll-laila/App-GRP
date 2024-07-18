@@ -39,6 +39,7 @@ export class DashboardChartsData {
   initMainChart(period: string = 'Month') {
     const brandSuccess = getStyle('--cui-success') ?? '#4dbd74';
     const brandInfo = getStyle('--cui-info') ?? '#20a8d8';
+    const brandYellow = getStyle('--cui-warning') ?? '#fae602';
     const brandInfoBg = hexToRgba(getStyle('--cui-info') ?? '#20a8d8', 10);
     const brandDanger = getStyle('--cui-danger') ?? '#f86c6b';
 
@@ -47,40 +48,42 @@ export class DashboardChartsData {
     this.mainChart['Data1'] = [];
     this.mainChart['Data2'] = [];
     this.mainChart['Data3'] = [];
+    this.mainChart['Data4'] = [];
 
     // generate random values for mainChart
     for (let i = 0; i <= this.mainChart['elements']; i++) {
       this.mainChart['Data1'].push(this.random(50, 240));
       this.mainChart['Data2'].push(this.random(20, 160));
-      this.mainChart['Data3'].push(65);
+      this.mainChart['Data3'].push(this.random(10, 100));
+      this.mainChart['Data4'].push(this.random(0, 300));
     }
 
     let labels: string[] = [];
     if (period === 'Month') {
-      labels = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
+       labels = [
+        'Janvier',
+        'Février',
+        'Mars',
+        'Avril',
+        'Mai',
+        'Juin',
+        'Juillet',
+        'Août',
+        'Septembre',
+        'Octobre',
+        'Novembre',
+        'Décembre'
       ];
     } else {
       /* tslint:disable:max-line-length */
       const week = [
-        'Monday',
-        'Tuesday',
-        'Wednesday',
-        'Thursday',
-        'Friday',
-        'Saturday',
-        'Sunday'
+        'Lundi',
+        'Mardi',
+        'Mercredi',
+        'Jeudi',
+        'Vendredi',
+        'Samedi',
+        'Dimanche'
       ];
       labels = week.concat(week, week, week);
     }
@@ -98,6 +101,12 @@ export class DashboardChartsData {
         // brandSuccess
         backgroundColor: 'transparent',
         borderColor: brandSuccess || '#4dbd74',
+        pointHoverBackgroundColor: '#fff'
+      },
+      {
+        // brandSuccess
+        backgroundColor: 'transparent',
+        borderColor: brandYellow || '#fae602',
         pointHoverBackgroundColor: '#fff'
       },
       {
@@ -125,8 +134,14 @@ export class DashboardChartsData {
         data: this.mainChart['Data3'],
         label: 'BEP',
         ...colors[2]
+      },
+      {
+        data: this.mainChart['Data4'],
+        label: 'BEP',
+        ...colors[3]
       }
     ];
+
 
     const plugins: DeepPartial<PluginOptionsByType<any>> = {
       legend: {
@@ -140,6 +155,7 @@ export class DashboardChartsData {
     };
 
     const scales = this.getScales();
+
 
     const options: ChartOptions = {
       maintainAspectRatio: false,
@@ -166,6 +182,8 @@ export class DashboardChartsData {
     };
   }
 
+
+
   getScales() {
     const colorBorderTranslucent = getStyle('--cui-border-color-translucent');
     const colorBody = getStyle('--cui-body-color');
@@ -187,12 +205,12 @@ export class DashboardChartsData {
         grid: {
           color: colorBorderTranslucent
         },
-        max: 250,
+        max: 1000,
         beginAtZero: true,
         ticks: {
           color: colorBody,
           maxTicksLimit: 5,
-          stepSize: Math.ceil(250 / 5)
+          stepSize: Math.ceil(1000 / 500)
         }
       }
     };

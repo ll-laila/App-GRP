@@ -5,6 +5,9 @@ import org.sir.appgestionstock.bean.core.parametres.MethodePaiement;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface PaiementService {
+
+double getIncome(Long entrepriseId);
+
 Paiement findById(Long id);
 List<Paiement> findAllOptimized();
 List<Paiement> findAll();

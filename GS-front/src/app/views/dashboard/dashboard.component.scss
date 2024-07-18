@@ -5,3 +5,17 @@
     }
   }
 }
+
+.card-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.card-content {
+  flex: 1;
+}
+
+.image-container {
+  flex: 0 0 auto;
+  margin-left: 20px; /* Ajoutez la marge souhaitée */
+}

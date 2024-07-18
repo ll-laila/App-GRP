@@ -7,7 +7,12 @@ import org.sir.appgestionstock.bean.core.parametres.Devises;
 import org.sir.appgestionstock.bean.core.parametres.Taxe;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
+import java.util.Map;
+
 public interface ClientService {
+
+Map<String, Map<String, Long>> getClientStatsForCurrentWeek(Long idEntreprise);
+double getNbClients(Long idEntreprise);
 Client findById(Long id);
 List<Client> findAllOptimized();
 List<Client> findAll();

@@ -22,17 +22,18 @@ import {
   TextColorDirective,
   ThemeDirective
 } from '@coreui/angular';
-import {NgForOf, NgStyle, NgTemplateOutlet} from '@angular/common';
+import { NgForOf, NgStyle, NgTemplateOutlet } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { delay, filter, map, tap } from 'rxjs/operators';
-import {TokenService} from "src/app/controller/auth/services/token.service";
-import {UserInfosService} from "../../../controller/shared/user-infos.service";
-import {AppUserService} from "../../../controller/auth/services/app-user.service";
-import {FormsModule} from "@angular/forms";
-import {Entreprise} from "../../../controller/entities/parametres/entreprise";
-import {EntrepriseService} from "../../../controller/services/parametres/entreprise.service";
+import { TokenService } from 'src/app/controller/auth/services/token.service';
+import { UserInfosService } from '../../../controller/shared/user-infos.service';
+import { AppUserService } from '../../../controller/auth/services/app-user.service';
+import { FormsModule } from '@angular/forms';
+import { Entreprise } from '../../../controller/entities/parametres/entreprise';
+import { EntrepriseService } from '../../../controller/services/parametres/entreprise.service';
+import { EntrepriseSharedService } from '../../../controller/shared/entreprise-shared.service';
 
 @Component({
   selector: 'app-default-header',
@@ -52,6 +53,8 @@ export class DefaultHeaderComponent extends HeaderComponent {
   readonly router = inject(Router);
 
   public entreprises!: Entreprise[];
+  public entrepriseSelected!: Entreprise;
+  private entrepriseSharedService = inject(EntrepriseSharedService);
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -59,32 +62,31 @@ export class DefaultHeaderComponent extends HeaderComponent {
     this.#colorModeService.eventName.set('ColorSchemeChange');
 
     this.#activatedRoute.queryParams
-      .pipe(
-        delay(1),
-        map(params => <string>params['theme']?.match(/^[A-Za-z0-9\s]+/)?.[0]),
-        filter(theme => ['dark', 'light', 'auto'].includes(theme)),
-        tap(theme => {
-          this.colorMode.set(theme);
-        }),
-        takeUntilDestroyed(this.#destroyRef)
-      )
-      .subscribe();
-
+        .pipe(
+            delay(1),
+            map(params => <string>params['theme']?.match(/^[A-Za-z0-9\s]+/)?.[0]),
+            filter(theme => ['dark', 'light', 'auto'].includes(theme)),
+            tap(theme => {
+              this.colorMode.set(theme);
+            }),
+            takeUntilDestroyed(this.#destroyRef)
+        )
+        .subscribe();
   }
 
   ngOnInit() {
     this.getEntreprises();
   }
 
-
   @Input() sidebarId: string = 'sidebar1';
 
   logout() {
     this.tokenService.clearToken()
-    this.router.navigate(["/login"]).then()
+    this.router.navigate(['/login']).then();
   }
+
   profile() {
-    this.router.navigate(["/profil"]).then();
+    this.router.navigate(['/profil']).then();
   }
 
   printReport(): void {
@@ -98,18 +100,34 @@ export class DefaultHeaderComponent extends HeaderComponent {
         || this.router.url === '/ventes/facture/facture/facturepdf';
   }
 
-  getEntreprises(){
+  getEntreprises() {
     this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe(res => {
       console.log(res);
       this.entreprises = res;
+      if (this.entreprises.length > 0) {
+        this.entrepriseSharedService.setEntreprise(this.entreprises[0]);
+      }
     }, error => {
       console.log(error);
     });
   }
 
+  onEntrepriseChange(event: Event) {
+    const selectElement = event.target as HTMLSelectElement;
+    const selectedId = Number(selectElement.value);
+    const selectedEntreprise = this.entreprises.find(it => it.id === selectedId);
+
+    if (selectedEntreprise) {
+      this.entrepriseSelected = selectedEntreprise;
+      this.entrepriseSharedService.setEntreprise(this.entrepriseSelected);
+      console.log("from header : ", this.entrepriseSharedService.getEntreprise());
+    } else {
+      console.error('Entreprise not found');
+    }
+  }
+
+
   trackById(index: number, item: Entreprise): number {
     return item.id;
   }
-
 }
-

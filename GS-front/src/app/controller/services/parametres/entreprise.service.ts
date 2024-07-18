@@ -20,6 +20,11 @@ export class EntrepriseService {
   public toReturn = () => this.returnUrl != undefined
 
 
+
+  public findEntreprisesAdroitAcces(id : number) {
+    return this.http.get<Array<Entreprise>>(`${this.api}/employe/${id}`);
+  }
+
   public findAll() {
     return this.http.get<Array<Entreprise>>(this.api);
   }

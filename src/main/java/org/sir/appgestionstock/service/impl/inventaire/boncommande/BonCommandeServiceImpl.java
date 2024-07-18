@@ -1,6 +1,7 @@
 package org.sir.appgestionstock.service.impl.inventaire.boncommande;
 import org.sir.appgestionstock.bean.core.inventaire.boncommande.BonCommande;
 import org.sir.appgestionstock.bean.core.ventes.Paiement;
+import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.bean.core.ventes.facture.Facture;
 import org.sir.appgestionstock.bean.enums.StatutFactureEnum;
 import org.sir.appgestionstock.dao.inventaire.boncommande.BonCommandeDao;
@@ -327,6 +328,24 @@ deleteAssociatedList(item);
 public void deleteAssociatedList(BonCommande item) {
 bonCommandeProduitService.deleteByBonCommandeId(item.getId());
 }
+
+
+
+@Override
+public double getCout(Long id){
+    Entreprise entreprise = entrepriseService.findById(id);
+    List<BonCommande> Boncommandes = dao.findByEntreprise(entreprise);
+    double sommeTotale = 0;
+
+    for (BonCommande boncommande : Boncommandes) {
+        sommeTotale += boncommande.getTotal();
+    }
+
+    return sommeTotale;
+
+}
+
+
 //----------------------------------------------------------
 @Autowired private BonCommandeDao dao;
 @Lazy @Autowired private LivraisonService livraisonService;

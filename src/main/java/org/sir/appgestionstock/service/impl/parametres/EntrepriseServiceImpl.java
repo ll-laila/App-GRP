@@ -304,6 +304,11 @@ public List<Entreprise> findEntrepriseByAdmin(String username){
 }
 
 
+@Override
+public List<Entreprise> findEntrepriseDroitAcces(Long idEmploye){
+    return dao.findEntreprisesByEmployeId(idEmploye);
+}
+
 
 //----------------------------------------------------------
 @Autowired private EntrepriseDao dao;

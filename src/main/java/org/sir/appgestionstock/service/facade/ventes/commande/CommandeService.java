@@ -1,8 +1,12 @@
 package org.sir.appgestionstock.service.facade.ventes.commande;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface CommandeService {
+
+double getNbCommandes(Long entrepriseId);
+
 Commande findById(Long id);
 List<Commande> findAllOptimized();
 List<Commande> findAll();

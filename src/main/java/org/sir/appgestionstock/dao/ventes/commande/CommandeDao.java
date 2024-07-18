@@ -1,4 +1,5 @@
 package org.sir.appgestionstock.dao.ventes.commande;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,4 +28,7 @@ List<Commande> findByEntrepriseId(Long id);
 List<Commande> findAllOptimized();
     @Query("SELECT MAX(item.id) FROM Commande item")
     Long findMaxId();
+
+
+
 }

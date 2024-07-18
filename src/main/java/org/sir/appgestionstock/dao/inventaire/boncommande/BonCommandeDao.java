@@ -1,5 +1,7 @@
 package org.sir.appgestionstock.dao.inventaire.boncommande;
 import org.sir.appgestionstock.bean.core.inventaire.boncommande.BonCommande;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
+import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
@@ -23,4 +25,9 @@ List<BonCommande> findByEntrepriseId(Long id);
 List<BonCommande> findAllOptimized();
     @Query("SELECT MAX(item.id) FROM BonCommande item")
     Long findMaxId();
+
+
+    List<BonCommande> findByEntreprise(Entreprise entreprise);
+
+
 }

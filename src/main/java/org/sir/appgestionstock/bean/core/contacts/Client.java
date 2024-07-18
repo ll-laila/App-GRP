@@ -37,6 +37,8 @@ private Taxe taxe;
 private List<ClientProduitNiveauPrix> clientProduitNiveauPrix;
 @ManyToOne(fetch = FetchType.LAZY)
 private Entreprise entreprise;
+private LocalDate creationDate;
+
 public Client() {
 }
 public Client(Long id, String label) {
@@ -141,6 +143,13 @@ this.entreprise = value;
 
     public void setClientProduitNiveauPrix(List<ClientProduitNiveauPrix> clientProduitNiveauPrix) {
         this.clientProduitNiveauPrix = clientProduitNiveauPrix;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+    public void setCreationDate(LocalDate value) {
+        this.creationDate = value;
     }
 
     @Override

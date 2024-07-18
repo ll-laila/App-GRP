@@ -1,7 +1,10 @@
 package org.sir.appgestionstock.ws.providers.ventes.commande;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.service.facade.ventes.commande.CommandeService;
+import org.sir.appgestionstock.ws.converter.parametres.EntrepriseConverter;
 import org.sir.appgestionstock.ws.converter.ventes.commande.CommandeConverter;
+import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.ws.dto.ventes.commande.CommandeDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
 import org.sir.appgestionstock.zutils.code.CodeResponse;
@@ -16,6 +19,8 @@ import java.util.List;
 public class CommandeProvider {
 @Autowired private CommandeService service;
 @Autowired private CommandeConverter converter;
+@Autowired private EntrepriseConverter entrepriseConverter;
+
 @GetMapping("/id/{id}")
 public ResponseEntity<CommandeDto> findById(@PathVariable Long id) {
 var result = service.findById(id);
@@ -28,6 +33,14 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+
+    @GetMapping("/commandes/{id}")
+    public ResponseEntity<Double> getNbCommandes(@PathVariable Long id) {
+        double result = service.getNbCommandes(id);
+        return ResponseEntity.ok(result);
+    }
+
 @GetMapping("/optimized")
 public ResponseEntity<List<CommandeDto>> findAllOptimized() {
 var result = service.findAllOptimized();

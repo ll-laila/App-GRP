@@ -20,6 +20,9 @@ export class BonCommandeService {
   public keepData: boolean = false
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
+    public getCout(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/cout/${entrepriseId}`);
+    }
 
   public findAll() {
     return this.http.get<Array<BonCommande>>(this.api);

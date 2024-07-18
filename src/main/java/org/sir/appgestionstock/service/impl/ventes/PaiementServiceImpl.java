@@ -163,6 +163,20 @@ public void deleteAssociatedObjects(Paiement item) {
 ServiceHelper.nullifyInContainer(item.getId(), devisService::findByPaiementId, Devis::setPaiement, (Devis value) -> devisService.update(value));
 ServiceHelper.nullifyInContainer(item.getId(), factureService::findByPaiementId, Facture::setPaiement, (Facture value) -> factureService.update(value));
 }
+
+
+    @Override
+    public double getIncome(Long entrepriseId) {
+        List<Paiement> paiements = dao.findByEntrepriseId(entrepriseId);
+        double sommeTotale = 0;
+
+        for (Paiement commande : paiements) {
+            sommeTotale += commande.getMontantPaye();
+        }
+
+        return sommeTotale;
+    }
+
 //----------------------------------------------------------
 @Autowired private PaiementDao dao;
 @Lazy @Autowired private MethodePaiementService methodePaiementService;

@@ -10,6 +10,7 @@ import org.sir.appgestionstock.bean.core.parametres.Taxe;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface BonCommandeService {
+double getCout(Long id);
 BonCommande findById(Long id);
 List<BonCommande> findAllOptimized();
 List<BonCommande> findAll();

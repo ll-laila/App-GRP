@@ -31,6 +31,7 @@ private double prixGros;
 private double prixDetailRecommande;
 private double prixAchat;
 private double disponible;
+
 @OneToOne()
 private NiveauStock niveauStock;
 @ManyToOne(fetch = FetchType.LAZY)

@@ -20,6 +20,11 @@ export const routes: Routes = [
       },
 
 // START MY ENTITIES ---------------------------------------------->
+      {
+        path: 'widgets',
+        loadChildren: () => import('./views/widgets/routes').then((m) => m.routes)
+      },
+
   {
   path: 'contacts',
   loadChildren: () => import('./views/contacts/routes').then((m) => m.routes)
