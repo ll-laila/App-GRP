@@ -37,6 +37,10 @@ public class EmployeServiceImpl implements EmployeService {
         return dao.findByUsername(username);
     }
 
+    @Transactional
+    public Employe getEmployeeByNotificationId(Long notificationId) {
+        return dao.findByNotificationId(notificationId);
+    }
 
     public Employe findById(Long id) {
         return dao.findById(id).orElse(null);

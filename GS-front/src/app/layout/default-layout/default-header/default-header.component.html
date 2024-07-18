@@ -29,7 +29,7 @@
         </select>
       </a>
     <!--notifications-->
-      <a cNavLink>
+      <a *ngIf="adminRole" cNavLink (click)="notification()">
         <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
       </a>
       <a cNavLink>

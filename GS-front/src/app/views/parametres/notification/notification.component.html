@@ -1,0 +1,42 @@
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9 right">
+            <div class="box shadow-sm rounded bg-white mb-3">
+                <div class="box-title border-bottom p-3">
+                    <h6 class="m-0">Recent</h6>
+                </div>
+                <div class="box-body p-0">
+                    <div *ngFor="let notification of notifications" class="p-3 d-flex align-items-center bg-light border-bottom osahan-post-header">
+                        <!-- Icône de notification -->
+                        <div class="icon-container">
+                            <i class="fas fa-bell"></i>
+                        </div>
+                        <!-- Contenu de la notification -->
+                        <div class="font-weight-bold flex-grow-1">
+                            <div class="text-truncate">{{ notification.type }}</div>
+                            <div class="small">{{ notification.message }}, {{ notification.nomEmploye }}</div>
+                        </div>
+                        <!-- Actions -->
+                        <span class="ml-auto mb-auto text-right">
+              <div class="btn-group">
+                <button type="button" class="btn btn-light btn-sm rounded" (click)="toggleDropdown()">
+                  <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-menu dropdown-menu-right" [class.show]="isDropdownOpen">
+                  <button class="dropdown-item" type="button">
+                    <i class="fas fa-trash-alt text-danger"></i> Delete
+                  </button>
+                  <button class="dropdown-item" type="button">
+                    <i class="fas fa-times"></i> Turn Off
+                  </button>
+                </div>
+              </div>
+              <br />
+              <div class="text-muted pt-1 date-container">3d</div>
+            </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

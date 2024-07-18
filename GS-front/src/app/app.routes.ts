@@ -48,6 +48,11 @@ export const routes: Routes = [
         path: 'profil',
         loadComponent: () => import('./views/pages/profil/profil.component').then(m => m.ProfilComponent),
         data: {title: 'profil Page'}
+      },
+      {
+        path: 'notification',
+        loadComponent: () => import('./views/parametres/notification/notification.component').then(m => m.NotificationComponent),
+        data: {title: 'profil Page'}
       }
 
     ]

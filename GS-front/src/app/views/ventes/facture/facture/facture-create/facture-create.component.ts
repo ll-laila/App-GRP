@@ -59,6 +59,7 @@ import {Commande} from "../../../../../controller/entities/ventes/commande/comma
 import {CommandeProduitService} from "../../../../../controller/services/ventes/commande/commande-produit.service";
 import {CommandeProduit} from "../../../../../controller/entities/ventes/commande/commande-produit";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {NotificationService} from "../../../../../controller/services/parametres/notification.service";
 
 @Component({
   selector: 'app-facture-create',
@@ -112,6 +113,7 @@ export class FactureCreateComponent implements OnChanges {
   private commandeService = inject(CommandeService)
   private commandeProduitService= inject(CommandeProduitService)
   private formBuilder: FormBuilder = inject(FormBuilder)
+  private notificationService =inject(NotificationService)
   protected validator = FactureValidator.init(() => this.item)
   // .setPaiement(PaiementValidator.init(() => this.paiement))
   // .setRetourProduit(RetourProduitValidator.init(() => this.retourProduit))
@@ -126,6 +128,8 @@ export class FactureCreateComponent implements OnChanges {
   protected produitList!: Produit[]
   protected factureProduits!: FactureProduit[]
   protected readonly TypeRabaisEnum = TypeRabaisEnum;
+  protected iSemploye = this.notificationService.isEmploye;
+
 
 //selectedDate: any = this.datePipe.transform(new Date(),"yyyy-MM-dd");
 
