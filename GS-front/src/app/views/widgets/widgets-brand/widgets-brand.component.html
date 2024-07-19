@@ -1,0 +1,9 @@
+<c-row class="g-4">
+  @for (widget of brandData; track widget; let i = $index) {
+  <c-col sm="6" xl="3">
+    <c-widget-stat-d [values]="widget.values">
+      <img [src]="widget.icon" height="150" width="250" style="border: none;" />
+    </c-widget-stat-d>
+  </c-col>
+  }
+</c-row>

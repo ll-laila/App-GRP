@@ -18,8 +18,12 @@ export class PaiementService {
   public keepData: boolean = false
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
+    public getIncome(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/income/${entrepriseId}`);
+    }
 
-  public findAll() {
+
+    public findAll() {
     return this.http.get<Array<Paiement>>(this.api);
   }
 

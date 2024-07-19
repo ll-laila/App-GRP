@@ -1,8 +1,11 @@
 package org.sir.appgestionstock.ws.providers.inventaire.boncommande;
 import org.sir.appgestionstock.bean.core.inventaire.boncommande.BonCommande;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.service.facade.inventaire.boncommande.BonCommandeService;
 import org.sir.appgestionstock.ws.converter.inventaire.boncommande.BonCommandeConverter;
+import org.sir.appgestionstock.ws.converter.parametres.EntrepriseConverter;
 import org.sir.appgestionstock.ws.dto.inventaire.boncommande.BonCommandeDto;
+import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
 import org.sir.appgestionstock.zutils.code.CodeResponse;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
@@ -16,6 +19,8 @@ import java.util.List;
 public class BonCommandeProvider {
 @Autowired private BonCommandeService service;
 @Autowired private BonCommandeConverter converter;
+@Autowired private EntrepriseConverter entrepriseConverter;
+
 @GetMapping("/id/{id}")
 public ResponseEntity<BonCommandeDto> findById(@PathVariable Long id) {
 var result = service.findById(id);
@@ -29,6 +34,12 @@ return ResponseEntity.ok(resultDto);
         var result = service.findAllByIdFor(idFor);
         var resultDto = converter.toDto(result);
         return ResponseEntity.ok(resultDto);
+    }
+
+    @GetMapping("/cout/{id}")
+    public ResponseEntity<Double> getCout(@PathVariable Long id) {
+        double result = service.getCout(id);
+        return ResponseEntity.ok(result);
     }
 
 @GetMapping

@@ -6,6 +6,7 @@ import { Client } from 'src/app/controller/entities/contacts/client';
 import { ClientValidator } from 'src/app/controller/validators/contacts/client.validator';
 import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.validator';
 import {CodeResponse} from "../../utils/code/code-response";
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ClientService {
@@ -19,6 +20,13 @@ export class ClientService {
   public keepData: boolean = false
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
+    public getNbClients(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/clients/${entrepriseId}`);
+    }
+
+    public getClientStats(idEntreprise: number): Observable<any> {
+        return this.http.get(`${this.api}/client-stats/${idEntreprise}`);
+    }
 
   public findAll() {
     return this.http.get<Array<Client>>(this.api);

@@ -19,4 +19,6 @@ void deleteByIdIn(List<Long> ids);
 int deleteByAdresseId(Long id);
 Entreprise findByAdresseId(Long id);
 List<Entreprise> findEntrepriseByAdmin(String idAdmin);
+
+List<Entreprise> findEntrepriseDroitAcces(Long idEmploye);
 }

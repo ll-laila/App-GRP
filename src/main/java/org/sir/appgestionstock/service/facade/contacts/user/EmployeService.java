@@ -9,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 public interface EmployeService {
+
 Employe findByUsername(String username);
 Employe getEmployeeByNotificationId(Long notificationId);
 Employe findById(Long id);

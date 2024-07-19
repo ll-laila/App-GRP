@@ -1,7 +1,10 @@
 package org.sir.appgestionstock.dao.contacts;
 import org.sir.appgestionstock.bean.core.contacts.Client;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDate;
 import java.util.List;
 public interface ClientDao extends JpaRepository<Client, Long> {
 int deleteByIdIn(List<Long> ids);
@@ -19,4 +22,8 @@ List<Client> findByEntrepriseId(Long id);
 List<Client> findAllOptimized();
     @Query("SELECT MAX(item.id) FROM Client item")
     Long findMaxId();
+
+
+    List<Client> findAllByEntrepriseIdAndCreationDateBetween(Long entrepriseId, LocalDate startDate, LocalDate endDate);
+
 }

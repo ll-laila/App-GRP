@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/client")
 public class ClientProvider {
@@ -28,6 +30,19 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+    @GetMapping("/clients/{idEntreprise}")
+    public ResponseEntity<Double> getIncome(@PathVariable Long idEntreprise) {
+        double result = service.getNbClients(idEntreprise);
+        return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/client-stats/{idEntreprise}")
+    public Map<String, Map<String, Long>> getClientStatsForCurrentWeek(@PathVariable Long idEntreprise) {
+        return service.getClientStatsForCurrentWeek(idEntreprise);
+    }
+
+
 @GetMapping("/optimized")
 public ResponseEntity<List<ClientDto>> findAllOptimized() {
 var result = service.findAllOptimized();

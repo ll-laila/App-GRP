@@ -4,6 +4,7 @@ import org.sir.appgestionstock.bean.core.ClientProduitNiveauPrix;
 import org.sir.appgestionstock.bean.core.contacts.Client;
 import org.sir.appgestionstock.bean.core.produit.Produit;
 import org.sir.appgestionstock.bean.core.produit.ProduitNiveauPrix;
+import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.dao.contacts.ClientDao;
 import org.sir.appgestionstock.service.facade.ClientProduitNiveauPrixService;
 import org.sir.appgestionstock.service.facade.contacts.ClientService;
@@ -26,8 +27,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -59,6 +65,8 @@ public class ClientServiceImpl implements ClientService {
                 found.isLast()
         );
     }
+
+
 
     //--------------- CREATE -----------------------------------
     @Transactional(rollbackFor = Exception.class)
@@ -105,6 +113,7 @@ public class ClientServiceImpl implements ClientService {
             }
         }
         createAssociatedObject(item);
+        item.setCreationDate(LocalDate.now());
         var saved = dao.save(item);
         ServiceHelper.createList(saved, Client::getClientProduitNiveauPrix, ClientProduitNiveauPrix::setClient,clientProduitNiveauPrixService::create);
         return saved;
@@ -240,6 +249,52 @@ public class ClientServiceImpl implements ClientService {
     public Long findMaxId() {
         return dao.findMaxId();
     }
+
+
+    @Override
+    public double getNbClients(Long idEntreprise){
+        List<Client> clients = dao.findByEntrepriseId(idEntreprise);
+        return clients.size();
+    }
+
+
+    @Override
+    public Map<String, Map<String, Long>> getClientStatsForCurrentWeek(Long idEntreprise) {
+        Map<String, Map<String, Long>> clientStats = new HashMap<>();
+
+        LocalDate today = LocalDate.now();
+        LocalDate startOfWeek = today.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+        LocalDate endOfWeek = today.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+
+        List<Client> clients = dao.findAllByEntrepriseIdAndCreationDateBetween(idEntreprise, startOfWeek, endOfWeek);
+
+        for (LocalDate date = startOfWeek; !date.isAfter(endOfWeek); date = date.plusDays(1)) {
+            final LocalDate currentDate = date; // Déclarer currentDate comme finale
+
+            String day = currentDate.getDayOfWeek().toString();
+
+            // Count new clients created on the current day
+            long newClientsCount = clients.stream()
+                    .filter(client -> client.getCreationDate().isEqual(currentDate))
+                    .count();
+
+            // Count recurring clients created before the current day
+            long recurringClientsCount = clients.stream()
+                    .filter(client -> client.getCreationDate().isBefore(currentDate))
+                    .count();
+
+            recurringClientsCount = recurringClientsCount + newClientsCount;
+
+            Map<String, Long> dailyStats = new HashMap<>();
+            dailyStats.put("newClients", newClientsCount);
+            dailyStats.put("recurringClients", recurringClientsCount);
+
+            clientStats.put(day, dailyStats);
+        }
+
+        return clientStats;
+    }
+
 
     //----------------------------------------------------------
     @Autowired

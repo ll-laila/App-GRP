@@ -26,6 +26,14 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+
+    @GetMapping("/income/{id}")
+    public ResponseEntity<Double> getIncome(@PathVariable Long id) {
+        double result = service.getIncome(id);
+        return ResponseEntity.ok(result);
+    }
+
 @GetMapping("/optimized")
 public ResponseEntity<List<PaiementDto>> findAllOptimized() {
 var result = service.findAllOptimized();

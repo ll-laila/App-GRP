@@ -34,6 +34,13 @@ return ResponseEntity.ok(resultDto);
         return ResponseEntity.ok(resultDto);
     }
 
+    @GetMapping("/employe/{id}")
+    public ResponseEntity<List<EntrepriseDto>> findEntrepriseDroitAcces(@PathVariable Long id) {
+        var result = service.findEntrepriseDroitAcces(id);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping("/optimized")
 public ResponseEntity<List<EntrepriseDto>> findAllOptimized() {
 var result = service.findAllOptimized();

@@ -11,46 +11,32 @@ import {
   CardFooterComponent,
   CardHeaderComponent,
   ColComponent,
-  ColDirective,
-  DropdownComponent,
-  DropdownItemDirective,
-  DropdownMenuDirective,
-  DropdownToggleDirective,
   FormCheckLabelDirective,
   GutterDirective,
-  PageItemDirective,
-  PageLinkDirective,
-  PaginationComponent,
-  PlaceholderAnimationDirective,
-  PlaceholderDirective, ProgressBarComponent,
   ProgressBarDirective,
   ProgressComponent,
   RowComponent,
-  TableDirective, TemplateIdDirective,
-  TextColorDirective, WidgetStatAComponent, WidgetStatBComponent
+  TableDirective,
+  TextColorDirective
 } from '@coreui/angular';
 import { ChartjsComponent } from '@coreui/angular-chartjs';
 import { IconDirective } from '@coreui/icons-angular';
 
+import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.component';
+import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
-import {Client} from "../../controller/entities/contacts/client";
 import {ClientService} from "../../controller/services/contacts/client.service";
-import {RouterLink} from "@angular/router";
-import {generatePageNumbers, paginationSizes} from "../../controller/utils/pagination/pagination";
-import {FactureService} from "../../controller/services/ventes/facture/facture.service";
-import {Facture} from "../../controller/entities/ventes/facture/facture";
+import {EmployeService} from "../../controller/services/contacts/user/employe.service";
+import {Employe} from "../../controller/entities/contacts/user/employe";
+import {PermissionsAcces} from "../../controller/entities/contacts/user/PermissionsAcces";
+import {EntrepriseSelectedService} from "../../controller/shared/entreprise-selected.service";
+
 
 interface IUser {
-  name: string;
-  state: string;
-  registered: string;
-  country: string;
+  nom: string;
+  prenom: string;
   usage: number;
-  period: string;
-  payment: string;
-  activity: string;
-  avatar: string;
-  status: string;
+ email: string;
   color: string;
 }
 
@@ -58,95 +44,51 @@ interface IUser {
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss'],
   standalone: true,
-  imports: [TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, CardHeaderComponent, TableDirective, AvatarComponent, ColDirective, PlaceholderAnimationDirective, PlaceholderDirective, RouterLink, DropdownComponent, DropdownItemDirective, DropdownMenuDirective, DropdownToggleDirective, PageItemDirective, PageLinkDirective, PaginationComponent, WidgetStatAComponent, TemplateIdDirective, WidgetStatBComponent, ProgressBarComponent]
+  imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent]
 })
 export class DashboardComponent implements OnInit {
 
+  private clientService = inject(ClientService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+
+  private employeService = inject(EmployeService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
   readonly #chartsData: DashboardChartsData = inject(DashboardChartsData);
+  clientStats: any = {};
+  public newClientAtWeek: number = 0;
+  public employers: Employe[] = [];
+  userList: IUser[] = [];
 
-  public users: IUser[] = [
-    {
-      name: 'Yiorgos Avraamu',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Us',
-      usage: 50,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Mastercard',
-      activity: '10 sec ago',
-      avatar: '',
-      status: '',
-      color: 'success'
-    },
-    {
-      name: 'Avram Tarasios',
-      state: 'Recurring ',
-      registered: 'Jan 1, 2021',
-      country: 'Br',
-      usage: 10,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Visa',
-      activity: '5 minutes ago',
-      avatar: '',
-      status: '',
-      color: 'info'
-    },
-    {
-      name: 'Quintin Ed',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'In',
-      usage: 74,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Stripe',
-      activity: '1 hour ago',
-      avatar: '',
-      status: '',
-      color: 'warning'
-    },
-    {
-      name: 'Enéas Kwadwo',
-      state: 'Sleep',
-      registered: 'Jan 1, 2021',
-      country: 'Fr',
-      usage: 98,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Paypal',
-      activity: 'Last month',
-      avatar: '',
-      status: '',
-      color: 'danger'
-    },
-    {
-      name: 'Agapetus Tadeáš',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Es',
-      usage: 22,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'ApplePay',
-      activity: 'Last week',
-      avatar: '',
-      status: '',
-      color: 'primary'
-    },
-    {
-      name: 'Friderik Dávid',
-      state: 'New',
-      registered: 'Jan 1, 2021',
-      country: 'Pl',
-      usage: 43,
-      period: 'Jun 11, 2021 - Jul 10, 2021',
-      payment: 'Amex',
-      activity: 'Yesterday',
-      avatar: '',
-      status: '',
-      color: 'dark'
-    }
-  ];
+
+
+  ngOnInit(): void {
+    this.initCharts();
+    this.updateChartOnColorModeChange();
+
+    this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
+      this.clientStats = data;
+      console.log("data : ",data);
+    });
+
+    this.getEmployers();
+
+  }
+
+  /******************************Clients charts*************************************/
+
+
+  getNewClients(day: string): number {
+    return this.clientStats[day]?.newClients || 0;
+  }
+
+  getRecurringClients(day: string): number {
+    return this.clientStats[day]?.recurringClients || 0;
+  }
+
+
+  /******************************Charts**************************************/
 
   public mainChart: IChartProps = { type: 'line' };
   public mainChartRef: WritableSignal<any> = signal(undefined);
@@ -159,75 +101,12 @@ export class DashboardComponent implements OnInit {
   public trafficRadioGroup = new FormGroup({
     trafficRadio: new FormControl('Month')
   });
-  protected factureList!: Facture[]
 
-  ngOnInit(): void {
-    this.initCharts();
-    this.updateChartOnColorModeChange();
-    this.loadClientList()
-    this.loadFactureList()
-    this.findAll()
-
-  }
-  protected currentIndex: number  = 0
-  protected deleteModel = false
-private factureService= inject(FactureService)
-  public get item(): Client {
-    return this.clientService.item;
-  }
-  public get generatePageNumbers() {
-    return generatePageNumbers(this.pagination)
-  }
-  loadFactureList() {
-    this.factureService.findPaginated().subscribe({
-      next: data => this.factureService.paginationF = data,
-      error: err => console.log(err)
-    })
-  }
-  public set item(value: Client ) {
-    this.clientService.item = value;
-  }
-  public set itemF(value: Facture ) {
-    this.factureService.item = value;
-  }
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-  protected paginating = false
-  protected loading = false
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.clientService.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
-      },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
-    })
-  }
 
   initCharts(): void {
     this.mainChart = this.#chartsData.mainChart;
   }
-  public get pagination() {
-    return this.clientService.pagination;
-  }
 
-  public get paginationF() {
-    return this.factureService.paginationF;
-  }
-
-  public set pagination(value) {
-    this.clientService.pagination = value;
-  }
-  public set paginationF(value) {
-    this.factureService.paginationF = value;
-  }
   setTrafficPeriod(value: string): void {
     this.trafficRadioGroup.setValue({ trafficRadio: value });
     this.#chartsData.initMainChart(value);
@@ -260,19 +139,47 @@ private factureService= inject(FactureService)
       });
     }
   }
-  private clientService = inject(ClientService)
-  protected clientList!: Client[]
 
-  loadClientList() {
-    this.clientService.findAll()
-      .subscribe({
-        next: data => {
-          this.clientList = data
-        },
-        error: err => console.log(err)
-      })
+
+
+  /***********************************Employers Charts************************************/
+
+
+    getEmployers(){
+      this.employeService.findAll().subscribe(data => {
+        this.employers = data;
+        this.employers = this.employers.filter(employe => {
+          const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
+              permission.entrepriseId == this.entrepriseSelectedService.getEntrepriseSelected());
+            return hasPermissionForEntrepriseId;
+        });
+        console.log("data 1 : ",this.employers);
+
+        this.userList = this.employers.map(employe => {
+          const entrepriseIdsSet = new Set<number>();
+          employe.permissionsAcces?.forEach(permission => {
+            if (permission.entrepriseId) {
+              entrepriseIdsSet.add(permission.entrepriseId);
+            }
+          });
+
+          return {
+            nom: employe.nom || '',
+            prenom: employe.prenom || '',
+            usage: entrepriseIdsSet.size,
+            email: employe.email || '',
+            color: this.generateRandomColor()
+          };
+        });
+
+        console.log("data 2 : ",this.userList);
+      });
+  }
+
+  generateRandomColor(): string {
+    const color = Math.floor(Math.random() * 96777215).toString(16);
+    return '#' + ('000000' + color).slice(-6);
   }
 
 
-  protected readonly paginationSizes = paginationSizes;
 }
