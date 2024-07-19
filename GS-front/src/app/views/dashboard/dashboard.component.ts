@@ -30,6 +30,11 @@ import {EmployeService} from "../../controller/services/contacts/user/employe.se
 import {Employe} from "../../controller/entities/contacts/user/employe";
 import {PermissionsAcces} from "../../controller/entities/contacts/user/PermissionsAcces";
 import {EntrepriseSelectedService} from "../../controller/shared/entreprise-selected.service";
+import {TokenService} from "../../controller/auth/services/token.service";
+import { NgForOf,NgIf } from '@angular/common';
+import {Entreprise} from "../../controller/entities/parametres/entreprise";
+import {UserInfosService} from "../../controller/shared/user-infos.service";
+import {EntrepriseService} from "../../controller/services/parametres/entreprise.service";
 
 
 interface IUser {
@@ -49,9 +54,11 @@ interface IUser {
 export class DashboardComponent implements OnInit {
 
   private clientService = inject(ClientService);
-  private entrepriseSelectedService = inject(EntrepriseSelectedService);
-
   private employeService = inject(EmployeService);
+  private entrepriseService = inject(EntrepriseService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+  private userInfosService = inject(UserInfosService);
+  private tokenService = inject(TokenService)
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
@@ -60,19 +67,29 @@ export class DashboardComponent implements OnInit {
   public newClientAtWeek: number = 0;
   public employers: Employe[] = [];
   userList: IUser[] = [];
+  public viewEmployers: boolean = true;
+  public entreprises!: Entreprise[];
 
 
 
   ngOnInit(): void {
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+    if(newVar == 0){
+      this.viewEmployers = false;
+    }
+
     this.initCharts();
     this.updateChartOnColorModeChange();
 
-    this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
-      this.clientStats = data;
-      console.log("data : ",data);
-    });
+
+    if(newVar == 1){
+      this.getClientsForAdmin();
+    }else{
+      this.getClientsForEmployer();
+    }
 
     this.getEmployers();
+
 
   }
 
@@ -86,6 +103,60 @@ export class DashboardComponent implements OnInit {
   getRecurringClients(day: string): number {
     return this.clientStats[day]?.recurringClients || 0;
   }
+
+
+  getClientsForEmployer() {
+    if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
+      this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
+        this.clientStats = data;
+        console.log("data : ",data);
+      });
+    }else{
+      this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+        console.log("empId : ", res.id);
+        this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+          this.entreprises = reslt;
+          console.log("EntreprisesÀdroit :",this.entreprises);
+          if (this.entreprises && this.entreprises.length > 0) {
+            this.clientService.getClientStats( this.entreprises[0].id).subscribe(data => {
+              this.clientStats = data;
+              console.log("data : ",data);
+            });
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+  getClientsForAdmin() {
+    if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
+      this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
+        this.clientStats = data;
+        console.log("data : ",data);
+      });
+    }else{
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe( (res: Entreprise[]) => {
+        this.entreprises = res;
+        console.log("Entreprises : ", this.entreprises)
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.clientService.getClientStats(this.entreprises[0].id).subscribe(data => {
+            this.clientStats = data;
+            console.log("data : ",data);
+          });
+        } else {
+          console.log('Aucune entreprise trouvée.');
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
 
 
   /******************************Charts**************************************/
@@ -145,16 +216,15 @@ export class DashboardComponent implements OnInit {
   /***********************************Employers Charts************************************/
 
 
-    getEmployers(){
+  getEmployers(){
+    if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
       this.employeService.findAll().subscribe(data => {
         this.employers = data;
         this.employers = this.employers.filter(employe => {
           const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
               permission.entrepriseId == this.entrepriseSelectedService.getEntrepriseSelected());
-            return hasPermissionForEntrepriseId;
+          return hasPermissionForEntrepriseId;
         });
-        console.log("data 1 : ",this.employers);
-
         this.userList = this.employers.map(employe => {
           const entrepriseIdsSet = new Set<number>();
           employe.permissionsAcces?.forEach(permission => {
@@ -162,7 +232,6 @@ export class DashboardComponent implements OnInit {
               entrepriseIdsSet.add(permission.entrepriseId);
             }
           });
-
           return {
             nom: employe.nom || '',
             prenom: employe.prenom || '',
@@ -171,15 +240,53 @@ export class DashboardComponent implements OnInit {
             color: this.generateRandomColor()
           };
         });
-
-        console.log("data 2 : ",this.userList);
       });
+
+
+    }else{
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe( (res: Entreprise[]) => {
+        this.entreprises = res;
+        console.log("Entreprises : ", this.entreprises)
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.employeService.findAll().subscribe(data => {
+            this.employers = data;
+            this.employers = this.employers.filter(employe => {
+              const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
+                  permission.entrepriseId == this.entreprises[0].id);
+              return hasPermissionForEntrepriseId;
+            });
+            this.userList = this.employers.map(employe => {
+              const entrepriseIdsSet = new Set<number>();
+              employe.permissionsAcces?.forEach(permission => {
+                if (permission.entrepriseId) {
+                  entrepriseIdsSet.add(permission.entrepriseId);
+                }
+              });
+              return {
+                nom: employe.nom || '',
+                prenom: employe.prenom || '',
+                usage: entrepriseIdsSet.size,
+                email: employe.email || '',
+                color: this.generateRandomColor()
+              };
+            });
+          });
+
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
+
+
 
   generateRandomColor(): string {
     const color = Math.floor(Math.random() * 96777215).toString(16);
     return '#' + ('000000' + color).slice(-6);
   }
+
+
 
 
 }
