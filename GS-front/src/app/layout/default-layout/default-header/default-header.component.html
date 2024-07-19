@@ -25,6 +25,7 @@
       <!--select-->
       <a cNavLink>
         <select cSelect id="entreprise" name="entreprise" (change)="onEntrepriseChange($event)">
+          <option>choisir une entreprise</option>
           <option *ngFor="let it of entreprises; trackBy: trackById" [value]="it.id">{{ it.nom }}</option>
         </select>
       </a>

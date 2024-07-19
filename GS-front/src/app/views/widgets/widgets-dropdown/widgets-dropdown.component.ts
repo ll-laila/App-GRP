@@ -1,6 +1,5 @@
 import {Component, OnInit, inject} from '@angular/core';
 import { RowComponent, ColComponent, DropdownComponent } from '@coreui/angular';
-import { EntrepriseSharedService } from '../../../controller/shared/entreprise-shared.service';
 import { Entreprise } from '../../../controller/entities/parametres/entreprise';
 import {CommandeService} from "../../../controller/services/ventes/commande/commande.service";
 import {BonCommandeService} from "../../../controller/services/inventaire/boncommande/bon-commande.service";
@@ -14,7 +13,7 @@ import {EmployeService} from "../../../controller/services/contacts/user/employe
 import {Employe} from "../../../controller/entities/contacts/user/employe";
 import {TokenService} from "../../../controller/auth/services/token.service";
 import {PaiementService} from "../../../controller/services/ventes/paiement.service";
-import {EntrepriseIdService} from "../../../controller/shared/entreprise-id.service";
+import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
 
 
 @Component({
@@ -30,12 +29,11 @@ export class WidgetsDropdownComponent implements OnInit {
     private entrepriseService = inject(EntrepriseService);
     private paiementService = inject(PaiementService);
     private employeService = inject(EmployeService);
-    private entrepriseSharedService = inject(EntrepriseSharedService);
     private commandeService = inject(CommandeService);
     private bonCommandeService = inject(BonCommandeService);
     private clientService = inject(ClientService);
     private userInfosService = inject(UserInfosService);
-    private entrepriseIdService = inject(EntrepriseIdService);
+    private entrepriseSelectedService = inject(EntrepriseSelectedService);
     private appUserService = inject(AppUserService);
     public admin! : AppUser;
     public entreprise!: Entreprise;
@@ -57,6 +55,8 @@ export class WidgetsDropdownComponent implements OnInit {
 
     ngOnInit(): void {
         this.actionUser();
+
+
     }
 
 
@@ -75,38 +75,20 @@ export class WidgetsDropdownComponent implements OnInit {
 
 
     getEntreprises() {
-        this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe( (res: Entreprise[]) => {
-            this.entreprises = res;
-            console.log("Entreprises : ", this.entreprises)
-            if (this.entreprises && this.entreprises.length > 0) {
-                this.entreprise = this.entreprises[0];
-                console.log('Première entreprise : ', this.entreprise);
-                this.entrepriseIdService.setIdEntreprise(this.entreprise.id);
-                this.getRevenus(this.entreprise.id);
-                this.getCouts(this.entreprise.id);
-                this.getNbrClients(this.entreprise.id);
-                this.getNbrCommandes(this.entreprise.id);
-            } else {
-                console.log('Aucune entreprise trouvée.');
-            }
-        }, error => {
-            console.log(error);
-        });
-    }
+        if(this.entrepriseSelectedService.getEntrepriseSelected()){
+            console.log('entreprise selected work : ', this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getRevenus(this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getCouts(this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getNbrClients(this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getNbrCommandes(this.entrepriseSelectedService.getEntrepriseSelected());
 
-
-
-
-    getEntreprisesAdroitAcces(){
-        this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
-           console.log("empId : ", res.id);
-            this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
-                this.entreprisesAdroitAcces = reslt;
-                console.log("EntreprisesÀdroit :",this.entreprisesAdroitAcces);
-                if (this.entreprisesAdroitAcces && this.entreprisesAdroitAcces.length > 0) {
-                    this.entreprise = this.entreprisesAdroitAcces[0];
+        }else{
+            this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe( (res: Entreprise[]) => {
+                this.entreprises = res;
+                console.log("Entreprises : ", this.entreprises)
+                if (this.entreprises && this.entreprises.length > 0) {
+                    this.entreprise = this.entreprises[0];
                     console.log('Première entreprise : ', this.entreprise);
-                    this.entrepriseIdService.setIdEntreprise(this.entreprise.id);
                     this.getRevenus(this.entreprise.id);
                     this.getCouts(this.entreprise.id);
                     this.getNbrClients(this.entreprise.id);
@@ -117,9 +99,42 @@ export class WidgetsDropdownComponent implements OnInit {
             }, error => {
                 console.log(error);
             });
-        }, error => {
-            console.log(error);
-        });
+       }
+    }
+
+
+
+    getEntreprisesAdroitAcces(){
+        if(this.entrepriseSelectedService.getEntrepriseSelected()){
+            console.log('entreprise selected work : ', this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getRevenus(this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getCouts(this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getNbrClients(this.entrepriseSelectedService.getEntrepriseSelected());
+            this.getNbrCommandes(this.entrepriseSelectedService.getEntrepriseSelected());
+
+        }else{
+            this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+                console.log("empId : ", res.id);
+                this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+                    this.entreprisesAdroitAcces = reslt;
+                    console.log("EntreprisesÀdroit :",this.entreprisesAdroitAcces);
+                    if (this.entreprisesAdroitAcces && this.entreprisesAdroitAcces.length > 0) {
+                        this.entreprise = this.entreprisesAdroitAcces[0];
+                        console.log('Première entreprise : ', this.entreprise);
+                        this.getRevenus(this.entreprise.id);
+                        this.getCouts(this.entreprise.id);
+                        this.getNbrClients(this.entreprise.id);
+                        this.getNbrCommandes(this.entreprise.id);
+                    } else {
+                        console.log('Aucune entreprise trouvée.');
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            }, error => {
+                console.log(error);
+            });
+        }
     }
 
 

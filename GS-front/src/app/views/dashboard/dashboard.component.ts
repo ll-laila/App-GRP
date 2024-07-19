@@ -26,10 +26,10 @@ import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.co
 import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
 import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
 import {ClientService} from "../../controller/services/contacts/client.service";
-import {EntrepriseIdService} from "../../controller/shared/entreprise-id.service";
 import {EmployeService} from "../../controller/services/contacts/user/employe.service";
 import {Employe} from "../../controller/entities/contacts/user/employe";
 import {PermissionsAcces} from "../../controller/entities/contacts/user/PermissionsAcces";
+import {EntrepriseSelectedService} from "../../controller/shared/entreprise-selected.service";
 
 
 interface IUser {
@@ -49,7 +49,8 @@ interface IUser {
 export class DashboardComponent implements OnInit {
 
   private clientService = inject(ClientService);
-  private entrepriseIdService = inject(EntrepriseIdService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+
   private employeService = inject(EmployeService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
@@ -66,12 +67,9 @@ export class DashboardComponent implements OnInit {
     this.initCharts();
     this.updateChartOnColorModeChange();
 
-    this.clientService.getClientStats(this.entrepriseIdService.getIdEntreprise()).subscribe(data => {
+    this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
       this.clientStats = data;
       console.log("data : ",data);
-      Object.keys(data).forEach(day => {
-       this.newClientAtWeek += data[day].newClients;
-      });
     });
 
     this.getEmployers();
@@ -88,9 +86,6 @@ export class DashboardComponent implements OnInit {
   getRecurringClients(day: string): number {
     return this.clientStats[day]?.recurringClients || 0;
   }
-
-
-
 
 
   /******************************Charts**************************************/
@@ -155,7 +150,7 @@ export class DashboardComponent implements OnInit {
         this.employers = data;
         this.employers = this.employers.filter(employe => {
           const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
-              permission.entrepriseId == this.entrepriseIdService.getIdEntreprise());
+              permission.entrepriseId == this.entrepriseSelectedService.getEntrepriseSelected());
             return hasPermissionForEntrepriseId;
         });
         console.log("data 1 : ",this.employers);

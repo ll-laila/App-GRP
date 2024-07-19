@@ -2,6 +2,9 @@ import {
   IconDirective
 } from "./chunk-QKQZRIZS.js";
 import {
+  createPopper
+} from "./chunk-7SLWANJ2.js";
+import {
   Platform,
   _getEventTarget,
   _getFocusedElementPierceShadowDom,
@@ -13,8 +16,9 @@ import {
   normalizePassiveListenerOptions
 } from "./chunk-7AYMQ7VL.js";
 import {
-  createPopper
-} from "./chunk-7SLWANJ2.js";
+  takeUntilDestroyed,
+  toObservable
+} from "./chunk-MHYG6MWX.js";
 import {
   AnimationBuilder,
   animate,
@@ -47,10 +51,6 @@ import {
   isPlatformBrowser,
   isPlatformServer
 } from "./chunk-XQ6BJWDH.js";
-import {
-  takeUntilDestroyed,
-  toObservable
-} from "./chunk-MHYG6MWX.js";
 import {
   APP_ID,
   AfterRenderPhase,

@@ -1,4 +1,4 @@
-import {Component, DestroyRef, inject, Input} from '@angular/core';
+import { Component, DestroyRef, inject, Input } from '@angular/core';
 import {
   AvatarComponent,
   BadgeComponent,
@@ -26,7 +26,7 @@ import {
   ThemeDirective
 } from '@coreui/angular';
 
-import { NgForOf, NgStyle, NgTemplateOutlet } from '@angular/common';
+import { NgForOf, NgStyle, NgTemplateOutlet, NgIf } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { IconDirective } from '@coreui/icons-angular';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -37,18 +37,49 @@ import { AppUserService } from '../../../controller/auth/services/app-user.servi
 import { FormsModule } from '@angular/forms';
 import { Entreprise } from '../../../controller/entities/parametres/entreprise';
 import { EntrepriseService } from '../../../controller/services/parametres/entreprise.service';
-import { EntrepriseSharedService } from '../../../controller/shared/entreprise-shared.service';
-import {NgForOf,NgIf, NgStyle, NgTemplateOutlet} from '@angular/common';
+import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
   standalone: true,
-  imports: [ContainerComponent, HeaderTogglerDirective, SidebarToggleDirective, IconDirective, HeaderNavComponent, NavItemComponent, NavLinkDirective, RouterLink, RouterLinkActive, NgTemplateOutlet, BreadcrumbRouterComponent, ThemeDirective, DropdownComponent, DropdownToggleDirective, TextColorDirective, AvatarComponent, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective, BadgeComponent, DropdownDividerDirective, ProgressBarDirective, ProgressComponent, NgStyle, SpinnerComponent, FormSelectDirective, FormsModule, InputGroupComponent, NgForOf,NgIf]
+  imports: [
+    ContainerComponent,
+    HeaderTogglerDirective,
+    SidebarToggleDirective,
+    IconDirective,
+    HeaderNavComponent,
+    NavItemComponent,
+    NavLinkDirective,
+    RouterLink,
+    RouterLinkActive,
+    NgTemplateOutlet,
+    BreadcrumbRouterComponent,
+    ThemeDirective,
+    DropdownComponent,
+    DropdownToggleDirective,
+    TextColorDirective,
+    AvatarComponent,
+    DropdownMenuDirective,
+    DropdownHeaderDirective,
+    DropdownItemDirective,
+    BadgeComponent,
+    DropdownDividerDirective,
+    ProgressBarDirective,
+    ProgressComponent,
+    NgStyle,
+    SpinnerComponent,
+    FormSelectDirective,
+    FormsModule,
+    InputGroupComponent,
+    NgForOf,
+    NgIf
+  ]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
 
   private entrepriseService = inject(EntrepriseService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService)
   readonly #activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
@@ -59,7 +90,6 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   public entreprises!: Entreprise[];
   public entrepriseSelected!: Entreprise;
-  private entrepriseSharedService = inject(EntrepriseSharedService);
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -113,7 +143,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
       console.log(res);
       this.entreprises = res;
       if (this.entreprises.length > 0) {
-        this.entrepriseSharedService.setEntreprise(this.entreprises[0]);
+        this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id);
       }
     }, error => {
       console.log(error);
@@ -127,8 +157,10 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
     if (selectedEntreprise) {
       this.entrepriseSelected = selectedEntreprise;
-      this.entrepriseSharedService.setEntreprise(this.entrepriseSelected);
-      console.log("from header : ", this.entrepriseSharedService.getEntreprise());
+      this.entrepriseSelectedService.clearEntrepriseSelected();
+      this.entrepriseSelectedService.setEntrepriseSelected(this.entrepriseSelected.id);
+      console.log("from header : ", this.entrepriseSelectedService.getEntrepriseSelected());
+      window.location.reload();
     } else {
       console.error('Entreprise not found');
     }

@@ -99,7 +99,8 @@
               <c-col xs="6">
                 <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
                   <div class="text-body-secondary text-truncate small">Nouveaux Clients</div>
-                  <div class="fs-5 fw-semibold">{{newClientAtWeek}}</div>
+                  <div class="fs-5 fw-semibold">{{getNewClients('MONDAY')+getNewClients('TUESDAY')+getNewClients('WEDNESDAY') +
+                 getNewClients('THURSDAY')+getNewClients('FRIDAY')+getNewClients('SATURDAY')+getNewClients('SUNDAY')}}</div>
                 </div>
               </c-col>
               <c-col xs="6">
