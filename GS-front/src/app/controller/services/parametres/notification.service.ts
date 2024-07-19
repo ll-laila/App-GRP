@@ -33,6 +33,7 @@ export class NotificationService {
   private _items!: Array<Notification>;
   private _keepData: boolean = false;
   private _returnUrl: string = '';
+  private iSemploye:number=0;
   private _toReturn = () => this._returnUrl != undefined;
 
   public findAll() {
@@ -63,6 +64,38 @@ export class NotificationService {
     );
   }
 
+public handelcreate(type: string, message: string){
+  this.iSemploye = this.isEmploye;
+  console.log(this.iSemploye);
+  // Vérifiez si l'utilisateur est un employé avant de créer la notification
+  if (this.iSemploye == 1) {
+    console.log('User is an employe');
+    this.getEmployeByUsername().subscribe({
+      next: (employe: Employe) => {
+        const nomEmploye = employe?.nom || 'Nom Inconnu';
+        // Créez la notification une fois que l'employé est récupéré
+        this.createNotification(
+            type,
+            message,
+            nomEmploye,
+            employe
+        ).subscribe({
+          next: response => {
+            console.log('Notification envoyée avec succès', response);
+          },
+          error: error => {
+            console.error('Erreur lors de l\'envoi de la notification', error);
+          }
+        });
+      },
+      error: err => {
+        console.error('Erreur lors de la récupération de l\'employé pour la notification', err);
+      }
+    });
+  } else {
+    console.log('User is not an employe');
+  }
+}
 
   public get isEmploye() {
     const newVar = this._tokenService.getRole()?.some(it => it == 'EMPLOYE') ? 1 : 0;

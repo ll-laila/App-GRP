@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, Input } from '@angular/core';
 import {
   AvatarComponent,
-  BadgeComponent,
+  BadgeComponent, BadgeModule,
   BreadcrumbRouterComponent,
   ColorModeService,
   ContainerComponent,
@@ -38,12 +38,14 @@ import { FormsModule } from '@angular/forms';
 import { Entreprise } from '../../../controller/entities/parametres/entreprise';
 import { EntrepriseService } from '../../../controller/services/parametres/entreprise.service';
 import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
-
+import {NotificationService} from "../../../controller/services/parametres/notification.service";
+import { Notification } from '../../../controller/entities/parametres/notification';
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
   standalone: true,
   imports: [
+    BadgeModule,
     ContainerComponent,
     HeaderTogglerDirective,
     SidebarToggleDirective,
@@ -87,9 +89,12 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   readonly tokenService = inject(TokenService);
   readonly router = inject(Router);
+  private notificationService=inject(NotificationService);
 
   public entreprises!: Entreprise[];
   public entrepriseSelected!: Entreprise;
+  public notifications!:Notification[];
+  public totalNotifications: number = 0;
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -111,6 +116,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   ngOnInit() {
     this.getEntreprises();
+    this.getTotalNotifications();
   }
 
   @Input() sidebarId: string = 'sidebar1';
@@ -174,5 +180,18 @@ export class DefaultHeaderComponent extends HeaderComponent {
   public get adminRole() {
     return !!this.tokenService.getRole()?.some(it => it == "ADMIN")
   }
+
+  getTotalNotifications() {
+    this.notificationService.findAll().subscribe({
+      next: (notifications) => {
+        this.totalNotifications = notifications.length;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des notifications', err);
+      }
+    });
+  }
+
+
 
 }

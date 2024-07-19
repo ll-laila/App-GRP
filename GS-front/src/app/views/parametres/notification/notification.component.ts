@@ -51,22 +51,23 @@ export class NotificationComponent {
             this.isDropdownOpen = false;
         }
     }
-    getNotificationColor(type?: string): string {
+    getNotificationIcon(type?: string): string {
         if (!type) {
-            return 'black';  // Valeur par défaut si le type est indéfini
+            return 'fa-info-circle';
         }
-
-        switch(type.toLowerCase()) {
-            case 'info':
-                return 'blue';
-            case 'warning':
-                return 'orange';
-            case 'error':
-                return 'red';
-            case 'Commande':
-                return 'green';
+        switch (type) {
+            case 'Creation d\'une commande':
+                return 'fa-check-circle';
+            case 'Cadeau':
+                return 'fa-gift';
+            case 'Embauche':
+                return 'fa-plus';
+            case 'Annonce':
+                return 'fa-leaf';
+            case 'Question':
+                return 'fa-question-circle';
             default:
-                return 'black';
+                return 'fa-info-circle';
         }
     }
 
