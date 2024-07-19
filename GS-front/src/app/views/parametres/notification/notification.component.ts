@@ -19,7 +19,14 @@ export class NotificationComponent {
   ngOnInit(): void {
     this.loadNotifications();
   }
-
+    delete(notification: Notification): void {
+        this.notificationService.delete(notification).subscribe(() => {
+            this.notifications = this.notifications.filter(n => n.id !== notification.id);
+            console.log('Notification supprimée:', notification);
+        }, error => {
+            console.error('Erreur lors de la suppression de la notification:', error);
+        });
+    }
   loadNotifications() {
     this.notificationService.findAll().subscribe(
         (notifications: Notification[]) => {
@@ -44,6 +51,26 @@ export class NotificationComponent {
             this.isDropdownOpen = false;
         }
     }
+    getNotificationColor(type?: string): string {
+        if (!type) {
+            return 'black';  // Valeur par défaut si le type est indéfini
+        }
+
+        switch(type.toLowerCase()) {
+            case 'info':
+                return 'blue';
+            case 'warning':
+                return 'orange';
+            case 'error':
+                return 'red';
+            case 'Commande':
+                return 'green';
+            default:
+                return 'black';
+        }
+    }
+
+
 
 
 }
