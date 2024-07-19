@@ -4,7 +4,7 @@ import { navItems2 } from '../../../layout/default-layout/nav';
 import { TokenService } from '../../auth/services/token.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import { Notification } from '../../entities/parametres/notification';
 import {Employe} from "../../entities/contacts/user/employe";
 import {AppUser} from "../../auth/entities/app-user";
@@ -37,6 +37,17 @@ export class NotificationService {
 
   public findAll() {
     return this._http.get<Array<Notification>>(this.api);
+  }
+
+  delete(notification: Notification): Observable<void> {
+    const url = `${this.api}`;
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json'
+      }),
+      body: notification
+    };
+    return this._http.delete<void>(url, httpOptions);
   }
   public createNotification(type: string, message: string, nomEmploye: string, employe: Employe) {
     const newNotification: Notification = { type, message, nomEmploye, employe };

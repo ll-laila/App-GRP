@@ -7,4 +7,5 @@ import java.util.List;
 public interface NotificationService {
     Notification createNotification(Notification notification);
     List<Notification> findAll();
+    void delete(Notification notification);
 }

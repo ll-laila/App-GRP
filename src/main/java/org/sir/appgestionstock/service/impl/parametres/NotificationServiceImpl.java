@@ -27,6 +27,10 @@ public class NotificationServiceImpl implements NotificationService {
         if (notification == null) return null;
         return notificationDao.save(notification);
     }
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Notification notification) {
+        notificationDao.delete(notification);
+    }
     @Override
     public List<Notification> findAll() {
         return notificationDao.findAll();
