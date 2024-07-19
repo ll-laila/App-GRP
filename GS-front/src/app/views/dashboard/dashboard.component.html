@@ -199,53 +199,56 @@
 
 <!---------------------------------------------------------------------->
 
-<c-row>
-  <c-col xs>
+@if(viewEmployers){
+    <c-row>
+    <c-col xs>
     <c-card class="mb-4">
-      <c-card-body>
-        <table
-                [hover]="true"
-                [responsive]="true"
-                [striped]="true"
-                align="middle"
-                cTable
-                class="mb-0 border"
-        >
-          <thead class="text-nowrap text-truncate">
-          <tr>
-            <th class="bg-body-tertiary">Employe</th>
-            <th class="bg-body-tertiary">Usage</th>
-            <th class="bg-body-tertiary">Email</th>
-          </tr>
-          </thead>
-          <tbody>
-          @for (user of userList; track user.nom; let i = $index) {
-          <tr>
-            <td>{{ user.prenom }}{{" "}}{{user.nom}}  </td>
-            <td>
-               <div class="d-flex justify-content-between">
-                  <div class="float-start">
-                     <strong></strong>
-                  </div>
-                  <div class="float-end ms-1 text-nowrap">
-                    <small class="text-body-secondary">
-                      {{user.usage}} entreprise
-                     </small>
-                  </div>
-               </div>
-               <c-progress thin [value]="user.usage" color="{{ user.color }}" aria-label="Usage" />
-            </td>
-           <td >
-           {{ user.email }}
-           </td>
-       </tr>
-          }
-          </tbody>
-        </table>
-      </c-card-body>
+    <c-card-body>
+    <table
+    [hover]="true"
+    [responsive]="true"
+    [striped]="true"
+    align="middle"
+    cTable
+    class="mb-0 border"
+    >
+    <thead class="text-nowrap text-truncate">
+    <tr>
+    <th class="bg-body-tertiary">Employe</th>
+    <th class="bg-body-tertiary">Usage</th>
+    <th class="bg-body-tertiary">Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (user of userList; track user.nom; let i = $index) {
+    <tr>
+      <td>{{ user.prenom }}{{" "}}{{user.nom}}  </td>
+      <td>
+        <div class="d-flex justify-content-between">
+          <div class="float-start">
+            <strong></strong>
+          </div>
+          <div class="float-end ms-1 text-nowrap">
+            <small class="text-body-secondary">
+              {{user.usage}} entreprise
+            </small>
+          </div>
+        </div>
+        <c-progress thin [value]="user.usage" color="{{ user.color }}" aria-label="Usage" />
+      </td>
+      <td >
+        {{ user.email }}
+      </td>
+    </tr>
+    }
+    </tbody>
+    </table>
+    </c-card-body>
     </c-card>
-  </c-col>
-</c-row>
+    </c-col>
+    </c-row>
+
+}
 
 
 

@@ -40,6 +40,11 @@ import { EntrepriseService } from '../../../controller/services/parametres/entre
 import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
 import {NotificationService} from "../../../controller/services/parametres/notification.service";
 import { Notification } from '../../../controller/entities/parametres/notification';
+import {Employe} from "../../../controller/entities/contacts/user/employe";
+import { HttpErrorResponse } from '@angular/common/http';
+import {EmployeService} from "../../../controller/services/contacts/user/employe.service";
+
+
 @Component({
   selector: 'app-default-header',
   templateUrl: './default-header.component.html',
@@ -81,20 +86,20 @@ import { Notification } from '../../../controller/entities/parametres/notificati
 export class DefaultHeaderComponent extends HeaderComponent {
 
   private entrepriseService = inject(EntrepriseService);
+  private employeService = inject(EmployeService);
   private entrepriseSelectedService = inject(EntrepriseSelectedService)
   readonly #activatedRoute: ActivatedRoute = inject(ActivatedRoute);
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  private notificationService =inject(NotificationService);
 
   readonly tokenService = inject(TokenService);
   readonly router = inject(Router);
-  private notificationService=inject(NotificationService);
 
   public entreprises!: Entreprise[];
   public entrepriseSelected!: Entreprise;
-  public notifications!:Notification[];
-  public totalNotifications: number = 0;
+  public totalNotifications:number=0;
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -115,13 +120,22 @@ export class DefaultHeaderComponent extends HeaderComponent {
   }
 
   ngOnInit() {
-    this.getEntreprises();
     this.getTotalNotifications();
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+    console.log("newVar :",newVar);
+    if(newVar == 1){
+      this.getEntreprises();
+    }
+    else{
+      this.getEntreprisesAdroitAcces();
+    }
   }
+
 
   @Input() sidebarId: string = 'sidebar1';
 
   logout() {
+    this.entrepriseSelectedService.clearEntrepriseSelected();
     this.tokenService.clearToken()
     this.router.navigate(['/login']).then();
   }
@@ -156,6 +170,28 @@ export class DefaultHeaderComponent extends HeaderComponent {
     });
   }
 
+  getEntreprisesAdroitAcces() {
+    this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+      console.log("empId : ", res.id);
+      this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+        this.entreprises = reslt;
+        console.log("EntreprisesÀdroit :",this.entreprises);
+        if (this.entreprises && this.entreprises.length > 0) {
+          console.log("from header :",this.entreprises[0]);
+          this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id);
+        }
+      }, error => {
+        console.log(error);
+      });
+    }, error => {
+      console.log(error);
+    });
+  }
+
+
+
+
+
   onEntrepriseChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedId = Number(selectElement.value);
@@ -181,7 +217,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return !!this.tokenService.getRole()?.some(it => it == "ADMIN")
   }
 
-  getTotalNotifications() {
+  getTotalNotifications(){
     this.notificationService.findAll().subscribe({
       next: (notifications) => {
         this.totalNotifications = notifications.length;
@@ -191,7 +227,6 @@ export class DefaultHeaderComponent extends HeaderComponent {
       }
     });
   }
-
 
 
 }

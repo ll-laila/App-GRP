@@ -75,7 +75,7 @@ export class WidgetsDropdownComponent implements OnInit {
 
 
     getEntreprises() {
-        if(this.entrepriseSelectedService.getEntrepriseSelected()){
+        if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
             console.log('entreprise selected work : ', this.entrepriseSelectedService.getEntrepriseSelected());
             this.getRevenus(this.entrepriseSelectedService.getEntrepriseSelected());
             this.getCouts(this.entrepriseSelectedService.getEntrepriseSelected());
