@@ -36,6 +36,7 @@ import {StatutBonCommandeEnum} from "src/app/controller/enums/statut-bon-command
 import {FactureProduit} from "../../../../../controller/entities/ventes/facture/facture-produit";
 import {Produit} from "../../../../../controller/entities/produit/produit";
 import {ProduitService} from "../../../../../controller/services/produit/produit.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-bon-commande-update',
@@ -78,6 +79,7 @@ export class BonCommandeUpdateComponent {
   private entrepriseService = inject(EntrepriseService)
   private produitService = inject(ProduitService);
   private bonCommandeProduitService = inject(BonCommandeProduitService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = BonCommandeValidator.init(() => this.item)
   //  .setLivraison(LivraisonValidator.init(() => this.livraison))
@@ -96,6 +98,8 @@ export class BonCommandeUpdateComponent {
   }
 
   ngOnInit() {
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
@@ -134,6 +138,18 @@ export class BonCommandeUpdateComponent {
   }
 
   // LOAD DATA
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
   loadTaxeList() {
     this.taxeService.findAllOptimized().subscribe({
       next: data => this.taxeList = data,

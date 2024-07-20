@@ -60,6 +60,7 @@ import {CommandeProduitService} from "../../../../../controller/services/ventes/
 import {CommandeProduit} from "../../../../../controller/entities/ventes/commande/commande-produit";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {NotificationService} from "../../../../../controller/services/parametres/notification.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-facture-create',
@@ -115,6 +116,7 @@ export class FactureCreateComponent implements OnChanges {
   private formBuilder: FormBuilder = inject(FormBuilder)
   private notificationService =inject(NotificationService)
   protected validator = FactureValidator.init(() => this.item)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   // .setPaiement(PaiementValidator.init(() => this.paiement))
   // .setRetourProduit(RetourProduitValidator.init(() => this.retourProduit))
   //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
@@ -134,27 +136,22 @@ export class FactureCreateComponent implements OnChanges {
 //selectedDate: any = this.datePipe.transform(new Date(),"yyyy-MM-dd");
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if (this.service.keepData) {
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
         this.item.taxe = taxeCreated.item
         this.validator.taxe.validate()
       }
-      /* let taxeExpeditionCreated = this.taxeService.createdItemAfterReturn;
-       if (taxeExpeditionCreated.created) {
-         this.item.taxeExpedition = taxeExpeditionCreated.item
-         this.validator.taxeExpedition.validate()
-       }*/
+
       let clientCreated = this.clientService.createdItemAfterReturn;
       if (clientCreated.created) {
         this.item.client = clientCreated.item
         this.validator.client.validate()
       }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+
       let devisesCreated = this.devisesService.createdItemAfterReturn;
       if (devisesCreated.created) {
         this.item.devises = devisesCreated.item
@@ -184,6 +181,19 @@ export class FactureCreateComponent implements OnChanges {
   }
 
   // LOAD DATA
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
   loadTaxeList() {
     this.taxeService.findAll().subscribe({
       next: data => this.taxeList = data,

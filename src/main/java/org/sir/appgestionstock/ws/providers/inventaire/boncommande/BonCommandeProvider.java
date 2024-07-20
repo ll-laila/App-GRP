@@ -42,6 +42,12 @@ return ResponseEntity.ok(resultDto);
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/achats/{idEntreprise}")
+    public ResponseEntity<Double> getNBrAchats(@PathVariable Long idEntreprise) {
+        double result = service.getNbrAchats(idEntreprise);
+        return ResponseEntity.ok(result);
+    }
+
 @GetMapping
 public ResponseEntity<List<BonCommandeDto>> findAll() {
 var result = service.findAll();

@@ -3,77 +3,51 @@
 <!---------------------------------------------------------------------->
 
 
-  <c-card class="my-4 shadow-sm ">
-    <div class="row">
-      <div class="col-md-7">
-        <div class="card-container p-lg-4 ">
-          <div class="card-content">
-            <!-- c-card-body -->
-            <c-card-body>
-              <c-row>
-                <!-- Contenu à gauche -->
-                <c-col sm="5">
-                  <h4 class="card-title mb-0" id="traffic">Traffic</h4>
-                </c-col>
-                <c-col class="d-none d-md-block" sm="7">
-                  <!-- Boutons et formulaire à droite -->
-                  <button cButton class="float-end" color="primary" aria-label="Download">
-                    <svg cIcon name="cilCloudDownload"></svg>
-                  </button>
-                  <form [formGroup]="trafficRadioGroup">
-                    <c-button-group class="float-end me-3" role="group">
-                      <input class="btn-check" formControlName="trafficRadio" type="radio" value="Day" id="dayRadio" />
-                      <label (click)="setTrafficPeriod('Day')" cButton cFormCheckLabel color="secondary" variant="outline" for="dayRadio">Jour</label>
-                      <input class="btn-check" formControlName="trafficRadio" type="radio" value="Month" id="radioMonth" />
-                      <label (click)="setTrafficPeriod('Month')" cButton cFormCheckLabel color="secondary" variant="outline" for="radioMonth">Mois</label>
-                      <input class="btn-check" formControlName="trafficRadio" type="radio" value="Year" id="radioYear" />
-                      <label (click)="setTrafficPeriod('Year')" cButton cFormCheckLabel color="secondary" variant="outline" for="radioYear">Année</label>
-                    </c-button-group>
-                  </form>
-                </c-col>
-              </c-row>
-              <!-- Chart -->
-              <c-chart [data]="mainChart.data" [height]="300" [ngStyle]="{ 'marginTop.px': 40 }" [options]="mainChart.options" [type]="mainChart.type" (chartRef)="handleChartRef($event)">
-                Main chart
-              </c-chart>
-            </c-card-body>
-
-            <!-- c-card-footer -->
-            <c-card-footer>
-              <c-row class="text-center mb-2" [xl]="4" [lg]="5" [sm]="2" [xs]="1" [gutter]="4">
-                <c-col>
-                  <div class="text-body-secondary">Ventes</div>
-                  <strong>0 (0%)</strong>
-                  <c-progress class="mt-2" thin color="success" value="50" aria-label="ventes"></c-progress>
-                </c-col>
-                <c-col>
-                  <div class="text-body-secondary">Achats</div>
-                  <div class="fw-semibold text-truncate">0(0%)</div>
-                  <c-progress class="mt-2" thin color="info" value="50" aria-label="achats"></c-progress>
-                </c-col>
-                <c-col>
-                  <div class="text-body-secondary">Produits</div>
-                  <div class="fw-semibold text-truncate">0 (0%)</div>
-                  <c-progress class="mt-2" thin color="warning" value="50" aria-label="produits"></c-progress>
-                </c-col>
-                <c-col>
-                  <div class="text-body-secondary">Commandes</div>
-                  <div class="fw-semibold text-truncate">0 (0%)</div>
-                  <c-progress class="mt-2" thin color="danger" value="50" aria-label="clients"></c-progress>
-                </c-col>
-              </c-row>
-            </c-card-footer>
-          </div>
-        </div>
-      </div>
-
-      <div class="col-md-5">
-        <div class="image-container">
-          <img class="image-card img-fluid" src="https://www.tinsoldier.co.nz/wp-content/uploads/2022/07/intelligent-ecom-min.png" alt="Gestion">
+<c-card class="my-4 shadow-sm">
+  <div class="row">
+    <div class="col-md-7">
+      <div class="card-container p-lg-4">
+        <div class="card-content">
+          <c-col xs="12">
+            <c-card class="mb-4">
+              <c-card-header>
+                Carte des paramètres essentiels
+              </c-card-header>
+              <c-card-body class="chart-container">
+                <c-chart type="polarArea" [data]="chartPolarAreaData" [options]="options" />
+                <c-card-footer>
+                  <c-row class="text-center mb-2" [xl]="4" [lg]="5" [sm]="2" [xs]="1" [gutter]="4">
+                    <c-col>
+                      <div class="text-body-secondary">Operations Ventes</div>
+                      <c-progress class="mt-2" thin color="success" [value]="nbrVentes" aria-label="ventes"></c-progress>
+                    </c-col>
+                    <c-col>
+                      <div class="text-body-secondary">Operations Achats</div>
+                      <c-progress class="mt-2" thin color="info" [value]="nbrAchats" aria-label="achats"></c-progress>
+                    </c-col>
+                    <c-col>
+                      <div class="text-body-secondary">Produits</div>
+                      <c-progress class="mt-2" thin color="warning" [value]="nbrProduits" aria-label="produits"></c-progress>
+                    </c-col>
+                    <c-col>
+                      <div class="text-body-secondary">Fournisseurs</div>
+                      <c-progress class="mt-2" thin  color="danger" [value]="nbrFournisseurs" aria-label="clients"></c-progress>
+                    </c-col>
+                  </c-row>
+                </c-card-footer>
+              </c-card-body>
+            </c-card>
+          </c-col>
         </div>
       </div>
     </div>
-  </c-card>
+    <div class="col-md-5">
+      <div class="image-container">
+        <img class="image-card img-fluid" src="https://www.tinsoldier.co.nz/wp-content/uploads/2022/07/intelligent-ecom-min.png" alt="Gestion">
+      </div>
+    </div>
+  </div>
+</c-card>
 
 
 

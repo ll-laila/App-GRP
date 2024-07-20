@@ -9,6 +9,7 @@ import org.sir.appgestionstock.bean.core.produit.Produit;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface FournisseurService {
+double getNbFournisseurs(Long idEntreprise);
 Fournisseur findById(Long id);
 List<Fournisseur> findAllOptimized();
 List<Fournisseur> findAll();

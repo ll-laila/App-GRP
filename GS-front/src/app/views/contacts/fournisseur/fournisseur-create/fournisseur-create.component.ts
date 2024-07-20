@@ -33,6 +33,7 @@ import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {AdresseCreateComponent} from "src/app/views/adresse/adresse/adresse-create/adresse-create.component";
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {LangueEnum} from "src/app/controller/enums/langue-enum";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-fournisseur-create',
@@ -71,7 +72,7 @@ export class FournisseurCreateComponent {
   private entrepriseService = inject(EntrepriseService)
   private formBuilder: FormBuilder= inject(FormBuilder)
   private toasterService = inject(ToasterService)
-
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = FournisseurValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
@@ -82,6 +83,7 @@ export class FournisseurCreateComponent {
   protected entrepriseList!: Entreprise[]
 
   ngOnInit() {
+    this.loadEntreprise();
     if(this.service.keepData) {
       let devisesCreated = this.devisesService.createdItemAfterReturn;
       if (devisesCreated.created) {
@@ -129,6 +131,16 @@ export class FournisseurCreateComponent {
   }
 
   // LOAD DATA
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
   loadDevisesList() {
     this.devisesService.findAllOptimized().subscribe({
       next: data => this.devisesList = data,

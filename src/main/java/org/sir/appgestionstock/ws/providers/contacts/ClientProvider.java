@@ -32,7 +32,7 @@ return ResponseEntity.ok(resultDto);
 }
 
     @GetMapping("/clients/{idEntreprise}")
-    public ResponseEntity<Double> getIncome(@PathVariable Long idEntreprise) {
+    public ResponseEntity<Double> getNbClients(@PathVariable Long idEntreprise) {
         double result = service.getNbClients(idEntreprise);
         return ResponseEntity.ok(result);
     }

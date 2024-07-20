@@ -28,6 +28,7 @@ import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {AdresseUpdateComponent} from "src/app/views/adresse/adresse/adresse-update/adresse-update.component";
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {LangueEnum} from "src/app/controller/enums/langue-enum";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-client-update',
@@ -66,7 +67,7 @@ export class ClientUpdateComponent {
   private niveauPrixService = inject(NiveauPrixService)
   private taxeService = inject(TaxeService)
   private entrepriseService = inject(EntrepriseService)
-
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   protected validator = ClientValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
 
@@ -80,6 +81,8 @@ export class ClientUpdateComponent {
   }
 
   ngOnInit() {
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let devisesCreated = this.devisesService.createdItemAfterReturn;
       if (devisesCreated.created) {
@@ -91,11 +94,7 @@ export class ClientUpdateComponent {
         this.item.niveauPrix = niveauPrixCreated.item
         this.validator.niveauPrix.validate()
       }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
         this.item.taxe = taxeCreated.item
@@ -110,6 +109,17 @@ export class ClientUpdateComponent {
   }
 
   // LOAD DATA
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entrep :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
   loadDevisesList() {
     this.devisesService.findAll().subscribe({
       next: data => this.devisesList = data,

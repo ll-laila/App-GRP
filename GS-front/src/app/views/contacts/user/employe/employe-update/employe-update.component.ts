@@ -26,6 +26,7 @@ import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.va
 import {RolesListComponent} from "../roles-list/roles-list.component";
 import * as bootstrap from "bootstrap";
 import {PermissionsAcces} from "../../../../../controller/entities/contacts/user/PermissionsAcces";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-employe-update',
@@ -65,6 +66,8 @@ export class EmployeUpdateComponent {
   private service = inject(EmployeService)
   private entrepriseService = inject(EntrepriseService)
 
+  private entrepriseSelectedService = inject(EntrepriseSelectedService)
+
   protected validator = EmployeValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
 
@@ -77,19 +80,30 @@ export class EmployeUpdateComponent {
   }
 
   ngOnInit() {
+    this.loadEntreprise();
+
     if(this.service.keepData) {
 
     } else { this.validator.reset() }
 
-    let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-    if (entrepriseCreated.created) {
-      this.item.entreprise = entrepriseCreated.item
-      this.validator.entreprise.validate()
-    }
-    this.loadEntrepriseList()
+
   }
 
   // LOAD DATA
+
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
   loadEntrepriseList() {
     this.entrepriseService.findAll().subscribe({
       next: data => this.entrepriseList = data,

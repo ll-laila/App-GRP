@@ -45,6 +45,7 @@ import {AdresseCreateComponent} from "src/app/views/adresse/adresse/adresse-crea
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {LangueEnum} from "src/app/controller/enums/langue-enum";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-client-create',
@@ -83,6 +84,7 @@ export class ClientCreateComponent {
   private niveauPrixService = inject(NiveauPrixService)
   private taxeService = inject(TaxeService)
   private entrepriseService = inject(EntrepriseService)
+ private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private formBuilder: FormBuilder= inject(FormBuilder)
   protected validator = ClientValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
@@ -92,7 +94,11 @@ export class ClientCreateComponent {
   protected entrepriseList!: Entreprise[]
   private toasterService = inject(ToasterService)
 
+
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let devisesCreated = this.devisesService.createdItemAfterReturn;
       if (devisesCreated.created) {
@@ -105,11 +111,11 @@ export class ClientCreateComponent {
         this.validator.niveauPrix.validate()
       }
 
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+      // let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
+      // if (entrepriseCreated.created) {
+      //   this.item.entreprise = entrepriseCreated.item
+      //   this.validator.entreprise.validate()
+      // }
 
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
@@ -155,12 +161,26 @@ export class ClientCreateComponent {
       error: err => console.log(err)
     })
   }
- loadEntrepriseList() {
-    this.entrepriseService.findAll().subscribe({
-      next: data => this.entrepriseList = data,
+
+
+    loadEntrepriseList() {
+        this.entrepriseService.findAll().subscribe({
+            next: data => this.entrepriseList = data,
+            error: err => console.log(err)
+        })
+    }
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
       error: err => console.log(err)
-    })
+    });
   }
+
+
   clientForm !: FormGroup;
 
 

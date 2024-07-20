@@ -28,6 +28,13 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+@GetMapping("/fournisseurs/{idEntreprise}")
+public ResponseEntity<Double> getNbFournisseurs(@PathVariable Long idEntreprise) {
+        double result = service.getNbFournisseurs(idEntreprise);
+        return ResponseEntity.ok(result);
+}
+
 @GetMapping("/optimized")
 public ResponseEntity<List<FournisseurDto>> findAllOptimized() {
 var result = service.findAllOptimized();

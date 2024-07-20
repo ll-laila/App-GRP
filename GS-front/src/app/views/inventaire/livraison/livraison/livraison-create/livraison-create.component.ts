@@ -38,6 +38,7 @@ import {BonCommande} from "../../../../../controller/entities/inventaire/boncomm
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {Produit} from "../../../../../controller/entities/produit/produit";
 import {ProduitService} from "../../../../../controller/services/produit/produit.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-livraison-create',
@@ -79,6 +80,7 @@ export class LivraisonCreateComponent {
   private formBuilder: FormBuilder= inject(FormBuilder);
   private toasterService = inject(ToasterService);
   private produitService = inject(ProduitService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = LivraisonValidator.init(() => this.item)
 
@@ -97,6 +99,9 @@ export class LivraisonCreateComponent {
 
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let taxeExpeditionCreated = this.taxeService.createdItemAfterReturn;
       if (taxeExpeditionCreated.created) {
@@ -108,11 +113,7 @@ export class LivraisonCreateComponent {
         this.item.fournisseur = fournisseurCreated.item
         this.validator.fournisseur.validate()
       }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+
     } else { this.reset(false) }
     this.service.keepData = false;
     this.generateCode();
@@ -153,6 +154,17 @@ export class LivraisonCreateComponent {
   }
 
   // LOAD DATA
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
   loadTaxeList() {
     this.taxeService.findAllOptimized().subscribe({
       next: data => this.taxeList = data,

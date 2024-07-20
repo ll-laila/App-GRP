@@ -57,6 +57,7 @@ import {Produit} from "../../../../../controller/entities/produit/produit";
 import {CommandeProduit} from "../../../../../controller/entities/ventes/commande/commande-produit";
 import {ProduitService} from "../../../../../controller/services/produit/produit.service";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-devis-create',
@@ -99,6 +100,7 @@ export class DevisCreateComponent {
   private devisProduitSevice = inject(DevisProduitService)
   private produitService = inject(ProduitService)
   private formBuilder: FormBuilder= inject(FormBuilder)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   protected readonly TypeRabaisEnum = TypeRabaisEnum;
 
 
@@ -113,6 +115,9 @@ export class DevisCreateComponent {
   protected entrepriseList!: Entreprise[]
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
@@ -138,11 +143,7 @@ export class DevisCreateComponent {
       if (niveauPrixCreated.created) {
         this.item.niveauPrix = niveauPrixCreated.item
       }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+
     } else { this.reset(false) }
     this.service.keepData = false
     this.item.paiement = new Paiement()
@@ -171,13 +172,25 @@ export class DevisCreateComponent {
     return 'I' + this.currentCodeNumber.toString().padStart(7, '0');
   }
   loadProduitList() {
-    this.produitService.findAll().subscribe({
+    this.produitService.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: data => this.produitList = data,
       error: err => console.log(err)
     })
   }
 
   // LOAD DATA
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
   loadTaxeList() {
     this.taxeService.findAllOptimized().subscribe({
       next: data => this.taxeList = data,

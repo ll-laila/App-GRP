@@ -27,6 +27,7 @@ import {StatutLivraisonEnum} from "src/app/controller/enums/statut-livraison-enu
 import {BonCommande} from "../../../../../controller/entities/inventaire/boncommande/bon-commande";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {BonCommandeService} from "../../../../../controller/services/inventaire/boncommande/bon-commande.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-livraison-update',
@@ -66,6 +67,7 @@ export class LivraisonUpdateComponent {
   private toasterService = inject(ToasterService);
   private fournisseurService = inject(FournisseurService);
   private entrepriseService = inject(EntrepriseService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = LivraisonValidator.init(() => this.item)
 
@@ -80,6 +82,9 @@ export class LivraisonUpdateComponent {
   }
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let taxeExpeditionCreated = this.taxeService.createdItemAfterReturn;
       if (taxeExpeditionCreated.created) {
@@ -90,11 +95,6 @@ export class LivraisonUpdateComponent {
       if (fournisseurCreated.created) {
         this.item.fournisseur = fournisseurCreated.item
         this.validator.fournisseur.validate()
-      }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
       }
 
     } else { this.validator.reset() }
@@ -108,6 +108,18 @@ export class LivraisonUpdateComponent {
   }
 
   // LOAD DATA
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
   loadTaxeList() {
     this.taxeService.findAllOptimized().subscribe({
       next: data => this.taxeList = data,

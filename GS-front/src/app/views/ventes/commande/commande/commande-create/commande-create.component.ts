@@ -55,6 +55,7 @@ import {ToasterService} from "../../../../../toaster/controller/toaster.service"
 import {ProduitNiveauPrix} from "../../../../../controller/entities/produit/produit-niveau-prix";
 import {NotificationService} from "../../../../../controller/services/parametres/notification.service";
 import {Employe} from "../../../../../controller/entities/contacts/user/employe";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-commande-create',
@@ -98,6 +99,7 @@ export class CommandeCreateComponent {
   private formBuilder: FormBuilder= inject(FormBuilder)
   private toasterService = inject(ToasterService)
   private notificationService =inject(NotificationService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = CommandeValidator.init(() => this.item)
   //  .setFacture(FactureValidator.init(() => this.facture))
@@ -116,6 +118,9 @@ export class CommandeCreateComponent {
 
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
@@ -137,11 +142,7 @@ export class CommandeCreateComponent {
         this.item.devises = devisesCreated.item
       //  this.validator.devises.validate()
       }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+
       let niveauPrixCreated = this.niveauPrixService.createdItemAfterReturn;
       if (niveauPrixCreated.created) {
         this.item.niveauPrix = niveauPrixCreated.item
@@ -178,12 +179,27 @@ export class CommandeCreateComponent {
   }
 
   loadProduitList() {
-    this.produitService.findAll().subscribe({
+    this.produitService.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: data => this.produitList = data,
       error: err => console.log(err)
     })
   }
+
+
   // LOAD DATA
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
   loadTaxeList() {
     this.taxeService.findAllOptimized().subscribe({
       next: data => this.taxeList = data,

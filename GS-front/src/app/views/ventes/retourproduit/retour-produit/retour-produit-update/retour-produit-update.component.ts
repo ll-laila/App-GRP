@@ -27,6 +27,7 @@ import {EntrepriseService} from "src/app/controller/services/parametres/entrepri
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 
 import {StatutRetourProduitEnum} from "src/app/controller/enums/statut-retour-produit-enum";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-retour-produit-update',
@@ -63,6 +64,7 @@ export class RetourProduitUpdateComponent {
   private clientService = inject(ClientService)
   private entrepriseService = inject(EntrepriseService)
 
+
   protected validator = RetourProduitValidator.init(() => this.item)
     //.setNoteCredit(NoteCreditValidator.init(() => this.noteCredit))
     //.setRemboursements(RemboursementValidator.init(() => this.remboursements))
@@ -75,17 +77,14 @@ export class RetourProduitUpdateComponent {
   }
 
   ngOnInit() {
+
     if(this.service.keepData) {
       let clientCreated = this.clientService.createdItemAfterReturn;
       if (clientCreated.created) {
         this.item.client = clientCreated.item
         this.validator.client.validate()
       }
-     /* let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }*/
+
     } else { this.validator.reset() }
 
     this.loadClientList()

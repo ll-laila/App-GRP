@@ -1,7 +1,7 @@
 import { DOCUMENT, NgStyle } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ChartOptions } from 'chart.js';
+import { ChartData } from 'chart.js';
 import {
   AvatarComponent,
   ButtonDirective,
@@ -24,24 +24,28 @@ import { IconDirective } from '@coreui/icons-angular';
 
 import { WidgetsBrandComponent } from '../widgets/widgets-brand/widgets-brand.component';
 import { WidgetsDropdownComponent } from '../widgets/widgets-dropdown/widgets-dropdown.component';
-import { DashboardChartsData, IChartProps } from './dashboard-charts-data';
-import {ClientService} from "../../controller/services/contacts/client.service";
-import {EmployeService} from "../../controller/services/contacts/user/employe.service";
-import {Employe} from "../../controller/entities/contacts/user/employe";
-import {PermissionsAcces} from "../../controller/entities/contacts/user/PermissionsAcces";
-import {EntrepriseSelectedService} from "../../controller/shared/entreprise-selected.service";
-import {TokenService} from "../../controller/auth/services/token.service";
-import { NgForOf,NgIf } from '@angular/common';
-import {Entreprise} from "../../controller/entities/parametres/entreprise";
-import {UserInfosService} from "../../controller/shared/user-infos.service";
-import {EntrepriseService} from "../../controller/services/parametres/entreprise.service";
+import { DashboardChartsData } from './dashboard-charts-data'; // Removed IChartProps
+import { ClientService } from "../../controller/services/contacts/client.service";
+import { EmployeService } from "../../controller/services/contacts/user/employe.service";
+import { Employe } from "../../controller/entities/contacts/user/employe";
+import { PermissionsAcces } from "../../controller/entities/contacts/user/PermissionsAcces";
+import { EntrepriseSelectedService } from "../../controller/shared/entreprise-selected.service";
+import { TokenService } from "../../controller/auth/services/token.service";
+import { NgForOf, NgIf } from '@angular/common';
+import { Entreprise } from "../../controller/entities/parametres/entreprise";
+import { UserInfosService } from "../../controller/shared/user-infos.service";
+import { EntrepriseService } from "../../controller/services/parametres/entreprise.service";
+import {FournisseurService} from "../../controller/services/contacts/fournisseur.service";
+import {CommandeService} from "../../controller/services/ventes/commande/commande.service";
+import {ProduitService} from "../../controller/services/produit/produit.service";
+import {BonCommandeService} from "../../controller/services/inventaire/boncommande/bon-commande.service";
 
 
 interface IUser {
   nom: string;
   prenom: string;
   usage: number;
- email: string;
+  email: string;
   color: string;
 }
 
@@ -53,12 +57,16 @@ interface IUser {
 })
 export class DashboardComponent implements OnInit {
 
+  private fournisseurService = inject(FournisseurService);
   private clientService = inject(ClientService);
+  private produitService = inject(ProduitService);
   private employeService = inject(EmployeService);
+  private commandeService = inject(CommandeService);
+  private bonCommandeService = inject(BonCommandeService);
   private entrepriseService = inject(EntrepriseService);
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private userInfosService = inject(UserInfosService);
-  private tokenService = inject(TokenService)
+  private tokenService = inject(TokenService);
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
@@ -69,32 +77,42 @@ export class DashboardComponent implements OnInit {
   userList: IUser[] = [];
   public viewEmployers: boolean = true;
   public entreprises!: Entreprise[];
+  public nbrProduits: number = 0;
+  public nbrFournisseurs: number = 0;
+  public nbrVentes: number = 0;
+  public nbrAchats: number = 0;
+  options = {
+    maintainAspectRatio: false
+  };
+
+  chartPolarAreaData: ChartData = {
+    datasets: [
+      {
+        data: [0, 0, 0, 0],
+        backgroundColor: ['#FF6384', '#4BC0C0', '#FFCE56','#36A2EB']
+      }
+    ]
+  };
 
 
 
   ngOnInit(): void {
     const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
-    if(newVar == 0){
+    if (newVar == 0) {
       this.viewEmployers = false;
     }
 
-    this.initCharts();
-    this.updateChartOnColorModeChange();
-
-
-    if(newVar == 1){
+    if (newVar == 1) {
       this.getClientsForAdmin();
-    }else{
+    } else {
       this.getClientsForEmployer();
     }
 
     this.getEmployers();
 
-
   }
 
   /******************************Clients charts*************************************/
-
 
   getNewClients(day: string): number {
     return this.clientStats[day]?.newClients || 0;
@@ -104,23 +122,32 @@ export class DashboardComponent implements OnInit {
     return this.clientStats[day]?.recurringClients || 0;
   }
 
-
   getClientsForEmployer() {
-    if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
       this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
         this.clientStats = data;
-        console.log("data : ",data);
+        console.log("data: ", data);
+        this.getNbrAchats(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrVentes(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrProduits(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected());
+        console.log("final :",this.chartPolarAreaData);
       });
-    }else{
+    } else {
       this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
-        console.log("empId : ", res.id);
+        console.log("empId: ", res.id);
         this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
           this.entreprises = reslt;
-          console.log("EntreprisesÀdroit :",this.entreprises);
+          console.log("EntreprisesÀdroit: ", this.entreprises);
           if (this.entreprises && this.entreprises.length > 0) {
-            this.clientService.getClientStats( this.entreprises[0].id).subscribe(data => {
+            this.clientService.getClientStats(this.entreprises[0].id).subscribe(data => {
               this.clientStats = data;
-              console.log("data : ",data);
+              console.log("data: ", data);
+              this.getNbrAchats(this.entreprises[0].id);
+              this.getNbrVentes(this.entreprises[0].id);
+              this.getNbrProduits(this.entreprises[0].id);
+              this.getNbrFournisseurs(this.entreprises[0].id);
+              console.log("final :",this.chartPolarAreaData);
             });
           }
         }, error => {
@@ -132,21 +159,30 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
   getClientsForAdmin() {
-    if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
       this.clientService.getClientStats(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe(data => {
         this.clientStats = data;
-        console.log("data : ",data);
+        console.log("data: ", data);
+        this.getNbrAchats(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrVentes(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrProduits(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected());
+        console.log("final :",this.chartPolarAreaData);
       });
-    }else{
-      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe( (res: Entreprise[]) => {
+    } else {
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
         this.entreprises = res;
-        console.log("Entreprises : ", this.entreprises)
+        console.log("Entreprises: ", this.entreprises);
         if (this.entreprises && this.entreprises.length > 0) {
           this.clientService.getClientStats(this.entreprises[0].id).subscribe(data => {
             this.clientStats = data;
-            console.log("data : ",data);
+            console.log("data: ", data);
+            this.getNbrAchats(this.entreprises[0].id);
+            this.getNbrVentes(this.entreprises[0].id);
+            this.getNbrProduits(this.entreprises[0].id);
+            this.getNbrFournisseurs(this.entreprises[0].id);
+            console.log("final :",this.chartPolarAreaData);
           });
         } else {
           console.log('Aucune entreprise trouvée.');
@@ -157,61 +193,62 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-
-
   /******************************Charts**************************************/
 
-  public mainChart: IChartProps = { type: 'line' };
-  public mainChartRef: WritableSignal<any> = signal(undefined);
-  #mainChartRefEffect = effect(() => {
-    if (this.mainChartRef()) {
-      this.setChartStyles();
-    }
-  });
-  public chart: Array<IChartProps> = [];
-  public trafficRadioGroup = new FormGroup({
-    trafficRadio: new FormControl('Month')
-  });
 
-
-  initCharts(): void {
-    this.mainChart = this.#chartsData.mainChart;
-  }
-
-  setTrafficPeriod(value: string): void {
-    this.trafficRadioGroup.setValue({ trafficRadio: value });
-    this.#chartsData.initMainChart(value);
-    this.initCharts();
-  }
-
-  handleChartRef($chartRef: any) {
-    if ($chartRef) {
-      this.mainChartRef.set($chartRef);
-    }
-  }
-
-  updateChartOnColorModeChange() {
-    const unListen = this.#renderer.listen(this.#document.documentElement, 'ColorSchemeChange', () => {
-      this.setChartStyles();
-    });
-
-    this.#destroyRef.onDestroy(() => {
-      unListen();
+  public getNbrProduits(id: number){
+    this.produitService.getNbProduits(id).subscribe( res => {
+      this.nbrProduits = res;
+      this.updateChart();
+      console.log("nbr Produits : ", this.nbrProduits);
+    }, error => {
+      console.log(error);
     });
   }
 
-  setChartStyles() {
-    if (this.mainChartRef()) {
-      setTimeout(() => {
-        const options: ChartOptions = { ...this.mainChart.options };
-        const scales = this.#chartsData.getScales();
-        this.mainChartRef().options.scales = { ...options.scales, ...scales };
-        this.mainChartRef().update();
-      });
-    }
+  public getNbrFournisseurs(id: number){
+    this.fournisseurService.getNbFournisseurs(id).subscribe( res => {
+      this.nbrFournisseurs = res;
+      this.updateChart();
+      console.log("nbr Fournisseurs : ", this.nbrFournisseurs);
+    }, error => {
+      console.log(error);
+    });
   }
 
+  public getNbrVentes(id: number){
+    this.commandeService.getNbCommandes(id).subscribe( res => {
+      this.nbrVentes = res;
+      this.updateChart();
+      console.log("nbr Ventes : ", this.nbrVentes);
+    }, error => {
+      console.log(error);
+    });
+  }
 
+  public getNbrAchats(id: number){
+    this.bonCommandeService.getNbAchats(id).subscribe( res => {
+      this.nbrAchats = res;
+      this.updateChart();
+      console.log("nbr Achats : ", this.nbrAchats);
+    }, error => {
+      console.log(error);
+    });
+  }
+  private updateChart() {
+    this.chartPolarAreaData.datasets[0].data = [
+      this.nbrProduits,
+      this.nbrFournisseurs,
+      this.nbrVentes,
+      this.nbrAchats
+    ];
+    this.chartPolarAreaData.labels = [
+      `${this.nbrProduits}`,
+      `${this.nbrFournisseurs}`,
+      `${this.nbrVentes}`,
+      `${this.nbrAchats}`
+    ];
+  }
 
   /***********************************Employers Charts************************************/
 
@@ -253,6 +290,7 @@ export class DashboardComponent implements OnInit {
             this.employers = this.employers.filter(employe => {
               const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
                   permission.entrepriseId == this.entreprises[0].id);
+              this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id)
               return hasPermissionForEntrepriseId;
             });
             this.userList = this.employers.map(employe => {
@@ -270,6 +308,7 @@ export class DashboardComponent implements OnInit {
                 color: this.generateRandomColor()
               };
             });
+            console.log(this.userList);
           });
 
         }

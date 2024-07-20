@@ -1,4 +1,5 @@
 package org.sir.appgestionstock.service.impl.contacts;
+import org.sir.appgestionstock.bean.core.contacts.Client;
 import org.sir.appgestionstock.bean.core.contacts.Fournisseur;
 import org.sir.appgestionstock.dao.contacts.FournisseurDao;
 import org.sir.appgestionstock.service.facade.contacts.FournisseurService;
@@ -248,6 +249,15 @@ produitService::delete
     public Long findMaxId() {
         return dao.findMaxId();
     }
+
+
+    @Override
+    public double getNbFournisseurs(Long idEntreprise){
+        List<Fournisseur> fournisseurs = dao.findByEntrepriseId(idEntreprise);
+        return fournisseurs.size();
+    }
+
+
 @Transactional(rollbackFor = Exception.class)
 public void deleteAssociated(Fournisseur item) {
 deleteAssociatedList(item);

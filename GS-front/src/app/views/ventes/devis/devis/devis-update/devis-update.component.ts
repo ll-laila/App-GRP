@@ -37,6 +37,7 @@ import {RetourProduitUpdateComponent} from "src/app/views/ventes/retourproduit/r
 import {RetourProduitValidator} from "src/app/controller/validators/ventes/retourproduit/retour-produit.validator";
 import {TypeRabaisEnum} from "src/app/controller/enums/type-rabais-enum";
 import {StatutDevisEnum} from "src/app/controller/enums/statut-devis-enum";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-devis-update',
@@ -76,6 +77,7 @@ export class DevisUpdateComponent {
   private devisesService = inject(DevisesService)
   private niveauPrixService = inject(NiveauPrixService)
   private entrepriseService = inject(EntrepriseService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = DevisValidator.init(() => this.item)
     //.setPaiement(PaiementValidator.init(() => this.paiement))
@@ -94,6 +96,9 @@ export class DevisUpdateComponent {
   }
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
@@ -134,6 +139,19 @@ export class DevisUpdateComponent {
   }
 
   // LOAD DATA
+
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
   loadTaxeList() {
     this.taxeService.findAllOptimized().subscribe({
       next: data => this.taxeList = data,

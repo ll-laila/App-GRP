@@ -25,6 +25,7 @@ import {ToasterService} from "../../../../../toaster/controller/toaster.service"
 import {RolesListComponent} from "../roles-list/roles-list.component";
 import * as bootstrap from 'bootstrap';
 import {PermissionsAcces} from "../../../../../controller/entities/contacts/user/PermissionsAcces";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-employe-create',
@@ -58,6 +59,7 @@ export class EmployeCreateComponent {
   }
 
   private router = inject(Router)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private service = inject(EmployeService)
   private entrepriseService = inject(EntrepriseService)
   private formBuilder: FormBuilder= inject(FormBuilder)
@@ -72,13 +74,14 @@ export class EmployeCreateComponent {
 
 
   ngOnInit() {
-    if(this.service.keepData) {
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+    this.loadEntreprise();
 
+    if(this.service.keepData) {
+      // let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
+      // if (entrepriseCreated.created) {
+      //   this.item.entreprise = entrepriseCreated.item
+      //   this.validator.entreprise.validate()
+      // }
     } else { this.reset(false) }
     this.service.keepData = false
     this.item.adresse = new Adresse()
@@ -103,6 +106,20 @@ export class EmployeCreateComponent {
 
 
   // LOAD DATA
+
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
   loadEntrepriseList() {
     this.entrepriseService.findAllOptimized().subscribe({
       next: data => this.entrepriseList = data,

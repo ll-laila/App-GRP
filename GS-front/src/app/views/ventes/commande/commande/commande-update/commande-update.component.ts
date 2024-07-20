@@ -39,6 +39,7 @@ import {AdresseUpdateComponent} from "src/app/views/adresse/adresse/adresse-upda
 import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.validator";
 import {TypeRabaisEnum} from "src/app/controller/enums/type-rabais-enum";
 import {StatutCommandeEnum} from "src/app/controller/enums/statut-commande-enum";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-commande-update',
@@ -79,6 +80,7 @@ export class CommandeUpdateComponent {
   private devisesService = inject(DevisesService)
   private niveauPrixService = inject(NiveauPrixService)
   private entrepriseService = inject(EntrepriseService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = CommandeValidator.init(() => this.item)
     //.setFacture(FactureValidator.init(() => this.facture))

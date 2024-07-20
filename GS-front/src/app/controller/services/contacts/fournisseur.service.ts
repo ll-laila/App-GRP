@@ -20,6 +20,10 @@ export class FournisseurService {
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
 
 
+    public getNbFournisseurs(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/fournisseurs/${entrepriseId}`);
+    }
+
   public findAll() {
     return this.http.get<Array<Fournisseur>>(this.api);
   }

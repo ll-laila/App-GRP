@@ -342,6 +342,14 @@ public class ProduitServiceImpl implements ProduitService {
         livraisonProduitService.deleteByProduitId(item.getId());
     }
 
+
+    @Override
+    public double getNbProduits(Long idEntreprise){
+        List<Produit> produits = dao.findByEntrepriseId(idEntreprise);
+        return produits.size();
+    }
+
+
     //----------------------------------------------------------
     @Autowired
     private ProduitDao dao;

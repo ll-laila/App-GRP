@@ -13,7 +13,6 @@ import {DropdownModule, SidebarModule} from "@coreui/angular";
 import {IconSetService} from "@coreui/icons-angular";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {errorInterceptor, interceptors} from "./controller/auth/interceptors";
-
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes,

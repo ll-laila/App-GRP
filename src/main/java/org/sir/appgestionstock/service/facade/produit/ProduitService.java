@@ -15,7 +15,8 @@ import org.sir.appgestionstock.bean.core.parametres.Taxe;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface ProduitService {
-Produit findById(Long id);
+    double getNbProduits(Long idEntreprise);
+    Produit findById(Long id);
 List<Produit> findAllOptimized();
 List<Produit> findAll();
 Pagination<Produit> findPaginated(int page, int size);

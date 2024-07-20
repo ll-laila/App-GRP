@@ -154,20 +154,10 @@
                 </c-input-group>
             </c-col>
 
-           < <c-col sm="4">
-          <svg cIcon name="cil-building" style="color: blue ;font-size: 30px"></svg>
-          <label cLabel for="entreprise" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Entreprise</label>
-                <c-input-group>
-                    <select cSelect id="entreprise" name="entreprise" [(ngModel)]="entreprise.id" [valid]="validator.entreprise.valid" (blur)="validator.entreprise.validate()">
-                        @for (it of entrepriseList; track it) {
-                        <option [value]="it.id">{{ it.id }}</option>
-                        }
-                    </select>
-                    <button cButton color="secondary" type="button" variant="outline" (click)="navigateToEntrepriseCreate()">
-                        <svg cIcon name="cilPlus"></svg>
-                    </button>
-                    <c-form-feedback [valid]="false">{{ validator.entreprise.message }}</c-form-feedback>
-                </c-input-group>
+            <c-col sm="4">
+                <svg cIcon name="cil-building" style="color: blue ;font-size: 30px"></svg>
+                <label cLabel for="entreprise" style="color: black;font-family: 'Times New Roman';font-size: 18px;font-weight: bold">Entreprise</label>
+                <input cFormControl id="entreprise" type="text"  [value]="item.entreprise?.nom" name="entreprise"    disabled="true"/>
             </c-col>
         </c-row>
     </c-card-body>

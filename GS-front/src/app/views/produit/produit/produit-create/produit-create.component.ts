@@ -34,6 +34,7 @@ import {NiveauStockValidator} from "src/app/controller/validators/inventaire/niv
 import {NiveauPrixService} from "../../../../controller/services/parametres/niveau-prix.service";
 import {StatutNiveauPrixEnum} from "../../../../controller/enums/statut-niveau-prix-enum";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-produit-create',
@@ -72,6 +73,7 @@ export class ProduitCreateComponent {
   private entrepriseService = inject(EntrepriseService)
   private niveauPrixService = inject(NiveauPrixService)
   private toasterService = inject(ToasterService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = ProduitValidator.init(() => this.item)
  //   .setNiveauStock(NiveauStockValidator.init(() => this.niveauStock))
@@ -82,6 +84,9 @@ export class ProduitCreateComponent {
   protected entrepriseList!: Entreprise[]
 
   ngOnInit() {
+
+    this.loadEntreprise();
+
     if(this.service.keepData) {
       let devisesCreated = this.devisesService.createdItemAfterReturn;
       if (devisesCreated.created) {
@@ -120,6 +125,18 @@ export class ProduitCreateComponent {
   }
 
   // LOAD DATA
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
   loadDevisesList() {
     this.devisesService.findAllOptimized().subscribe({
       next: data => this.devisesList = data,

@@ -33,6 +33,7 @@ import {ProduitService} from "../../../../../controller/services/produit/produit
 import {DevisProduit} from "../../../../../controller/entities/ventes/devis/devis-produit";
 import {FactureProduit} from "../../../../../controller/entities/ventes/facture/facture-produit";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-retour-produit-create',
@@ -73,6 +74,8 @@ export class RetourProduitCreateComponent {
   private produitService = inject(ProduitService)
   private retourProduitProduitService = inject(RetourProduitProduitService)
   private toasterService = inject(ToasterService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+
 
 
   protected validator = RetourProduitValidator.init(() => this.item)
@@ -84,17 +87,16 @@ export class RetourProduitCreateComponent {
   protected produitList!: Produit[]
 
   ngOnInit() {
+    this.loadEntreprise();
+
+
     if(this.service.keepData) {
       let clientCreated = this.clientService.createdItemAfterReturn;
       if (clientCreated.created) {
         this.item.client = clientCreated.item
         this.validator.client.validate()
       }
-      let entrepriseCreated = this.entrepriseService.createdItemAfterReturn;
-      if (entrepriseCreated.created) {
-        this.item.entreprise = entrepriseCreated.item
-        this.validator.entreprise.validate()
-      }
+
     } else { this.reset(false) }
     this.service.keepData = false
     this.item.noteCredit = new NoteCredit()
@@ -120,12 +122,28 @@ export class RetourProduitCreateComponent {
   generateCode(): string {
     return 'I' + this.currentCodeNumber.toString().padStart(7, '0');
   }
+
+
+
+  loadEntreprise() {
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :",this.item.entreprise);
+      },
+      error: err => console.log(err)
+    });
+  }
+
+
+
   loadProduitList() {
-    this.produitService.findAll().subscribe({
+    this.produitService.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: data => this.produitList = data,
       error: err => console.log(err)
     })
   }
+
   factureretour() {
     this.service.findByFactureId(this.itemF.id).subscribe({
       next: value => {

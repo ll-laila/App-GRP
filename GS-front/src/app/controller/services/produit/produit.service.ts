@@ -22,6 +22,11 @@ export class ProduitService {
 
  constructor(private httpClient: HttpClient, private cookieService: CookieService) {}
 
+    public getNbProduits(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/produits/${entrepriseId}`);
+    }
+
+
     public findAll() {
     return this.http.get<Array<Produit>>(this.api);
   }
@@ -109,7 +114,7 @@ export class ProduitService {
   }
 
   public findByEntrepriseId(id: number){
-    return this.http.get<Array<Produit>>(`${this.api}/entreprise/${id}`);
+    return this.http.get<Array<Produit>>(`${this.api}/entreprise/id/${id}`);
   }
 
   //------------- getters and setters -----------------------

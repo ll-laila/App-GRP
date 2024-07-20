@@ -346,6 +346,14 @@ public double getCout(Long id){
 }
 
 
+    @Override
+    public double getNbrAchats(Long id){
+        Entreprise entreprise = entrepriseService.findById(id);
+        List<BonCommande> boncommandes = dao.findByEntreprise(entreprise);
+        return boncommandes.size();
+
+    }
+
 //----------------------------------------------------------
 @Autowired private BonCommandeDao dao;
 @Lazy @Autowired private LivraisonService livraisonService;

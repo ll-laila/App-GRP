@@ -36,6 +36,12 @@ public class ProduitProvider {
         return ResponseEntity.ok(resultDto);
     }
 
+    @GetMapping("/produits/{idEntreprise}")
+    public ResponseEntity<Double> getNBrProduits(@PathVariable Long idEntreprise) {
+        double result = service.getNbProduits(idEntreprise);
+        return ResponseEntity.ok(result);
+    }
+
     @GetMapping("/optimized")
     public ResponseEntity<List<ProduitDto>> findAllOptimized() {
         var result = service.findAllOptimized();

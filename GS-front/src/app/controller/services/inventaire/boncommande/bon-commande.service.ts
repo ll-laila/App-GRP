@@ -24,6 +24,10 @@ export class BonCommandeService {
         return this.http.get<number>(`${this.api}/cout/${entrepriseId}`);
     }
 
+    public getNbAchats(entrepriseId: number) {
+        return this.http.get<number>(`${this.api}/achats/${entrepriseId}`);
+    }
+
   public findAll() {
     return this.http.get<Array<BonCommande>>(this.api);
   }
