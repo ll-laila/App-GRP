@@ -1,39 +1,63 @@
-body{
-  margin-top:20px;
-  background-color: #f0f2f5;
+@import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+
+body {
+  background-color: #D32F2F;
+  font-family: 'Calibri', sans-serif !important;
 }
-.dropdown-list-image {
+
+.mt-100 {
+  margin-top: 100px;
+}
+
+.mb-100 {
+  margin-bottom: 100px;
+}
+
+.card {
   position: relative;
-  height: 2.5rem;
-  width: 2.5rem;
-}
-.dropdown-list-image img {
-  height: 2.5rem;
-  width: 2.5rem;
-}
-.btn-light {
-  color: #2cdd9b;
-  background-color: #e5f7f0;
-  border-color: #d8f7eb;
-}
-.date-container {
-  margin-left: 20px; /* Ajustez cette valeur selon vos besoins */
-}
-.icon-container {
-  font-size: 24px; /* Ajustez la taille de l'icône selon vos besoins */
-  margin-right: 15px; /* Espace entre l'icône et le message */
-  color: #007bff; /* Couleur de l'icône */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background-color: #fff;
+  background-clip: border-box;
+  border: 0px solid transparent;
+  border-radius: 0px;
 }
 
-.notification-type {
-  font-weight: bold;
+.card-body {
+  -webkit-box-flex: 1;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  padding: 1.25rem;
 }
 
-.employee-name {
-  font-weight: bold;
-  color: black; /* Vous pouvez définir une couleur spécifique ici */
-}
-.osahan-post-header .btn {
-  margin-right: 8px; /* Ajustez la marge selon vos préférences */
+.card .card-title {
+  position: relative;
+  font-weight: 600;
+  margin-bottom: 10px;
 }
 
+ul.list-style-none li {
+  list-style: none;
+}
+
+ul.list-style-none li a {
+  color: #673AB7;
+  padding: 8px 0px;
+  display: block;
+  text-decoration: none;
+}
+
+.m-t-5 {
+  margin-top: 5px;
+}
+
+.w-30px {
+  width: 30px;
+}

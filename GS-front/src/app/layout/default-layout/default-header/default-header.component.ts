@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, Input } from '@angular/core';
 import {
   AvatarComponent,
-  BadgeComponent,
+  BadgeComponent, BadgeModule,
   BreadcrumbRouterComponent,
   ColorModeService,
   ContainerComponent,
@@ -38,6 +38,8 @@ import { FormsModule } from '@angular/forms';
 import { Entreprise } from '../../../controller/entities/parametres/entreprise';
 import { EntrepriseService } from '../../../controller/services/parametres/entreprise.service';
 import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
+import {NotificationService} from "../../../controller/services/parametres/notification.service";
+import { Notification } from '../../../controller/entities/parametres/notification';
 import {Employe} from "../../../controller/entities/contacts/user/employe";
 import { HttpErrorResponse } from '@angular/common/http';
 import {EmployeService} from "../../../controller/services/contacts/user/employe.service";
@@ -48,6 +50,7 @@ import {EmployeService} from "../../../controller/services/contacts/user/employe
   templateUrl: './default-header.component.html',
   standalone: true,
   imports: [
+    BadgeModule,
     ContainerComponent,
     HeaderTogglerDirective,
     SidebarToggleDirective,
@@ -89,12 +92,14 @@ export class DefaultHeaderComponent extends HeaderComponent {
   readonly #colorModeService = inject(ColorModeService);
   readonly colorMode = this.#colorModeService.colorMode;
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
+  private notificationService =inject(NotificationService);
 
   readonly tokenService = inject(TokenService);
   readonly router = inject(Router);
 
   public entreprises!: Entreprise[];
   public entrepriseSelected!: Entreprise;
+  public totalNotifications:number=0;
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -115,6 +120,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
   }
 
   ngOnInit() {
+    this.getTotalNotifications();
     const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
     console.log("newVar :",newVar);
     if(newVar == 1){
@@ -211,8 +217,16 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return !!this.tokenService.getRole()?.some(it => it == "ADMIN")
   }
 
-
-
+  getTotalNotifications(){
+    this.notificationService.findAll().subscribe({
+      next: (notifications) => {
+        this.totalNotifications = notifications.length;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des notifications', err);
+      }
+    });
+  }
 
 
 }

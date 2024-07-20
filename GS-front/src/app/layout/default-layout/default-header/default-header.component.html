@@ -1,3 +1,44 @@
+
+<head>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <style>
+    .icon-button {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      color: #333333;
+      background: #dddddd;
+      border: none;
+      outline: none;
+      border-radius: 50%;
+    }
+
+    .icon-button:hover {
+      cursor: pointer;
+    }
+
+    .icon-button:active {
+      background: #cccccc;
+    }
+
+    .icon-button__badge {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 25px;
+      height: 25px;
+      background: red;
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 50%;
+    }
+  </style>
+</head>
 <ng-container>
 
   <c-container [fluid]="true" class="border-bottom px-4">
@@ -30,13 +71,12 @@
         </select>
       </a>
 
-    <!--notifications-->
-      <a *ngIf="adminRole" cNavLink (click)="notification()">
-        <svg cIcon class="my-1" name="cilBell" size="lg"></svg>
-      </a>
-      <a cNavLink>
-        <svg cIcon class="my-1" name="cilList" size="lg"></svg>
-      </a>
+      <button *ngIf="adminRole" type="button" class="icon-button" (click)="notification()">
+        <span class="material-icons">notifications</span>
+        <span *ngIf="totalNotifications > 0" class="icon-button__badge">{{ totalNotifications }}</span>
+      </button>
+
+
     </c-header-nav>
     <c-header-nav class="ms-auto ms-md-0">
       <div class="nav-item py-1">
