@@ -1,74 +1,77 @@
-<div class="bg-light dark:bg-transparent min-vh-100 d-flex flex-row align-items-center">
-  <c-container breakpoint="md" >
-    <c-row class="justify-content-center">
-      <c-col lg="10" xl="8">
-        <c-card-group >
-          <c-card class="p-4" style="height: 590px">
-            <c-card-body >
-              <div cForm >
-                <br>
-                <br>
-                <br>
+<section class="vh-100 bmg">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col col-xl-10">
+        <div class="card hover-zoom shadow-lg" style="border-radius: 2rem; position: relative;">
+          <div class="row g-0">
+            <div class="col-md-6 col-lg-5 d-none d-md-block position-relative">
+              <img src="assets/images/stock.jpg" alt="login form" class="img-fluid bottom-image" />
+            </div>
+            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+              <div class="card-body p-4 p-lg-5 text-black">
+                <form>
+                  <div class="d-flex align-items-center mb-3 pb-1">
+                    <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+                    <span class="h1 fw-bold mb-0">erplain</span>
+                  </div>
+                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Connectez-vous à votre compte</h5>
 
-                <h1 style=" font-family: 'Arial Black';font-size: 30px ;color: #000000">Login</h1>
-                <br>
-                <br>
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <label class="form-label" for="form2Example17">Nom d'utilisateur</label>
+                    <input id="form2Example17" name="username" autoComplete="username" cFormControl
+                           [(ngModel)]="item.username" />
+                    <c-form-feedback [valid]="false">{{ validator.username.message }}</c-form-feedback>
+                  </div>
 
-                <c-input-group class="mb-3">
-                  <span cInputGroupText><svg cIcon name="cilUser"  style="color: blue"></svg></span>
-                  <input  style="color: black; font-weight: bold ;font-size: 18px "autoComplete="username" cFormControl placeholder="Nom d'utilisation"
-                         [(ngModel)]="item.username" [valid]="validator.username.valid" (blur)="validator.username.validate()"/>
-                  <c-form-feedback [valid]="false">{{ validator.username.message }}</c-form-feedback>
-                </c-input-group>
-                <c-input-group class="mb-4">
-                  <span cInputGroupText><svg cIcon name="cilLockLocked"  style="color: blue"></svg></span>
-                  <input   style="color: black; font-weight: bold ;font-size: 18px" autoComplete="current-password" cFormControl placeholder="Mot de passe" type="password"
-                         [(ngModel)]="item.password" [valid]="validator.password.valid" (blur)="validator.password.validate()"/>
-                  <c-form-feedback [valid]="false">{{ validator.password.message }}</c-form-feedback>
-                </c-input-group>
-                <br>
-
-
-                <c-row>
-                  <c-col xs="6">
-                    <button (click)="login()" cButton class="px-4" color="primary">
+                  <div data-mdb-input-init class="form-outline mb-4">
+                    <label class="form-label" for="form2Example27">Mot de passe</label>
+                    <input id="form2Example27" name="password" autoComplete="current-password" cFormControl type="password"
+                           [(ngModel)]="item.password" />
+                    <c-form-feedback [valid]="false">{{ validator.password.message }}</c-form-feedback>
+                  </div>
+                  <div class="pt-1 mb-4">
+                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block" type="button" (click)="login()">
                       @if (loading) {
                       <c-spinner aria-hidden="true" size="sm"></c-spinner>
-                      } @else {
-                      <svg cIcon name="cilSend"></svg>
                       }
-                     Se connecter
+                      Se connecter
                     </button>
-                  </c-col>
-                  <c-col class="text-right" xs="6">
-                    <button cButton class="px-0" color="link" routerLink="/404">
-                      Mot de passe oublié ?
-                    </button>
-                  </c-col>
-                </c-row>
+                  </div>
+                  <a class="small text-muted" href="#!">Mot de passe oublié?</a>
+                  <p class="mb-5 pb-lg-2" style="color: #393f81;">Vous n'avez pas un compte? <a  style="color: #393f81;" routerLink="/register">Inscrivez-vous ici</a></p>
+                  <a href="#!" class="small text-muted">Conditions d'utilisation, </a>
+                  <a href="#!" class="small text-muted">Politique de confidentialité</a>
+                </form>
               </div>
-            </c-card-body>
-          </c-card>
-          <c-card [ngStyle]="{'minWidth.%': 44}" class="text-white bg-primary py-5">
-            <c-card-body class="text-center">
-              <div>
-                <br>
-                <br>
-                <h2 style=" font-family: 'Arial Black';font-size: 25px ;color: #ffffff" >Bienvenu!</h2>
-                <br>
-                <br>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-                <p  style="color: #ffffff; font-size: 20px;font-family: 'Times New Roman'">
-                  Simplifiez la gestion de votre entreprise avec notre solution tout-en-un! <br><br>Gérez facilement vos stocks,vos  commandes, vos factures, et bien plus encore
-                </p>
-                <button [active]="true" cButton class="mt-3" color="primary" routerLink="/register">
-                  S'inscrire!
-                </button>
-              </div>
-            </c-card-body>
-          </c-card>
-        </c-card-group>
-      </c-col>
-    </c-row>
-  </c-container>
-</div>
+<style>
+  .bmg {
+    background-image: url('assets/images/backColor.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 100%;
+  }
+
+  .bottom-image {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: bottom;
+    border-radius: 1rem 0 0 1rem;
+  }
+
+  .hover-zoom:hover {
+    transform: scale(1.02);
+  }
+
+
+</style>

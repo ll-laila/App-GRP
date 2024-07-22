@@ -234,12 +234,11 @@ export class FactureCreateComponent implements OnChanges {
   }
 
   loadProduitList() {
-    this.produitService.findAll().subscribe({
+    this.produitService.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: data => this.produitList = data,
       error: err => console.log(err)
     })
   }
-
   create() {
     this.notificationService.handelcreate('creation d\'une facture','Une nouvelle facture à été crée par l\'employer' )
     console.log(this.item)

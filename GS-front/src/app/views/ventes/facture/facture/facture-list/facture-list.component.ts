@@ -49,13 +49,9 @@ export class FactureListComponent {
   private employe: Employe = new Employe();
   public isEmploye: boolean = false;
   public a: boolean = false;
-  public deletePermission: boolean = true;
-  public addPermission: boolean = true;
-  public updatePermission: boolean = true;
 
 
   ngOnInit() {
-    this.showPermission();
     this.findAll();
     this.getEmployeByUsername(this.userInfosService.getUsername());
   }
@@ -125,9 +121,26 @@ export class FactureListComponent {
   }
 
   delete() {
-
+    this.isEmploye = !!this.tokenService.getRole()?.some(it => it == "EMPLOYE");
+    if(this.isEmploye){
+      // @ts-ignore
+      this.employe.permissionsAcces.forEach(permission => {
+        if(permission.nom == 'supprimer facture' && permission.etat == true &&
+            (permission.entrepriseId === this.employe.entreprise?.id ||
+                this.employe.entreprisesAdroitAcces?.some(entreprise => entreprise.id === permission.entrepriseId))
+        ){
+          this.a = true;
+        }
+      });
+      if(this.a){
+          this.deletefacture();
+      }else{
+        this.router.navigate(["/ventes/facture/facture"]).then();
+        this.toasterService.toast({message: "Vous n'avez pas le droit de supprimer une facture", color: "danger"});
+      }
+    } else{
       this.deletefacture();
-
+    }
   }
 
   public navigateToPdfCreate() {
@@ -136,61 +149,52 @@ export class FactureListComponent {
   }
 
   create(){
-
-      this.router.navigate(["/ventes/facture/facture/create"]).then();
-
-  }
-
-
-  showPermission(){
     this.isEmploye = !!this.tokenService.getRole()?.some(it => it == "EMPLOYE");
-    if(this.isEmploye) {
+    if(this.isEmploye){
       // @ts-ignore
-      this.employe.permissionsAcces?.forEach(permission => {
-        if (permission.nom == 'ajouter facture' && permission.etat == true &&
+      this.employe.permissionsAcces.forEach(permission => {
+        if(permission.nom == 'ajouter facture' && permission.etat == true &&
             (permission.entrepriseId === this.employe.entreprise?.id ||
-                this.employe.entreprisesAdroitAcces?.some(entreprise => entreprise.id === permission.entrepriseId))) {
+                this.employe.entreprisesAdroitAcces?.some(entreprise => entreprise.id === permission.entrepriseId))        ){
           this.a = true;
-          this.addPermission = true;
-        } else {
-          this.addPermission = false;
         }
       });
-
-       this.employe.permissionsAcces?.forEach(permission => {
-         if (permission.nom == 'modifier facture' && permission.etat == true
-             && permission.entrepriseId == this.employe.entreprise?.id &&
-             (permission.entrepriseId === this.employe.entreprise?.id ||
-                 this.employe.entreprisesAdroitAcces?.some(entreprise => entreprise.id === permission.entrepriseId))
-         ) {
-           this.a = true;
-           this.updatePermission = true;
-         } else {
-           this.updatePermission = false;
-         }
-       });
-
-      this.employe.permissionsAcces?.forEach(permission => {
-        if(permission.nom == 'supprimer facture' && permission.etat == true &&
-            (permission.entrepriseId === this.employe.entreprise?.id ||
-                this.employe.entreprisesAdroitAcces?.some(entreprise => entreprise.id === permission.entrepriseId))
-        ){
-          this.a = true;
-          this.deletePermission = true;
-        }
-        else{
-          this.deletePermission = false;
-        }
-      });
-
-
+      if(this.a){
+        this.a = false;
+        this.router.navigate(["/ventes/facture/facture/create"]).then();
+      }else{
+        this.router.navigate(["/ventes/facture/facture"]).then();
+        this.toasterService.toast({message: "Vous n'avez pas le droit de créer une facture", color: "danger"});
+      }
+    } else{
+      this.router.navigate(["/ventes/facture/facture/create"]).then();
     }
   }
 
   updateFacture(it: Facture){
     this.item = it;
-    this.router.navigate(["/ventes/facture/facture/update"]).then();
-
+    this.isEmploye = !!this.tokenService.getRole()?.some(it => it == "EMPLOYE");
+    if(this.isEmploye){
+      // @ts-ignore
+      this.employe.permissionsAcces.forEach(permission => {
+        if(permission.nom == 'modifier facture' && permission.etat == true
+            && permission.entrepriseId == this.employe.entreprise?.id &&
+            (permission.entrepriseId === this.employe.entreprise?.id ||
+                this.employe.entreprisesAdroitAcces?.some(entreprise => entreprise.id === permission.entrepriseId))
+        ){
+          this.a = true;
+        }
+      });
+      if(this.a){
+        this.a = false;
+        this.router.navigate(["/ventes/facture/facture/update"]).then();
+      }else{
+        this.router.navigate(["/ventes/facture/facture"]).then();
+        this.toasterService.toast({message: "Vous n'avez pas le droit de modifier une facture", color: "danger"});
+      }
+    } else{
+      this.router.navigate(["/ventes/facture/facture/update"]).then();
+    }
   }
 
 

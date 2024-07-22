@@ -5,12 +5,12 @@ body {
   font-family: 'Calibri', sans-serif !important;
 }
 
-.mt-100 {
-  margin-top: 100px;
+.mt-30 {
+  margin-top: 50px;
 }
 
-.mb-100 {
-  margin-bottom: 100px;
+.mb-30 {
+  margin-bottom: 50px;
 }
 
 .card {
@@ -34,12 +34,12 @@ body {
   -webkit-box-flex: 1;
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
-  padding: 1.25rem;
+  padding: 1rem;
 }
 
 .card .card-title {
   position: relative;
-  font-weight: 600;
+  font-weight: 700;
   margin-bottom: 10px;
 }
 

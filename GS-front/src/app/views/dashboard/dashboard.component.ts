@@ -1,7 +1,7 @@
 import { DOCUMENT, NgStyle } from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ChartData } from 'chart.js';
+//import { ChartData } from 'chart.js';
 import {
   AvatarComponent,
   ButtonDirective,
@@ -31,7 +31,6 @@ import { Employe } from "../../controller/entities/contacts/user/employe";
 import { PermissionsAcces } from "../../controller/entities/contacts/user/PermissionsAcces";
 import { EntrepriseSelectedService } from "../../controller/shared/entreprise-selected.service";
 import { TokenService } from "../../controller/auth/services/token.service";
-import { NgForOf, NgIf } from '@angular/common';
 import { Entreprise } from "../../controller/entities/parametres/entreprise";
 import { UserInfosService } from "../../controller/shared/user-infos.service";
 import { EntrepriseService } from "../../controller/services/parametres/entreprise.service";
@@ -39,6 +38,7 @@ import {FournisseurService} from "../../controller/services/contacts/fournisseur
 import {CommandeService} from "../../controller/services/ventes/commande/commande.service";
 import {ProduitService} from "../../controller/services/produit/produit.service";
 import {BonCommandeService} from "../../controller/services/inventaire/boncommande/bon-commande.service";
+import {Produit} from "../../controller/entities/produit/produit";
 
 
 interface IUser {
@@ -77,21 +77,15 @@ export class DashboardComponent implements OnInit {
   userList: IUser[] = [];
   public viewEmployers: boolean = true;
   public entreprises!: Entreprise[];
+  protected produitList!: Produit[];
+  protected top5Produits!: Produit[];
   public nbrProduits: number = 0;
   public nbrFournisseurs: number = 0;
   public nbrVentes: number = 0;
   public nbrAchats: number = 0;
+  public nbrClients: number = 0;
   options = {
     maintainAspectRatio: false
-  };
-
-  chartPolarAreaData: ChartData = {
-    datasets: [
-      {
-        data: [0, 0, 0, 0],
-        backgroundColor: ['#FF6384', '#4BC0C0', '#FFCE56','#36A2EB']
-      }
-    ]
   };
 
 
@@ -131,7 +125,8 @@ export class DashboardComponent implements OnInit {
         this.getNbrVentes(this.entrepriseSelectedService.getEntrepriseSelected());
         this.getNbrProduits(this.entrepriseSelectedService.getEntrepriseSelected());
         this.getNbrFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected());
-        console.log("final :",this.chartPolarAreaData);
+        this.loadProduitList(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrClients(this.entrepriseSelectedService.getEntrepriseSelected());
       });
     } else {
       this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
@@ -147,7 +142,8 @@ export class DashboardComponent implements OnInit {
               this.getNbrVentes(this.entreprises[0].id);
               this.getNbrProduits(this.entreprises[0].id);
               this.getNbrFournisseurs(this.entreprises[0].id);
-              console.log("final :",this.chartPolarAreaData);
+              this.loadProduitList(this.entreprises[0].id);
+              this.getNbrClients(this.entreprises[0].id);
             });
           }
         }, error => {
@@ -168,7 +164,9 @@ export class DashboardComponent implements OnInit {
         this.getNbrVentes(this.entrepriseSelectedService.getEntrepriseSelected());
         this.getNbrProduits(this.entrepriseSelectedService.getEntrepriseSelected());
         this.getNbrFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected());
-        console.log("final :",this.chartPolarAreaData);
+        this.loadProduitList(this.entrepriseSelectedService.getEntrepriseSelected());
+        this.getNbrClients(this.entrepriseSelectedService.getEntrepriseSelected());
+
       });
     } else {
       this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
@@ -182,7 +180,8 @@ export class DashboardComponent implements OnInit {
             this.getNbrVentes(this.entreprises[0].id);
             this.getNbrProduits(this.entreprises[0].id);
             this.getNbrFournisseurs(this.entreprises[0].id);
-            console.log("final :",this.chartPolarAreaData);
+            this.loadProduitList(this.entreprises[0].id);
+            this.getNbrClients(this.entreprises[0].id);
           });
         } else {
           console.log('Aucune entreprise trouvée.');
@@ -196,10 +195,19 @@ export class DashboardComponent implements OnInit {
   /******************************Charts**************************************/
 
 
+  public getNbrClients(id: number){
+    this.clientService.getNbClients(id).subscribe( res => {
+      this.nbrClients = res;
+      console.log("nbr Clients : ", this.nbrClients)
+    }, error => {
+      console.log(error);
+    });
+  }
+
+
   public getNbrProduits(id: number){
     this.produitService.getNbProduits(id).subscribe( res => {
       this.nbrProduits = res;
-      this.updateChart();
       console.log("nbr Produits : ", this.nbrProduits);
     }, error => {
       console.log(error);
@@ -209,7 +217,6 @@ export class DashboardComponent implements OnInit {
   public getNbrFournisseurs(id: number){
     this.fournisseurService.getNbFournisseurs(id).subscribe( res => {
       this.nbrFournisseurs = res;
-      this.updateChart();
       console.log("nbr Fournisseurs : ", this.nbrFournisseurs);
     }, error => {
       console.log(error);
@@ -219,7 +226,6 @@ export class DashboardComponent implements OnInit {
   public getNbrVentes(id: number){
     this.commandeService.getNbCommandes(id).subscribe( res => {
       this.nbrVentes = res;
-      this.updateChart();
       console.log("nbr Ventes : ", this.nbrVentes);
     }, error => {
       console.log(error);
@@ -229,26 +235,43 @@ export class DashboardComponent implements OnInit {
   public getNbrAchats(id: number){
     this.bonCommandeService.getNbAchats(id).subscribe( res => {
       this.nbrAchats = res;
-      this.updateChart();
       console.log("nbr Achats : ", this.nbrAchats);
     }, error => {
       console.log(error);
     });
   }
-  private updateChart() {
-    this.chartPolarAreaData.datasets[0].data = [
-      this.nbrProduits,
-      this.nbrFournisseurs,
-      this.nbrVentes,
-      this.nbrAchats
-    ];
-    this.chartPolarAreaData.labels = [
-      `${this.nbrProduits}`,
-      `${this.nbrFournisseurs}`,
-      `${this.nbrVentes}`,
-      `${this.nbrAchats}`
-    ];
+
+
+  public generatRandomColor = (): string => {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  };
+
+  loadProduitList(id: number) {
+    this.produitService.findByEntrepriseId(id).subscribe({
+      next: data => {
+        this.produitList = data;
+        this.top5Produits = this.getTop5Produits(this.produitList);
+      },
+      error: err => console.log(err)
+    });
   }
+
+  getTop5Produits(produits: Produit[]): Produit[] {
+    return produits
+        .map(produit => ({
+          ...produit,
+          ventes: produit.niveauStockInitial - produit.disponible
+        }))
+        .sort((a, b) => b.ventes - a.ventes)
+        .slice(0, 5);
+  }
+
+
 
   /***********************************Employers Charts************************************/
 

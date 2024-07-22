@@ -1,3 +1,7 @@
+<head>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css" integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
+</head>
 
 <app-widgets-dropdown />
 <!---------------------------------------------------------------------->
@@ -11,30 +15,55 @@
           <c-col xs="12">
             <c-card class="mb-4">
               <c-card-header>
-                Carte des paramètres essentiels
+                Les produits les plus vendu
               </c-card-header>
               <c-card-body class="chart-container">
-                <c-chart type="polarArea" [data]="chartPolarAreaData" [options]="options" />
-                <c-card-footer>
-                  <c-row class="text-center mb-2" [xl]="4" [lg]="5" [sm]="2" [xs]="1" [gutter]="4">
-                    <c-col>
-                      <div class="text-body-secondary">Operations Ventes</div>
-                      <c-progress class="mt-2" thin color="success" [value]="nbrVentes" aria-label="ventes"></c-progress>
-                    </c-col>
-                    <c-col>
-                      <div class="text-body-secondary">Operations Achats</div>
-                      <c-progress class="mt-2" thin color="info" [value]="nbrAchats" aria-label="achats"></c-progress>
-                    </c-col>
-                    <c-col>
-                      <div class="text-body-secondary">Produits</div>
-                      <c-progress class="mt-2" thin color="warning" [value]="nbrProduits" aria-label="produits"></c-progress>
-                    </c-col>
-                    <c-col>
-                      <div class="text-body-secondary">Fournisseurs</div>
-                      <c-progress class="mt-2" thin  color="danger" [value]="nbrFournisseurs" aria-label="clients"></c-progress>
-                    </c-col>
-                  </c-row>
-                </c-card-footer>
+        <div>
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="">
+                <div class="table-responsive">
+                  <table class="table project-list-table table-nowrap align-middle table-borderless">
+                    <thead>
+                    <tr>
+                      <th scope="col">Nom</th>
+                      <th scope="col">Disponible</th>
+                      <th scope="col">Vendu</th>
+                      <th scope="col">Prix</th>
+                      <th scope="col" style="width: 200px;">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for (produit of top5Produits; track produit.nom; let i = $index) {
+
+                    <tr>
+                      <td><a href="#" class="text-body">{{ produit.nom }}</a></td>
+                      <td><span class="badge badge-soft-success mb-0">{{"disponible :"}}{{produit.disponible}}</span></td>
+                      <td>{{produit.niveauStockInitial - produit.disponible}}</td>
+                      <td>{{produit.prixGros}}</td>
+                      <td>
+                        <ul class="list-inline mb-0">
+                          <li class="list-inline-item dropdown">
+                            <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"><i class="bx bx-dots-vertical-rounded"></i></a>
+                            <div class="dropdown-menu dropdown-menu-end">
+                              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="px-2 text-primary"><i class="bx bx-pencil font-size-18"></i></a>
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-end">
+                              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="px-2 text-danger"><i class="bx bx-trash-alt font-size-18"></i></a>
+                            </div>
+                          </li>
+                        </ul>
+                      </td>
+                    </tr>
+                    }
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
               </c-card-body>
             </c-card>
           </c-col>
@@ -47,9 +76,30 @@
       </div>
     </div>
   </div>
+  <div class="row container">
+
+    <c-card-footer>
+      <c-row class="text-center" [xl]="4" [lg]="5" [sm]="2" [xs]="1" [gutter]="4">
+        <c-col>
+          <div class="text-body-secondary">Operations Ventes<span><strong>{{" ("}}{{nbrVentes}}{{")"}}</strong></span></div>
+          <c-progress class="mt-2" thin color="success" [value]="nbrVentes" aria-label="ventes"></c-progress>
+        </c-col>
+        <c-col>
+          <div class="text-body-secondary">Operations Achats<span><strong>{{" ("}}{{nbrAchats}}{{")"}}</strong></span></div>
+          <c-progress class="mt-2" thin color="info" [value]="nbrAchats" aria-label="achats"></c-progress>
+        </c-col>
+        <c-col>
+          <div class="text-body-secondary">Produits<span><strong>{{"("}}{{nbrProduits}}{{")"}}</strong></span></div>
+          <c-progress class="mt-2" thin color="warning" [value]="nbrProduits" aria-label="produits"></c-progress>
+        </c-col>
+        <c-col>
+          <div class="text-body-secondary">Fournisseurs<span><strong>{{" ("}}{{nbrFournisseurs}}{{")"}}</strong></span></div>
+          <c-progress class="mt-2" thin  color="danger" [value]="nbrFournisseurs" aria-label="clients"></c-progress>
+        </c-col>
+      </c-row>
+    </c-card-footer>
+  </div>
 </c-card>
-
-
 
 
 <!---------------------------------------------------------------------->
@@ -82,7 +132,7 @@
                   <div class="text-body-secondary text-truncate small">
                     Clients récurrents
                   </div>
-                  <div class="fs-5 fw-semibold">{{getRecurringClients('SUNDAY')}}</div>
+                  <div class="fs-5 fw-semibold">{{nbrClients}}</div>
                 </div>
               </c-col>
             </c-row>
@@ -93,7 +143,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info"  [value]="getNewClients('MONDAY')" aria-label="Monday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('MONDAY')" aria-label="Monday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('MONDAY')" aria-label="Monday recurring clients" />-->
+               <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -102,7 +153,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info" [value]="getNewClients('TUESDAY')" aria-label="Tuesday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('TUESDAY')" aria-label="Tuesday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('TUESDAY')" aria-label="Tuesday recurring clients" />-->
+                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -111,7 +163,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info" [value]="getNewClients('WEDNESDAY')" aria-label="Wednesday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('WEDNESDAY')" aria-label="Wednesday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('WEDNESDAY')" aria-label="Wednesday recurring clients" />-->
+                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -120,7 +173,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info" [value]="getNewClients('THURSDAY')" aria-label="Thursday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('THURSDAY')" aria-label="Thursday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('THURSDAY')" aria-label="Thursday recurring clients" />-->
+                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -129,7 +183,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info" [value]="getNewClients('FRIDAY')" aria-label="Friday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('FRIDAY')" aria-label="Friday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('FRIDAY')" aria-label="Friday recurring clients" />-->
+                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -138,7 +193,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info" [value]="getNewClients('SATURDAY')" aria-label="Saturday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('SATURDAY')" aria-label="Saturday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('SATURDAY')" aria-label="Saturday recurring clients" />-->
+                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -147,7 +203,8 @@
               </div>
               <div class="progress-group-bars">
                 <c-progress thin color="info" [value]="getNewClients('SUNDAY')" aria-label="Sunday new clients" />
-                <c-progress thin color="danger" [value]="getRecurringClients('SUNDAY')" aria-label="Sunday recurring clients" />
+<!--                <c-progress thin color="danger" [value]="getRecurringClients('SUNDAY')" aria-label="Sunday recurring clients" />-->
+                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="legend text-center d-none d-md-block" ngPreserveWhitespaces>

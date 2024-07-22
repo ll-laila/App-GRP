@@ -100,6 +100,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
   public entreprises!: Entreprise[];
   public entrepriseSelected!: Entreprise;
   public totalNotifications:number=0;
+  public vu : boolean = false;
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -144,6 +145,8 @@ export class DefaultHeaderComponent extends HeaderComponent {
     this.router.navigate(['/profil']).then();
   }
   notification(){
+    this.totalNotifications = 0;
+    this.vu = true;
     this.router.navigate(["/notification"]).then();
   }
 
@@ -221,6 +224,9 @@ export class DefaultHeaderComponent extends HeaderComponent {
     this.notificationService.findAll().subscribe({
       next: (notifications) => {
         this.totalNotifications = notifications.length;
+        if(this.vu == true){
+          this.totalNotifications = 0;
+        }
       },
       error: (err) => {
         console.error('Erreur lors de la récupération des notifications', err);

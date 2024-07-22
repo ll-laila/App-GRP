@@ -2,6 +2,7 @@ package org.sir.appgestionstock.service.impl.ventes.commande;
 
 import org.sir.appgestionstock.bean.core.contacts.Client;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
+import org.sir.appgestionstock.bean.core.produit.Produit;
 import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.bean.core.ventes.commande.CommandeProduit;
 import org.sir.appgestionstock.bean.core.ventes.facture.Facture;
@@ -14,6 +15,7 @@ import org.sir.appgestionstock.service.facade.parametres.DevisesService;
 import org.sir.appgestionstock.service.facade.parametres.EntrepriseService;
 import org.sir.appgestionstock.service.facade.parametres.NiveauPrixService;
 import org.sir.appgestionstock.service.facade.parametres.TaxeService;
+import org.sir.appgestionstock.service.facade.produit.ProduitService;
 import org.sir.appgestionstock.service.facade.ventes.commande.CommandeProduitService;
 import org.sir.appgestionstock.service.facade.ventes.commande.CommandeService;
 import org.sir.appgestionstock.service.facade.ventes.facture.FactureService;
@@ -125,6 +127,13 @@ public class CommandeServiceImpl implements CommandeService {
         }
         createAssociatedObject(item);
         item.setStatut(StatutCommandeEnum.ENATTENTE);
+
+        for(CommandeProduit cp : item.getCommandeProduit()){
+            Produit pUpdated = produitService.findById(cp.getProduit().getId());
+            pUpdated.setDisponible(cp.getProduit().getDisponible());
+            produitService.update(pUpdated);
+        }
+
         Commande saved = dao.save(item);
         createAssociatedList(saved);
         return saved;
@@ -179,6 +188,11 @@ public class CommandeServiceImpl implements CommandeService {
                 addressExpedition.setId(oldAddressExpedition.getId());
                 adresseService.update(addressExpedition);
             }
+        }
+        for(CommandeProduit cp : item.getCommandeProduit()){
+            Produit pUpdated = produitService.findById(cp.getProduit().getId());
+            pUpdated.setDisponible(cp.getProduit().getDisponible());
+            produitService.update(pUpdated);
         }
         Commande saved = dao.save(item);
         return saved;
@@ -432,4 +446,7 @@ public class CommandeServiceImpl implements CommandeService {
     @Lazy
     @Autowired
     private EntrepriseService entrepriseService;
+    @Lazy
+    @Autowired
+    private ProduitService produitService;
 }
