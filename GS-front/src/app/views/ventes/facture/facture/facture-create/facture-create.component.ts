@@ -256,7 +256,7 @@ export class FactureCreateComponent implements OnChanges {
           this.router.navigate([this.returnUrl]).then()
           return;
         }
-        this.router.navigate(["/ventes/facture/facture/factureautre"]).then()
+        this.router.navigate(["/ventes/facture/facture/facturepdf"]).then()
         this.toasterService.toast({message: "Une nouvelle facture a été ajouté", color: "success"})
 
       },

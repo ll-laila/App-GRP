@@ -147,7 +147,6 @@ public httpClient : HttpClient = inject(HttpClient);
     this.paiement.returnUrl = this.router.url
     this.service.keepData = true
     this.router.navigate(['/ventes/paiement/create']).then()
-
   }
   public navigateToPdfFacture() {
     this.paiement.returnUrl = this.router.url
