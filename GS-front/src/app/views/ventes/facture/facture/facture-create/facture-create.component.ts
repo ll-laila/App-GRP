@@ -61,6 +61,10 @@ import {CommandeProduit} from "../../../../../controller/entities/ventes/command
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {NotificationService} from "../../../../../controller/services/parametres/notification.service";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {Employe} from "../../../../../controller/entities/contacts/user/employe";
+import {TokenService} from "../../../../../controller/auth/services/token.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
+import {EmployeService} from "../../../../../controller/services/contacts/user/employe.service";
 
 @Component({
   selector: 'app-facture-create',
@@ -105,6 +109,7 @@ export class FactureCreateComponent implements OnChanges {
   private service = inject(FactureService)
   private taxeService = inject(TaxeService)
   private clientService = inject(ClientService)
+  private employeService = inject(EmployeService);
   private devisesService = inject(DevisesService)
   private niveauPrixService = inject(NiveauPrixService)
   private entrepriseService = inject(EntrepriseService)
@@ -117,10 +122,9 @@ export class FactureCreateComponent implements OnChanges {
   private notificationService =inject(NotificationService)
   protected validator = FactureValidator.init(() => this.item)
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
-  // .setPaiement(PaiementValidator.init(() => this.paiement))
-  // .setRetourProduit(RetourProduitValidator.init(() => this.retourProduit))
-  //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
-  //.setAddressExpedition(AdresseValidator.init(() => this.addressExpedition))
+  private tokenService = inject(TokenService);
+  private userInfosService = inject(UserInfosService);
+
 
   protected taxeList!: Taxe[]
   protected clientList!: Client[]
@@ -128,6 +132,7 @@ export class FactureCreateComponent implements OnChanges {
   protected niveauPrixList!: NiveauPrix[]
   protected entrepriseList!: Entreprise[]
   protected produitList!: Produit[]
+  public entreprises!: Entreprise[];
   protected factureProduits!: FactureProduit[]
   protected readonly TypeRabaisEnum = TypeRabaisEnum;
   protected iSemploye = this.notificationService.isEmploye;
@@ -165,12 +170,20 @@ export class FactureCreateComponent implements OnChanges {
     this.item.addressExpedition = new Adresse()
     this.loadTaxeList()
     this.calculerTotal(this.itemFP);
-    this.loadClientList()
     this.loadDevisesList()
     this.loadNiveauPrixList()
     this.loadEntrepriseList()
     this.findProduitCommande()
     this.generateCode();
+
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+
+    if (newVar == 1) {
+      this.getClientsForAdmin();
+    } else {
+      this.getClientsForEmploye();
+    }
+
 
   }
 
@@ -201,16 +214,74 @@ export class FactureCreateComponent implements OnChanges {
     })
   }
 
-  loadClientList() {
-    this.clientService.findAll()
-        .subscribe({
-          next: data => {
-            this.clientList = data
-            this.loadProduitList()
-          },
-          error: err => console.log(err)
-        })
+
+  getClientsForAdmin() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
+        this.entreprises = res
+        console.log("Entreprises: ", this.entreprises);
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.clientService.getClients(this.entreprises[0].id).subscribe({
+            next: data => {
+              this.clientList = data;
+              console.log("Clients :",data);
+            },
+            error: err => console.log(err)
+          })
+        } else {
+          console.log('Aucune entreprise trouvée.');
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
+
+
+  getClientsForEmploye() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+        console.log("empId: ", res.id);
+        this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+          this.entreprises = reslt;
+          console.log("EntreprisesÀdroit: ", this.entreprises);
+          if (this.entreprises && this.entreprises.length > 0) {
+            this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+              next: data => {
+                this.clientList = data;
+                console.log("Clients :",data);
+              },
+              error: err => console.log(err)
+            })
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+
+
 
   loadDevisesList() {
     this.devisesService.findAll().subscribe({

@@ -36,8 +36,14 @@ import {Client} from "src/app/controller/entities/contacts/client";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
-import {Taxe} from "../../../../controller/entities/parametres/taxe";
-import {Fournisseur} from "../../../../controller/entities/contacts/fournisseur";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
+import {PermissionsAcces} from "../../../../controller/entities/contacts/user/PermissionsAcces";
+import {Entreprise} from "../../../../controller/entities/parametres/entreprise";
+import {EntrepriseService} from "../../../../controller/services/parametres/entreprise.service";
+import {UserInfosService} from "../../../../controller/shared/user-infos.service";
+import {Employe} from "../../../../controller/entities/contacts/user/employe";
+import {EmployeService} from "../../../../controller/services/contacts/user/employe.service";
+import {TokenService} from "../../../../controller/auth/services/token.service";
 
 @Component({
   selector: 'app-client-list',
@@ -57,36 +63,98 @@ export class ClientListComponent {
   protected loading = false
   protected paginating = false
   protected currentIndex: number  = 0
-  protected deleteModel = false
-
-
+  protected deleteModel = false;
+  protected clientList!: Client[];
+  public entreprises!: Entreprise[];
+  private employeService = inject(EmployeService);
+  private entrepriseService = inject(EntrepriseService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private service = inject(ClientService)
+  private userInfosService = inject(UserInfosService);
+  private tokenService = inject(TokenService);
 
   ngOnInit() {
-    this.findAll()
-  }
+      const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
-      },
-      error: err => {
-        console.log(err)
-        this.paginating = false
+      if (newVar == 1) {
+          this.getClientsForAdmin();
+      } else {
+          this.getClientsForEmploye();
       }
-    })
   }
 
 
-  delete() {
+
+
+    getClientsForAdmin() {
+        if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+            this.service.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+                next: data => {
+                    this.clientList = data;
+                    console.log("Clients :",data);
+                },
+                error: err => console.log(err)
+            })
+        } else {
+            this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
+                this.entreprises = res;
+                console.log("Entreprises: ", this.entreprises);
+                if (this.entreprises && this.entreprises.length > 0) {
+                    this.service.getClients(this.entreprises[0].id).subscribe({
+                        next: data => {
+                            this.clientList = data;
+                            console.log("Clients :",data);
+                        },
+                        error: err => console.log(err)
+                    })
+                } else {
+                    console.log('Aucune entreprise trouvée.');
+                }
+            }, error => {
+                console.log(error);
+            });
+        }
+    }
+
+
+    getClientsForEmploye() {
+        if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+            this.service.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+                next: data => {
+                    this.clientList = data;
+                    console.log("Clients :",data);
+                },
+                error: err => console.log(err)
+            })
+        } else {
+            this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+                console.log("empId: ", res.id);
+                this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+                    this.entreprises = reslt;
+                    console.log("EntreprisesÀdroit: ", this.entreprises);
+                    if (this.entreprises && this.entreprises.length > 0) {
+                        this.service.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+                            next: data => {
+                                this.clientList = data;
+                                console.log("Clients :",data);
+                            },
+                            error: err => console.log(err)
+                        })
+                    }
+                }, error => {
+                    console.log(error);
+                });
+            }, error => {
+                console.log(error);
+            });
+        }
+    }
+
+
+
+
+
+    delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
         this.pagination.data.splice(this.currentIndex as number, 1)
@@ -131,6 +199,5 @@ export class ClientListComponent {
   }
 
 
-  /////
   protected readonly paginationSizes = paginationSizes;
 }

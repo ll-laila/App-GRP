@@ -4,6 +4,7 @@ import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.service.facade.ventes.commande.CommandeService;
 import org.sir.appgestionstock.ws.converter.parametres.EntrepriseConverter;
 import org.sir.appgestionstock.ws.converter.ventes.commande.CommandeConverter;
+import org.sir.appgestionstock.ws.dto.contacts.ClientDto;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.ws.dto.ventes.commande.CommandeDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
@@ -39,6 +40,13 @@ return ResponseEntity.ok(resultDto);
     public ResponseEntity<Double> getNbCommandes(@PathVariable Long id) {
         double result = service.getNbCommandes(id);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/commandesErp/{idEntreprise}")
+    public ResponseEntity<List<CommandeDto>> getCommandes(@PathVariable Long idEntreprise) {
+        var result = service.getCommandes(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
     }
 
 @GetMapping("/optimized")

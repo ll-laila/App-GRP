@@ -13,6 +13,7 @@ public interface ClientService {
 
 Map<String, Map<String, Long>> getClientStatsForCurrentWeek(Long idEntreprise);
 double getNbClients(Long idEntreprise);
+List<Client> getClients(Long idEntreprise);
 Client findById(Long id);
 List<Client> findAllOptimized();
 List<Client> findAll();

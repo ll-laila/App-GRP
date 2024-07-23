@@ -39,6 +39,7 @@ import {CommandeService} from "../../controller/services/ventes/commande/command
 import {ProduitService} from "../../controller/services/produit/produit.service";
 import {BonCommandeService} from "../../controller/services/inventaire/boncommande/bon-commande.service";
 import {Produit} from "../../controller/entities/produit/produit";
+import {Router, RouterLink} from "@angular/router";
 
 
 interface IUser {
@@ -53,7 +54,7 @@ interface IUser {
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss'],
   standalone: true,
-  imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent]
+  imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent, RouterLink]
 })
 export class DashboardComponent implements OnInit {
 
@@ -67,6 +68,7 @@ export class DashboardComponent implements OnInit {
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private userInfosService = inject(UserInfosService);
   private tokenService = inject(TokenService);
+  private router = inject(Router)
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   readonly #document: Document = inject(DOCUMENT);
   readonly #renderer: Renderer2 = inject(Renderer2);
@@ -348,7 +350,13 @@ export class DashboardComponent implements OnInit {
     return '#' + ('000000' + color).slice(-6);
   }
 
+  update(){
+    this.router.navigate(["/produit/produit"]).then()
 
+  }
 
+  delete(){
+    this.router.navigate(["/produit/produit"]).then()
+  }
 
 }

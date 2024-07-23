@@ -27,8 +27,12 @@ private String nom;
 private String email;
 private String telephone;
 private String siteweb;
-private String logo;
-private Long idAdmin;
+    @Lob
+    @Column(length = 1000000)
+    private byte[] logo;
+
+
+    private Long idAdmin;
 
 @OneToOne()
 private Adresse adresse;
@@ -68,7 +72,6 @@ private List<Devis> devisList;
 @OneToMany(mappedBy = "entreprise")
 private List<EntrepriseDevises> entrepriseDevises;
 
-
 public Entreprise() {
     this.employesAdroitAcces = new ArrayList<>();
 }
@@ -102,10 +105,10 @@ return siteweb;
 public void setSiteweb(String value) {
 this.siteweb = value;
 }
-public String getLogo() {
+public byte[] getLogo() {
 return logo;
 }
-public void setLogo(String value) {
+public void setLogo(byte[] value) {
 this.logo = value;
 }
 public Adresse getAdresse() {
@@ -217,6 +220,7 @@ this.entrepriseDevises = value;
     public void setIdAdmin(Long value) {
         this.idAdmin = value;
     }
+
 @Override
 public boolean equals(Object object) {
 if (object instanceof Entreprise entreprise) {

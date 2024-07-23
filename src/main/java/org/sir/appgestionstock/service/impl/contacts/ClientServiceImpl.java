@@ -257,6 +257,10 @@ public class ClientServiceImpl implements ClientService {
         return clients.size();
     }
 
+    @Override
+    public List<Client> getClients(Long idEntreprise){
+        return dao.findByEntrepriseId(idEntreprise);
+    }
 
     @Override
     public Map<String, Map<String, Long>> getClientStatsForCurrentWeek(Long idEntreprise) {

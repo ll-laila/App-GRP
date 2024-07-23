@@ -119,7 +119,6 @@ export class LivraisonCreateComponent {
     this.generateCode();
     this.loadTaxeList();
     this.loadFournisseurList();
-    this.loadEntrepriseList();
 
   }
 
@@ -172,17 +171,14 @@ export class LivraisonCreateComponent {
     })
   }
   loadFournisseurList() {
-    this.fournisseurService.findAllOptimized().subscribe({
-      next: data => this.fournisseurList = data,
+    this.fournisseurService.getFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.fournisseurList = data;
+      },
       error: err => console.log(err)
     })
   }
-  loadEntrepriseList() {
-    this.entrepriseService.findAllOptimized().subscribe({
-      next: data => this.entrepriseList = data,
-      error: err => console.log(err)
-    })
-  }
+
 
   reset(force = true) {
     if (force || this.item == null) this.item = new Livraison()

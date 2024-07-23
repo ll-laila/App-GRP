@@ -9,6 +9,7 @@ import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.
 import {CodeResponse} from "../../../utils/code/code-response";
 import {Facture} from "../../../entities/ventes/facture/facture";
 import {Entreprise} from "../../../entities/parametres/entreprise";
+import {Client} from "../../../entities/contacts/client";
 
 
 @Injectable({ providedIn: 'root' })
@@ -28,7 +29,12 @@ export class CommandeService {
         return this.http.get<number>(`${this.api}/commandes/${entrepriseId}`);
     }
 
-  public findAll() {
+    public getCommandes(id: number) {
+        return this.http.get<Array<Commande>>(`${this.api}/commandesErp/${id}`);
+    }
+
+
+    public findAll() {
     return this.http.get<Array<Commande>>(this.api);
   }
 

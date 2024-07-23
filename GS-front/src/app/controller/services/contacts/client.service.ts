@@ -24,6 +24,10 @@ export class ClientService {
         return this.http.get<number>(`${this.api}/clients/${entrepriseId}`);
     }
 
+    public getClients(id: number) {
+        return this.http.get<Array<Client>>(`${this.api}/clientsErp/${id}`);
+    }
+
     public getClientStats(idEntreprise: number): Observable<any> {
         return this.http.get(`${this.api}/client-stats/${idEntreprise}`);
     }

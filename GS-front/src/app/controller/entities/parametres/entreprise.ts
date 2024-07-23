@@ -47,5 +47,4 @@ nouvelleDevises?: Array<NouvelleDevise> ;
 devisList?: Array<Devis> ;
 entrepriseDevises?: Array<EntrepriseDevises> ;
 idAdmin?: number;
-    selected: any;
 }

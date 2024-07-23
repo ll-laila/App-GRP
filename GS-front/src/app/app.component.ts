@@ -1,6 +1,6 @@
 import {Component, inject} from '@angular/core';
 import {NavigationEnd, Router, RouterOutlet} from '@angular/router';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {Title} from "@angular/platform-browser";
 import {IconSetService} from "@coreui/icons-angular";
 import {iconSubset} from "./icons/icon-subset";

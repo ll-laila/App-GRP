@@ -157,8 +157,10 @@ export class BonCommandeUpdateComponent {
     })
   }
   loadFournisseurList() {
-    this.fournisseurService.findAllOptimized().subscribe({
-      next: data => this.fournisseurList = data,
+    this.fournisseurService.getFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.fournisseurList = data;
+      },
       error: err => console.log(err)
     })
   }
@@ -470,8 +472,8 @@ export class BonCommandeUpdateComponent {
     return number;
   }
   loadProduitList() {
-    this.produitService.findAll().subscribe({
-      next: data => this.produits = data,
+    this.produitService.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => this.produitList = data,
       error: err => console.log(err)
     })
   }

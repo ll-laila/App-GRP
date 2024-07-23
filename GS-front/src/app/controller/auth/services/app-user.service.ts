@@ -1,5 +1,5 @@
 import {inject, Injectable} from '@angular/core';
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {AppUser} from 'src/app/controller/auth/entities/app-user';
 import {AppUserValidator} from "src/app/controller/auth/validators/app-user.validator";
 import {environment} from "src/environments/environment";

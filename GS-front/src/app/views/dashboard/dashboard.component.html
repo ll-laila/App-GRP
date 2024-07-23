@@ -30,7 +30,7 @@
                       <th scope="col">Disponible</th>
                       <th scope="col">Vendu</th>
                       <th scope="col">Prix</th>
-                      <th scope="col" style="width: 200px;">Action</th>
+                      <th scope="col ml-2" style="width: 200px;">Action</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,10 +46,8 @@
                           <li class="list-inline-item dropdown">
                             <a class="text-muted dropdown-toggle font-size-18 px-2" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true"><i class="bx bx-dots-vertical-rounded"></i></a>
                             <div class="dropdown-menu dropdown-menu-end">
-                              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="px-2 text-primary"><i class="bx bx-pencil font-size-18"></i></a>
-                            </div>
-                            <div class="dropdown-menu dropdown-menu-end">
-                              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="px-2 text-danger"><i class="bx bx-trash-alt font-size-18"></i></a>
+                              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit" class="px-2 text-primary" (click)="update()"><i class="bx bx-pencil font-size-18"></i></a>
+                              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete" class="px-2 text-danger" (click)="delete()"><i class="bx bx-trash-alt font-size-18"></i></a>
                             </div>
                           </li>
                         </ul>

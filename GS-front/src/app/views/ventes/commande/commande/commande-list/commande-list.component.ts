@@ -12,6 +12,8 @@ import {Commande} from "src/app/controller/entities/ventes/commande/commande";
 import {Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {Fournisseur} from "../../../../../controller/entities/contacts/fournisseur";
 
 @Component({
   selector: 'app-commande-list',
@@ -32,12 +34,26 @@ export class CommandeListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
+  protected commandesList!: Commande[]
+
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   private service = inject(CommandeService)
   private router = inject(Router);
 
   ngOnInit() {
     this.findAll()
+  }
+
+
+  loadCommandesList() {
+    this.service.getCommandes(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.commandesList = data;
+        console.log("commandes :",data);
+      },
+      error: err => console.log(err)
+    })
   }
 
   findAll() {

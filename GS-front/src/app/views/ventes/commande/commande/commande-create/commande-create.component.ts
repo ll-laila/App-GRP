@@ -56,6 +56,9 @@ import {ProduitNiveauPrix} from "../../../../../controller/entities/produit/prod
 import {NotificationService} from "../../../../../controller/services/parametres/notification.service";
 import {Employe} from "../../../../../controller/entities/contacts/user/employe";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
+import {EmployeService} from "../../../../../controller/services/contacts/user/employe.service";
+import {TokenService} from "../../../../../controller/auth/services/token.service";
 
 @Component({
   selector: 'app-commande-create',
@@ -79,9 +82,11 @@ export class CommandeCreateComponent {
     this.itemGetter = getter
     this.standAlon = false
   }
-  @Input("setter") set setItemSetter(setter: (value: Commande ) => void) {
+
+  @Input("setter") set setItemSetter(setter: (value: Commande) => void) {
     this.itemSetter = setter
   }
+
   @Input("validator") set setValidator(validator: CommandeValidator) {
     this.validator = validator
   }
@@ -90,21 +95,21 @@ export class CommandeCreateComponent {
   private service = inject(CommandeService)
   private taxeService = inject(TaxeService)
   private clientService = inject(ClientService)
+  private employeService = inject(EmployeService);
   private devisesService = inject(DevisesService)
   private niveauPrixService = inject(NiveauPrixService)
   private entrepriseService = inject(EntrepriseService)
   private commandeProduitService = inject(CommandeProduitService)
   private produitService = inject(ProduitService)
   private factureService = inject(FactureService)
-  private formBuilder: FormBuilder= inject(FormBuilder)
+  private formBuilder: FormBuilder = inject(FormBuilder)
   private toasterService = inject(ToasterService)
-  private notificationService =inject(NotificationService)
+  private notificationService = inject(NotificationService)
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
+  private userInfosService = inject(UserInfosService);
+  private tokenService = inject(TokenService);
 
   protected validator = CommandeValidator.init(() => this.item)
-  //  .setFacture(FactureValidator.init(() => this.facture))
-    //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
-    //.setAddressExpedition(AdresseValidator.init(() => this.addressExpedition))
 
   protected taxeList!: Taxe[]
   protected clientList!: Client[]
@@ -112,25 +117,25 @@ export class CommandeCreateComponent {
   protected niveauPrixList!: NiveauPrix[]
   protected entrepriseList!: Entreprise[]
   protected produitList!: Produit[]
+  public entreprises!: Entreprise[];
   protected readonly TypeRabaisEnum = TypeRabaisEnum;
-  protected  clientP! : Client;
-
+  protected clientP!: Client;
 
 
   ngOnInit() {
 
     this.loadEntreprise();
 
-    if(this.service.keepData) {
+    if (this.service.keepData) {
       let taxeCreated = this.taxeService.createdItemAfterReturn;
       if (taxeCreated.created) {
         this.item.taxe = taxeCreated.item
-       // this.validator.taxe.validate()
+        // this.validator.taxe.validate()
       }
       let taxeExpeditionCreated = this.taxeService.createdItemAfterReturn;
       if (taxeExpeditionCreated.created) {
         this.item.taxeExpedition = taxeExpeditionCreated.item
-      //  this.validator.taxeExpedition.validate()
+        //  this.validator.taxeExpedition.validate()
       }
       let clientCreated = this.clientService.createdItemAfterReturn;
       if (clientCreated.created) {
@@ -140,7 +145,7 @@ export class CommandeCreateComponent {
       let devisesCreated = this.devisesService.createdItemAfterReturn;
       if (devisesCreated.created) {
         this.item.devises = devisesCreated.item
-      //  this.validator.devises.validate()
+        //  this.validator.devises.validate()
       }
 
       let niveauPrixCreated = this.niveauPrixService.createdItemAfterReturn;
@@ -148,7 +153,9 @@ export class CommandeCreateComponent {
         this.item.niveauPrix = niveauPrixCreated.item
       }
 
-    } else { this.reset(false) }
+    } else {
+      this.reset(false)
+    }
     this.service.keepData = false
     this.item.facture = new Facture()
     this.item.addressFacturation = new Adresse()
@@ -156,11 +163,18 @@ export class CommandeCreateComponent {
 
     this.loadTaxeList()
     this.loadProduitList()
-
-    this.loadClientList()
     this.loadDevisesList()
     this.loadNiveauPrixList()
     this.loadEntrepriseList()
+
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+
+    if (newVar == 1) {
+      this.getClientsForAdmin();
+    } else {
+      this.getClientsForEmploye();
+    }
+
     this.clientForm = this.formBuilder.group({
       code: [{value: this.generateCode(), disabled: true}]
 
@@ -171,9 +185,11 @@ export class CommandeCreateComponent {
       error: err => console.log(err)
     })
   }
+
   currentCodeNumber: number = 1;
 
   clientForm !: FormGroup;
+
   generateCode(): string {
     return 'I' + this.currentCodeNumber.toString().padStart(7, '0');
   }
@@ -186,6 +202,9 @@ export class CommandeCreateComponent {
   }
 
 
+
+
+
   // LOAD DATA
 
 
@@ -193,7 +212,7 @@ export class CommandeCreateComponent {
     this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: entreprise => {
         this.item.entreprise = entreprise;
-        console.log("entre :",this.item.entreprise);
+        console.log("entre :", this.item.entreprise);
       },
       error: err => console.log(err)
     });
@@ -206,24 +225,89 @@ export class CommandeCreateComponent {
       error: err => console.log(err)
     })
   }
-  loadClientList() {
-    this.clientService.findAllOptimized().subscribe({
-      next: data => this.clientList = data,
-      error: err => console.log(err)
-    })
+
+
+  getClientsForAdmin() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
+        this.entreprises = res
+        console.log("Entreprises: ", this.entreprises);
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.clientService.getClients(this.entreprises[0].id).subscribe({
+            next: data => {
+              this.clientList = data;
+              console.log("Clients :",data);
+            },
+            error: err => console.log(err)
+          })
+        } else {
+          console.log('Aucune entreprise trouvée.');
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
+
+
+  getClientsForEmploye() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+        console.log("empId: ", res.id);
+        this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+          this.entreprises = reslt;
+          console.log("EntreprisesÀdroit: ", this.entreprises);
+          if (this.entreprises && this.entreprises.length > 0) {
+            this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+              next: data => {
+                this.clientList = data;
+                console.log("Clients :",data);
+              },
+              error: err => console.log(err)
+            })
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+
+
   loadDevisesList() {
     this.devisesService.findAllOptimized().subscribe({
       next: data => this.devisesList = data,
       error: err => console.log(err)
     })
   }
+
   loadNiveauPrixList() {
     this.niveauPrixService.findAllOptimized().subscribe({
       next: data => this.niveauPrixList = data,
       error: err => console.log(err)
     })
   }
+
   loadEntrepriseList() {
     this.entrepriseService.findAllOptimized().subscribe({
       next: data => this.entrepriseList = data,
@@ -232,11 +316,12 @@ export class CommandeCreateComponent {
   }
 
   create() {
-   this.notificationService.handelcreate('Creation d\'une commande','Une nouvelle commande à été crée par l\'employer' )
+    this.notificationService.handelcreate('Creation d\'une commande', 'Une nouvelle commande à été crée par l\'employer')
     console.log(this.item)
-    if (!this.validator.validate()){
+    if (!this.validator.validate()) {
       console.log(this.validator);
-    return;}
+      return;
+    }
     this.sending = true;
     this.service.create().subscribe({
       next: data => {
@@ -253,11 +338,10 @@ export class CommandeCreateComponent {
       error: err => {
         this.sending = false
         console.log(err)
-        this.validator.import(err.error as ValidatorResult< any>[])
+        this.validator.import(err.error as ValidatorResult<any>[])
       }
     })
   }
-
 
 
   protected dispo = 0;
@@ -278,7 +362,7 @@ export class CommandeCreateComponent {
     commandeProduit.disponible = produit.disponible;
 
     commandeProduit.prix = produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.id == this.client?.niveauPrix?.id)[0]?.prix || produit.prixGros;
-    console.log("prix",commandeProduit.prix);
+    console.log("prix", commandeProduit.prix);
 
     commandeProduit.total = this.calculerTotal(commandeProduit);
     this.item.commandeProduit = [...this.item.commandeProduit, commandeProduit]
@@ -294,15 +378,15 @@ export class CommandeCreateComponent {
     }
   }
 
-  calculerTotal(commandeProduit: CommandeProduit):number {
+  calculerTotal(commandeProduit: CommandeProduit): number {
 
     console.log(this.item);
     let total = 0;
     if (commandeProduit.produit) {
-       let prixProduit = 0;
-       let id = this.client.id;
-       this.findClient(id);
-       prixProduit = commandeProduit.produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.nom == this?.clientP?.niveauPrix?.nom)[0]?.prix || commandeProduit.produit.prixGros;
+      let prixProduit = 0;
+      let id = this.client.id;
+      this.findClient(id);
+      prixProduit = commandeProduit.produit?.produitNiveauPrix?.filter(it => it.niveauPrix?.nom == this?.clientP?.niveauPrix?.nom)[0]?.prix || commandeProduit.produit.prixGros;
 
       console.log("prixProduit", prixProduit);
 
@@ -322,7 +406,7 @@ export class CommandeCreateComponent {
         total = totalAvecTaxe - disque;
       }
     }
-    return  parseFloat(total.toFixed(2));
+    return parseFloat(total.toFixed(2));
   }
 
   calculeSommeQuantite(commandeProduitList: CommandeProduit[]): number {
@@ -359,18 +443,18 @@ export class CommandeCreateComponent {
       return somme + total;
     }, 0);
 
-    let taxeFacture =this.taxeList?.filter(it => it.id == this.item.taxe?.id)[0]?.tauxImposition;
+    let taxeFacture = this.taxeList?.filter(it => it.id == this.item.taxe?.id)[0]?.tauxImposition;
     let taxeExpedition = this.item.taxeExpedition?.tauxImposition != null ? this.item.taxeExpedition.tauxImposition : 0.0;
 
     let sommeTotaleTaxe = 0;
 
     // taxe rabais
-    if(this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE){
+    if (this.item.typeRabais != null && this.item.typeRabais == this.TypeRabaisEnum.POURCENTAGE) {
       let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
       let rabais = totalAvecTaxe * (this.item.rabais / 100);
       sommeTotaleTaxe = totalAvecTaxe - rabais;
     }
-    if(this.item?.typeRabais !=null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
+    if (this.item?.typeRabais != null && this.item?.typeRabais == this.TypeRabaisEnum.MONTANT) {
       let totalAvecTaxe = sommeTotale * (1 + ((taxeFacture + taxeExpedition) / 100));
       let rabais = this.item.rabais;
       sommeTotaleTaxe = totalAvecTaxe - rabais;
@@ -388,7 +472,7 @@ export class CommandeCreateComponent {
   }
 
 
-   public findClient(id: number){
+  public findClient(id: number) {
     this.clientService.findById(id).subscribe(res => {
       console.log(res);
       this.clientP = res;
@@ -415,12 +499,14 @@ export class CommandeCreateComponent {
   public get item(): Commande {
     return this.itemGetter();
   }
+
   public get commandeProduit(): CommandeProduit[] {
     if (this.item.commandeProduit == null)
       this.item.commandeProduit = []
     return this.item.commandeProduit;
   }
-  public set item(value: Commande ) {
+
+  public set item(value: Commande) {
     this.itemSetter(value);
   }
 
@@ -428,7 +514,7 @@ export class CommandeCreateComponent {
     return this.service.item;
   }
 
-  private itemSetter(value: Commande ) {
+  private itemSetter(value: Commande) {
     this.service.item = value;
   }
 
@@ -437,48 +523,53 @@ export class CommandeCreateComponent {
       this.item.facture = new Facture()
     return this.item.facture;
   }
-  public set facture(value: Facture ) {
+
+  public set facture(value: Facture) {
     this.item.facture = value;
   }
 
 
   protected factureGetter = () => this.facture;
-  protected factureSetter = (value: Facture ) => this.facture = value;
+  protected factureSetter = (value: Facture) => this.facture = value;
 
 
   public get itemCP(): CommandeProduit {
     return this.commandeProduitService.item;
   }
+
   public get addressFacturation(): Adresse {
     if (this.item.addressFacturation == null)
       this.item.addressFacturation = new Adresse()
     return this.item.addressFacturation;
   }
-  public set addressFacturation(value: Adresse ) {
+
+  public set addressFacturation(value: Adresse) {
     this.item.addressFacturation = value;
   }
 
   protected addressFacturationGetter = () => this.addressFacturation;
-  protected addressFacturationSetter = (value: Adresse ) => this.addressFacturation = value;
+  protected addressFacturationSetter = (value: Adresse) => this.addressFacturation = value;
 
   public get addressExpedition(): Adresse {
     if (this.item.addressExpedition == null)
       this.item.addressExpedition = new Adresse()
     return this.item.addressExpedition;
   }
-  public set addressExpedition(value: Adresse ) {
+
+  public set addressExpedition(value: Adresse) {
     this.item.addressExpedition = value;
   }
 
   protected addressExpeditionGetter = () => this.addressExpedition;
-  protected addressExpeditionSetter = (value: Adresse ) => this.addressExpedition = value;
+  protected addressExpeditionSetter = (value: Adresse) => this.addressExpedition = value;
 
   public get taxe(): Taxe {
     if (this.item.taxe == null)
       this.item.taxe = new Taxe()
     return this.item.taxe;
   }
-  public set taxe(value: Taxe ) {
+
+  public set taxe(value: Taxe) {
     this.item.taxe = value;
   }
 
@@ -488,7 +579,8 @@ export class CommandeCreateComponent {
       this.item.taxeExpedition = new Taxe()
     return this.item.taxeExpedition;
   }
-  public set taxeExpedition(value: Taxe ) {
+
+  public set taxeExpedition(value: Taxe) {
     this.item.taxeExpedition = value;
   }
 
@@ -498,7 +590,8 @@ export class CommandeCreateComponent {
       this.item.client = new Client()
     return this.item.client;
   }
-  public set client(value: Client ) {
+
+  public set client(value: Client) {
     this.item.client = value;
   }
 
@@ -508,7 +601,8 @@ export class CommandeCreateComponent {
       this.item.devises = new Devises()
     return this.item.devises;
   }
-  public set devises(value: Devises ) {
+
+  public set devises(value: Devises) {
     this.item.devises = value;
   }
 
@@ -518,7 +612,8 @@ export class CommandeCreateComponent {
       this.item.niveauPrix = new NiveauPrix()
     return this.item.niveauPrix;
   }
-  public set niveauPrix(value: NiveauPrix ) {
+
+  public set niveauPrix(value: NiveauPrix) {
     this.item.niveauPrix = value;
   }
 
@@ -528,10 +623,10 @@ export class CommandeCreateComponent {
       this.item.entreprise = new Entreprise()
     return this.item.entreprise;
   }
-  public set entreprise(value: Entreprise ) {
+
+  public set entreprise(value: Entreprise) {
     this.item.entreprise = value;
   }
-
 
 
   public get returnUrl() {
@@ -547,21 +642,25 @@ export class CommandeCreateComponent {
     this.service.keepData = true
     this.router.navigate(['/parametres/taxe/create']).then()
   }
+
   public navigateToClientCreate() {
     this.clientService.returnUrl = this.router.url
     this.service.keepData = true
     this.router.navigate(['/contacts/client/create']).then()
   }
+
   public navigateToDevisesCreate() {
     this.devisesService.returnUrl = this.router.url
     this.service.keepData = true
     this.router.navigate(['/parametres/devises/create']).then()
   }
+
   public navigateToNiveauPrixCreate() {
     this.niveauPrixService.returnUrl = this.router.url
     this.service.keepData = true
     this.router.navigate(['/parametres/niveau-prix/create']).then()
   }
+
   public navigateToEntrepriseCreate() {
     this.entrepriseService.returnUrl = this.router.url
     this.service.keepData = true
@@ -569,12 +668,15 @@ export class CommandeCreateComponent {
   }
 
   ////
-    protected typeRabaisEnumList = Object.values(TypeRabaisEnum)
-    protected statutCommandeEnumList = Object.values(StatutCommandeEnum)
-  cancel(){
+  protected typeRabaisEnumList = Object.values(TypeRabaisEnum)
+  protected statutCommandeEnumList = Object.values(StatutCommandeEnum)
+
+  cancel() {
     this.item = new Commande();
   }
-  retour(){
+
+  retour() {
     this.router.navigate(['/pays/pays/list']).then()
   }
+
 }

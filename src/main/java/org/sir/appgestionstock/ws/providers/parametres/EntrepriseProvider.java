@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.ws.providers.parametres;
-import org.sir.appgestionstock.bean.core.parametres.Entreprise;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.sir.appgestionstock.service.facade.parametres.EntrepriseService;
 import org.sir.appgestionstock.ws.converter.parametres.EntrepriseConverter;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
@@ -8,6 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.List;
 @RestController
 @RequestMapping("/api/entreprise")
@@ -57,9 +61,11 @@ var pagination = result.convert(converter::toDto);
 return ResponseEntity.ok(pagination);
 }
 @PostMapping
-public ResponseEntity<EntrepriseDto> save(@RequestBody EntrepriseDto dto) {
-if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
-var item = converter.toItem(dto);
+public ResponseEntity<EntrepriseDto> save(@RequestParam("item") String itemJson, @RequestParam("file") MultipartFile file) throws IOException {
+EntrepriseDto erp = new ObjectMapper().readValue(itemJson, EntrepriseDto.class);
+erp.setLogo(file.getBytes());
+if (erp == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
+var item = converter.toItem(erp);
 var result = service.create(item);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
@@ -125,4 +131,5 @@ var result = service.findByAdresseId(id);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
 }

@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import {HttpClient, HttpErrorResponse} from "@angular/common/http";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Produit } from 'src/app/controller/entities/produit/produit'

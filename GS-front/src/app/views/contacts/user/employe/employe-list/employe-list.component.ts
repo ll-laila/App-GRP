@@ -12,6 +12,11 @@ import {Employe} from "src/app/controller/entities/contacts/user/employe";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {PermissionsAcces} from "../../../../../controller/entities/contacts/user/PermissionsAcces";
+import {Entreprise} from "../../../../../controller/entities/parametres/entreprise";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {EntrepriseService} from "../../../../../controller/services/parametres/entreprise.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
 
 @Component({
   selector: 'app-employe-list',
@@ -32,31 +37,56 @@ export class EmployeListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
-
+  public employers: Employe[] = [];
+  public entreprises!: Entreprise[];
+  private userInfosService = inject(UserInfosService);
+  private entrepriseService = inject(EntrepriseService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private service = inject(EmployeService)
 
   ngOnInit() {
-    this.findAll()
+    this.getEmployers();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
+
+  getEmployers(){
+    if(this.entrepriseSelectedService.getEntrepriseSelected() !=0 ){
+      this.service.findAll().subscribe(data => {
+        this.employers = data;
+        this.employers = this.employers.filter(employe => {
+          const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
+              permission.entrepriseId == this.entrepriseSelectedService.getEntrepriseSelected());
+          return hasPermissionForEntrepriseId;
+        });
+        console.log(this.employers);
+      });
+
+
+    }else{
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe( (res: Entreprise[]) => {
+        this.entreprises = res;
+        console.log("Entreprises : ", this.entreprises)
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.service.findAll().subscribe(data => {
+            this.employers = data;
+            this.employers = this.employers.filter(employe => {
+              const hasPermissionForEntrepriseId = employe.permissionsAcces?.some((permission: PermissionsAcces) =>
+                  permission.entrepriseId == this.entreprises[0].id);
+              this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id)
+              return hasPermissionForEntrepriseId;
+            });
+            console.log(this.employers);
+          });
+
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
-      },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
-    })
-  }
+
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({

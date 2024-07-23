@@ -52,15 +52,15 @@ public class EntrepriseValidator extends Validator<Entreprise> {
                         .valid();
             }
     );
-    public ValidatorItem<String> logo = new ValidatorItem<>(
-            "logo",
-            () -> this.getItem().getLogo(),
-            (String value) -> {
-                this.logo.getValidators()
-                        .required()
-                        .valid();
-            }
-    );
+   // public ValidatorItem<String> logo = new ValidatorItem<>(
+//            "logo",
+//            () -> this.getItem().getLogo(),
+//            (String value) -> {
+//                this.logo.getValidators()
+//                        .required()
+//                        .valid();
+//            }
+//    );
 
     @Override
     public List< ValidatorItem< ?>> validatorItems() {
@@ -68,8 +68,8 @@ public class EntrepriseValidator extends Validator<Entreprise> {
                 this.nom,
                 this.email,
                 this.telephone,
-                this.siteweb,
-                this.logo
+                this.siteweb
+//                this.logo
         );
     }
 }
