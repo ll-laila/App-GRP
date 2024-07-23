@@ -76,7 +76,6 @@ export class ProduitCreateComponent {
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = ProduitValidator.init(() => this.item)
- //   .setNiveauStock(NiveauStockValidator.init(() => this.niveauStock))
 
   protected devisesList!: Devises[]
   protected taxeList!: Taxe[]
@@ -149,12 +148,16 @@ export class ProduitCreateComponent {
       error: err => console.log(err)
     })
   }
+
   loadFournisseurList() {
-    this.fournisseurService.findAllOptimized().subscribe({
-      next: data => this.fournisseurList = data,
+    this.fournisseurService.getFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.fournisseurList = data;
+      },
       error: err => console.log(err)
     })
   }
+
   loadEntrepriseList() {
     this.entrepriseService.findAllOptimized().subscribe({
       next: data => this.entrepriseList = data,

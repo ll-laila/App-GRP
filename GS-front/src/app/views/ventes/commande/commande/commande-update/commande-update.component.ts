@@ -40,6 +40,10 @@ import {AdresseValidator} from "src/app/controller/validators/adresse/adresse.va
 import {TypeRabaisEnum} from "src/app/controller/enums/type-rabais-enum";
 import {StatutCommandeEnum} from "src/app/controller/enums/statut-commande-enum";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {EmployeService} from "../../../../../controller/services/contacts/user/employe.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
+import {TokenService} from "../../../../../controller/auth/services/token.service";
+import {Employe} from "../../../../../controller/entities/contacts/user/employe";
 
 @Component({
   selector: 'app-commande-update',
@@ -81,17 +85,20 @@ export class CommandeUpdateComponent {
   private niveauPrixService = inject(NiveauPrixService)
   private entrepriseService = inject(EntrepriseService)
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
+  private employeService = inject(EmployeService);
+  private userInfosService = inject(UserInfosService);
+  private tokenService = inject(TokenService);
 
   protected validator = CommandeValidator.init(() => this.item)
-    //.setFacture(FactureValidator.init(() => this.facture))
-    //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
-    //.setAddressExpedition(AdresseValidator.init(() => this.addressExpedition))
+
 
   protected taxeList!: Taxe[]
   protected clientList!: Client[]
   protected devisesList!: Devises[]
   protected niveauPrixList!: NiveauPrix[]
   protected entrepriseList!: Entreprise[]
+  public entreprises!: Entreprise[];
+
 
   ngAfterContentInit() {
     if (!this.isPartOfUpdateForm && this.item.id == null) this.router.navigate(["/ventes/commande/commande"]).then()
@@ -127,10 +134,18 @@ export class CommandeUpdateComponent {
     } else { this.validator.reset() }
 
     this.loadTaxeList()
-    this.loadClientList()
     this.loadDevisesList()
     this.loadNiveauPrixList()
     this.loadEntrepriseList()
+
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+
+    if (newVar == 1) {
+      this.getClientsForAdmin();
+    } else {
+      this.getClientsForEmploye();
+    }
+
   }
 
   // LOAD DATA
@@ -140,17 +155,80 @@ export class CommandeUpdateComponent {
       error: err => console.log(err)
     })
   }
-  loadClientList() {
-    this.clientService.findAllOptimized().subscribe({
-      next: data => {
-        // Filter out clients already associated with this command
-        this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
-        // Optionally, you can set the original list for other purposes
-        this.clientList = data;
-      },
-      error: err => console.log(err)
-    })
+
+
+
+  getClientsForAdmin() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
+        this.entreprises = res
+        console.log("Entreprises: ", this.entreprises);
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.clientService.getClients(this.entreprises[0].id).subscribe({
+            next: data => {
+              this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
+              this.clientList = data;
+              console.log("Clients :",data);
+            },
+            error: err => console.log(err)
+          })
+        } else {
+          console.log('Aucune entreprise trouvée.');
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
+
+
+  getClientsForEmploye() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+        console.log("empId: ", res.id);
+        this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+          this.entreprises = reslt;
+          console.log("EntreprisesÀdroit: ", this.entreprises);
+          if (this.entreprises && this.entreprises.length > 0) {
+            this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+              next: data => {
+                this.filteredClientList = data.filter(client => client.id !== this.item.client?.id);
+                this.clientList = data;
+                console.log("Clients :",data);
+              },
+              error: err => console.log(err)
+            })
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+
+
 
   loadDevisesList() {
     this.devisesService.findAllOptimized().subscribe({

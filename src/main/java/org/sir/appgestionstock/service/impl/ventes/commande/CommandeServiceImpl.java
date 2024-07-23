@@ -409,15 +409,16 @@ public class CommandeServiceImpl implements CommandeService {
     }
 
 
-
-
     @Override
     public double getNbCommandes(Long entrepriseId){
         List<Commande> commandes = dao.findByEntrepriseId(entrepriseId);
         return commandes.size();
     }
 
-
+    @Override
+    public List<Commande> getCommandes(Long entrepriseId){
+        return dao.findByEntrepriseId(entrepriseId);
+    }
 
     //----------------------------------------------------------
     @Autowired

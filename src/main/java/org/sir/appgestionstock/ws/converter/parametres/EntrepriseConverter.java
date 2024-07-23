@@ -14,7 +14,6 @@ import org.sir.appgestionstock.ws.converter.ventes.retourproduit.RetourProduitCo
 import org.sir.appgestionstock.ws.converter.ventes.facture.FactureConverter;
 import org.sir.appgestionstock.ws.converter.ventes.commande.CommandeConverter;
 import org.sir.appgestionstock.ws.converter.ventes.devis.DevisConverter;
-import org.sir.appgestionstock.zsecurity.ws.converter.AppUserConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.ArrayList;

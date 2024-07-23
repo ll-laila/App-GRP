@@ -35,6 +35,15 @@ public ResponseEntity<Double> getNbFournisseurs(@PathVariable Long idEntreprise)
         return ResponseEntity.ok(result);
 }
 
+
+    @GetMapping("/fournisseurErp/{idEntreprise}")
+    public ResponseEntity<List<FournisseurDto>> getFournisseurs(@PathVariable Long idEntreprise) {
+        var result = service.getFournisseurs(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
+
 @GetMapping("/optimized")
 public ResponseEntity<List<FournisseurDto>> findAllOptimized() {
 var result = service.findAllOptimized();

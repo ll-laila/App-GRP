@@ -20,7 +20,6 @@ export class EntrepriseService {
   public toReturn = () => this.returnUrl != undefined
 
 
-
   public findEntreprisesAdroitAcces(id : number) {
     return this.http.get<Array<Entreprise>>(`${this.api}/employe/${id}`);
   }
@@ -45,9 +44,15 @@ export class EntrepriseService {
     return this.http.get<Pagination<Entreprise>>(`${this.api}/paginated?page=${page}&size=${size}`);
   }
 
-  public create() {
-    return this.http.post<Entreprise>(this.api, this.item);
+  // public create() {
+  //   return this.http.post<Entreprise>(this.api, this.item);
+  // }
+
+  public create(formData: FormData) {
+    formData.append("item", JSON.stringify(this.item));
+    return this.http.post<Entreprise>(this.api, formData);
   }
+
 
   public createList() {
     return this.http.post<Array<Entreprise>>(`${this.api}/all`, this.items);

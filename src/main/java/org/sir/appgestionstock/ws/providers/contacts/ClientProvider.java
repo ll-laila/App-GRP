@@ -37,6 +37,14 @@ return ResponseEntity.ok(resultDto);
         return ResponseEntity.ok(result);
     }
 
+    @GetMapping("/clientsErp/{idEntreprise}")
+    public ResponseEntity<List<ClientDto>> getClients(@PathVariable Long idEntreprise) {
+        var result = service.getClients(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
+
     @GetMapping("/client-stats/{idEntreprise}")
     public Map<String, Map<String, Long>> getClientStatsForCurrentWeek(@PathVariable Long idEntreprise) {
         return service.getClientStatsForCurrentWeek(idEntreprise);

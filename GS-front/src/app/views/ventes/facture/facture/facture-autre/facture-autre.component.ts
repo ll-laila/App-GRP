@@ -30,7 +30,7 @@ import {RetourProduitService} from "../../../../../controller/services/ventes/re
 import {ClientService} from "../../../../../controller/services/contacts/client.service";
 import {Client} from "../../../../../controller/entities/contacts/client";
 import {IconDirective} from "@coreui/icons-angular";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {FactureValidator} from "../../../../../controller/validators/ventes/facture/facture.validator";
 import {PaiementValidator} from "../../../../../controller/validators/ventes/paiement.validator";
 import {
@@ -51,7 +51,11 @@ import {AdresseValidator} from "../../../../../controller/validators/adresse/adr
     FormFeedbackComponent,
     FormLabelDirective,
     IconDirective,
-    HttpClientModule,
+    
+// TODO: `HttpClientModule` should not be imported into a component directly.
+// Please refactor the code to add `provideHttpClient()` call to the provider list in the
+// application bootstrap logic and remove the `HttpClientModule` import from this component.
+// HttpClientModule,
     CardHeaderComponent,
     CardBodyComponent,
     CardComponent,
@@ -80,17 +84,13 @@ export class FactureAutreComponent {
   protected currentIndex: number = 0
   protected deleteModel = false
   private router = inject(Router)
-  //protected validator = FactureValidator.init(() => this.item)
-    //.setPaiement(PaiementValidator.init(() => this.paiement))
-  //  .setRetourProduit(RetourProduitValidator.init(() => this.retourProduit))
-    //.setAddressFacturation(AdresseValidator.init(() => this.addressFacturation))
-    //.setAddressExpedition(AdresseValidator.init(() => this.addressExpedition))
+
 
   private service: FactureService = inject(FactureService)
   private paiement: PaiementService = inject(PaiementService)
   private retourProduitService: RetourProduitService = inject(RetourProduitService)
   private clientService: ClientService = inject(ClientService)
-public httpClient : HttpClient = inject(HttpClient);
+//public httpClient : HttpClient = inject(HttpClient);
 
   public get items() {
     return this.service.items;
@@ -114,7 +114,7 @@ public httpClient : HttpClient = inject(HttpClient);
 
    this.service.keepData = false;
    this.loadClientList()
-   this.fetchData()
+   //this.fetchData()
  }
   protected standAlon = true
 
@@ -160,12 +160,12 @@ public httpClient : HttpClient = inject(HttpClient);
   }
   data: any;
 
-  fetchData() {
-    this.httpClient.get('https://jsonplaceholder.typicode.com/posts').subscribe((data : any ) => {
-      console.log(data);
-        this.data = data;
-    });
-  }
+  // fetchData() {
+  //   this.httpClient.get('https://jsonplaceholder.typicode.com/posts').subscribe((data : any ) => {
+  //     console.log(data);
+  //       this.data = data;
+  //   });
+  // }
 
   public navigateToRetourProduitCreate() {
     this.retourProduitService.returnUrl = this.router.url

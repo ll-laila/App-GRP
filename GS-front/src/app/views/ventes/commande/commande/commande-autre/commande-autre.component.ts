@@ -13,7 +13,7 @@ import {CommandeService} from "../../../../../controller/services/ventes/command
 import {Paiement} from "../../../../../controller/entities/ventes/paiement";
 import {Client} from "../../../../../controller/entities/contacts/client";
 import {ClientService} from "../../../../../controller/services/contacts/client.service";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {Commande} from "../../../../../controller/entities/ventes/commande/commande";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 
@@ -104,5 +104,8 @@ private clientService = inject(ClientService)
       error: err => console.log(err)
     })
   }
+
+
+
 
 }

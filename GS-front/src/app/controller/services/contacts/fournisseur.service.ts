@@ -6,6 +6,7 @@ import { Fournisseur } from 'src/app/controller/entities/contacts/fournisseur';
 import { FournisseurValidator } from 'src/app/controller/validators/contacts/fournisseur.validator';
 import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.validator';
 import {CodeResponse} from "../../utils/code/code-response";
+import {Client} from "../../entities/contacts/client";
 
 @Injectable({ providedIn: 'root' })
 export class FournisseurService {
@@ -24,6 +25,9 @@ export class FournisseurService {
         return this.http.get<number>(`${this.api}/fournisseurs/${entrepriseId}`);
     }
 
+    public getFournisseurs(id: number) {
+        return this.http.get<Array<Fournisseur>>(`${this.api}/fournisseurErp/${id}`);
+    }
   public findAll() {
     return this.http.get<Array<Fournisseur>>(this.api);
   }

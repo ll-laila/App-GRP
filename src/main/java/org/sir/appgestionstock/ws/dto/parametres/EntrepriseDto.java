@@ -13,8 +13,6 @@ import org.sir.appgestionstock.ws.dto.contacts.user.EmployeDto;
 import org.sir.appgestionstock.ws.dto.contacts.ClientDto;
 import org.sir.appgestionstock.ws.dto.inventaire.boncommande.BonCommandeDto;
 import org.sir.appgestionstock.ws.dto.ventes.facture.FactureDto;
-import org.sir.appgestionstock.zsecurity.entity.AppUser;
-import org.sir.appgestionstock.zsecurity.ws.dto.AppUserDto;
 
 import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -24,7 +22,7 @@ private String nom;
 private String email;
 private String telephone;
 private String siteweb;
-private String logo;
+private byte[] logo;
 private AdresseDto adresse;
 private List<EmployeDto> employes;
 private List<ProduitDto> produits;
@@ -74,10 +72,10 @@ return siteweb;
 public void setSiteweb(String value) {
 this.siteweb = value;
 }
-public String getLogo() {
+public byte[] getLogo() {
 return logo;
 }
-public void setLogo(String value) {
+public void setLogo(byte[] value) {
 this.logo = value;
 }
 public AdresseDto getAdresse() {

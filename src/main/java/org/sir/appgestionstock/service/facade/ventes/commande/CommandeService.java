@@ -6,7 +6,7 @@ import java.util.List;
 public interface CommandeService {
 
 double getNbCommandes(Long entrepriseId);
-
+List<Commande> getCommandes(Long entrepriseId);
 Commande findById(Long id);
 List<Commande> findAllOptimized();
 List<Commande> findAll();

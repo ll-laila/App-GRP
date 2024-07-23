@@ -101,6 +101,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
   public entrepriseSelected!: Entreprise;
   public totalNotifications:number=0;
   public vu : boolean = false;
+  public logo?: string ;
 
   constructor(private userInfosService: UserInfosService) {
     super();
@@ -166,6 +167,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
       console.log(res);
       this.entreprises = res;
       if (this.entreprises.length > 0) {
+        this.logo = this.entreprises[0].logo;
         this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id);
       }
     }, error => {
@@ -181,6 +183,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
         console.log("EntreprisesÀdroit :",this.entreprises);
         if (this.entreprises && this.entreprises.length > 0) {
           console.log("from header :",this.entreprises[0]);
+          this.logo = this.entreprises[0].logo;
           this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id);
         }
       }, error => {
@@ -204,6 +207,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
       this.entrepriseSelected = selectedEntreprise;
       this.entrepriseSelectedService.clearEntrepriseSelected();
       this.entrepriseSelectedService.setEntrepriseSelected(this.entrepriseSelected.id);
+      this.logo = selectedEntreprise.logo;
       console.log("from header : ", this.entrepriseSelectedService.getEntrepriseSelected());
       window.location.reload();
     } else {

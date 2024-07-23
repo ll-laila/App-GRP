@@ -10,6 +10,8 @@ import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface FournisseurService {
 double getNbFournisseurs(Long idEntreprise);
+List<Fournisseur> getFournisseurs(Long idEntreprise);
+
 Fournisseur findById(Long id);
 List<Fournisseur> findAllOptimized();
 List<Fournisseur> findAll();

@@ -1,6 +1,6 @@
 import {Injectable, inject} from '@angular/core';
 import {environment} from "src/environments/environment";
-import {HttpClient} from "@angular/common/http";
+import { HttpClient } from "@angular/common/http";
 import {JwtRequest} from "src/app/controller/auth/entities/jwt-request";
 import {JwtResponse} from "src/app/controller/auth/entities/jwt-response";
 import {JwtRequestValidator} from "src/app/controller/auth/validators/jwt-request.validator";

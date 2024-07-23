@@ -23,6 +23,8 @@ import {ToasterService} from "../../../../toaster/controller/toaster.service";
 import {AppUserService} from "../../../../controller/auth/services/app-user.service";
 import {AppUser} from "../../../../controller/auth/entities/app-user";
 import {UserInfosService} from "../../../../controller/shared/user-infos.service";
+import { format } from 'path';
+
 
 @Component({
   selector: 'app-entreprise-create',
@@ -42,6 +44,7 @@ export class EntrepriseCreateComponent {
   protected sending = false
   protected standAlon = true
   private toasterService = inject(ToasterService)
+  selectedFile!:File;
 
   @Input("getter") set setItemGetter(getter: () => Entreprise) {
     this.itemGetter = getter
@@ -84,6 +87,13 @@ export class EntrepriseCreateComponent {
   }
 
   // METHODS
+
+  onFileSelected(event:any){
+    this.selectedFile=event.target.files[0];
+  }
+
+
+
   create() {
     console.log(this.item)
     this.item.idAdmin = this.admin.id;
@@ -92,7 +102,11 @@ export class EntrepriseCreateComponent {
       return;
     }
     this.sending = true;
-    this.service.create().subscribe({
+
+    const formData=new FormData();
+    formData.append("file",this.selectedFile);
+
+    this.service.create(formData).subscribe({
       next: data => {
         this.sending = false
         if (data == null) return
@@ -109,6 +123,8 @@ export class EntrepriseCreateComponent {
       }
     })
   }
+
+
 
   reset(force = true) {
     if (force || this.item == null) this.item = new Entreprise()

@@ -342,7 +342,6 @@ item.setNom("nom " + i);
 item.setEmail("email " + i);
 item.setTelephone("telephone " + i);
 item.setSiteweb("siteweb " + i);
-item.setLogo("logo " + i);
 entrepriseDao.save(item);
 }
 System.out.println("Data For Entreprise Generated!");

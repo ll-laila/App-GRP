@@ -28,6 +28,10 @@ import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 
 import {StatutRetourProduitEnum} from "src/app/controller/enums/statut-retour-produit-enum";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {Employe} from "../../../../../controller/entities/contacts/user/employe";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
+import {TokenService} from "../../../../../controller/auth/services/token.service";
+import {EmployeService} from "../../../../../controller/services/contacts/user/employe.service";
 
 @Component({
   selector: 'app-retour-produit-update',
@@ -63,6 +67,10 @@ export class RetourProduitUpdateComponent {
   private service = inject(RetourProduitService)
   private clientService = inject(ClientService)
   private entrepriseService = inject(EntrepriseService)
+  private userInfosService = inject(UserInfosService);
+  private tokenService = inject(TokenService);
+  private employeService = inject(EmployeService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
 
   protected validator = RetourProduitValidator.init(() => this.item)
@@ -71,6 +79,7 @@ export class RetourProduitUpdateComponent {
 
   protected clientList!: Client[]
   protected entrepriseList!: Entreprise[]
+  public entreprises!: Entreprise[];
 
   ngAfterContentInit() {
     if (!this.isPartOfUpdateForm && this.item.id == null) this.router.navigate(["/ventes/retourproduit/retour-produit"]).then()
@@ -87,22 +96,92 @@ export class RetourProduitUpdateComponent {
 
     } else { this.validator.reset() }
 
-    this.loadClientList()
     this.loadEntrepriseList()
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+
+    if (newVar == 1) {
+      this.getClientsForAdmin();
+    } else {
+      this.getClientsForEmploye();
+    }
   }
 
   // LOAD DATA
-  loadClientList() {
-    this.clientService.findAllOptimized().subscribe({
-      next: data => this.clientList = data,
-      error: err => console.log(err)
-    })
+
+  getClientsForAdmin() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
+        this.entreprises = res
+        console.log("Entreprises: ", this.entreprises);
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.clientService.getClients(this.entreprises[0].id).subscribe({
+            next: data => {
+              this.clientList = data;
+              console.log("Clients :",data);
+            },
+            error: err => console.log(err)
+          })
+        } else {
+          console.log('Aucune entreprise trouvée.');
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
+
+
+  getClientsForEmploye() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+        console.log("empId: ", res.id);
+        this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+          this.entreprises = reslt;
+          console.log("EntreprisesÀdroit: ", this.entreprises);
+          if (this.entreprises && this.entreprises.length > 0) {
+            this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+              next: data => {
+                this.clientList = data;
+                console.log("Clients :",data);
+              },
+              error: err => console.log(err)
+            })
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+
   loadEntrepriseList() {
-    this.entrepriseService.findAllOptimized().subscribe({
-      next: data => this.entrepriseList = data,
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :", this.item.entreprise);
+      },
       error: err => console.log(err)
-    })
+    });
   }
 
   // METHODS

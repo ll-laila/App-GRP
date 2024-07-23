@@ -4,7 +4,7 @@ import { navItems2 } from '../../../layout/default-layout/nav';
 import { TokenService } from '../../auth/services/token.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environment';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Notification } from '../../entities/parametres/notification';
 import {Employe} from "../../entities/contacts/user/employe";
 import {AppUser} from "../../auth/entities/app-user";

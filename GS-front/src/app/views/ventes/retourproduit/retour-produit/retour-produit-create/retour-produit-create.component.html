@@ -58,7 +58,7 @@
           <c-input-group>
             <select cSelect id="client" name="client" [(ngModel)]="client.id" [valid]="validator.client.valid" (blur)="validator.client.validate()">
               @for (it of clientList; track it) {
-                <option [value]="it.id">{{ it.code }}</option>
+                <option [value]="it.id">{{ it.nom }}</option>
               }
             </select>
             <button cButton color="secondary" type="button" variant="outline" (click)="navigateToClientCreate()">

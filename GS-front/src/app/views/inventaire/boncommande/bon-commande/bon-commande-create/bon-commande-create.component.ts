@@ -40,6 +40,8 @@ import {ProduitService} from "../../../../../controller/services/produit/produit
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {CommandeProduit} from "../../../../../controller/entities/ventes/commande/commande-produit";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
+import {TokenService} from "../../../../../controller/auth/services/token.service";
 
 @Component({
   selector: 'app-bon-commande-create',
@@ -84,7 +86,6 @@ export class BonCommandeCreateComponent {
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = BonCommandeValidator.init(() => this.item)
-  //  .setLivraison(LivraisonValidator.init(() => this.livraison))
 
   protected taxeList!: Taxe[]
   protected fournisseurList!: Fournisseur[]
@@ -92,6 +93,7 @@ export class BonCommandeCreateComponent {
   protected niveauPrixList!: NiveauPrix[]
   protected entrepriseList!: Entreprise[]
   protected produitList!: Produit[]
+  public entreprises!: Entreprise[];
 
   ngOnInit() {
 
@@ -130,9 +132,9 @@ export class BonCommandeCreateComponent {
     this.loadFournisseurList();
     this.loadDevisesList();
     this.loadNiveauPrixList();
-    this.loadEntrepriseList();
     this.loadProduitList();
     this.generateCode();
+
 
   }
 
@@ -161,11 +163,14 @@ export class BonCommandeCreateComponent {
     })
   }
   loadFournisseurList() {
-    this.fournisseurService.findAllOptimized().subscribe({
-      next: data => this.fournisseurList = data,
+    this.fournisseurService.getFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.fournisseurList = data;
+      },
       error: err => console.log(err)
     })
   }
+
   loadDevisesList() {
     this.devisesService.findAllOptimized().subscribe({
       next: data => this.devisesList = data,
@@ -178,12 +183,7 @@ export class BonCommandeCreateComponent {
       error: err => console.log(err)
     })
   }
-  loadEntrepriseList() {
-    this.entrepriseService.findAllOptimized().subscribe({
-      next: data => this.entrepriseList = data,
-      error: err => console.log(err)
-    })
-  }
+
 
   // METHODS
   create() {
@@ -518,7 +518,7 @@ export class BonCommandeCreateComponent {
 
 
   loadProduitList() {
-    this.produitService.findAll().subscribe({
+    this.produitService.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: data => this.produitList = data,
       error: err => console.log(err)
     })

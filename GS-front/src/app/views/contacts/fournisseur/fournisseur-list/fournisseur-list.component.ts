@@ -12,6 +12,8 @@ import {Fournisseur} from "src/app/controller/entities/contacts/fournisseur";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {Client} from "../../../../controller/entities/contacts/client";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-fournisseur-list',
@@ -32,12 +34,25 @@ export class FournisseurListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
-
+  protected fournisseurList!: Fournisseur[]
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private service = inject(FournisseurService)
 
   ngOnInit() {
-    this.findAll()
+    this.loadFournisseurList();
   }
+
+
+  loadFournisseurList() {
+    this.service.getFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.fournisseurList = data;
+        console.log("Fournisseurs :",data);
+      },
+      error: err => console.log(err)
+    })
+  }
+
 
   findAll() {
     this.loading = true

@@ -34,6 +34,10 @@ import {DevisProduit} from "../../../../../controller/entities/ventes/devis/devi
 import {FactureProduit} from "../../../../../controller/entities/ventes/facture/facture-produit";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {EmployeService} from "../../../../../controller/services/contacts/user/employe.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
+import {TokenService} from "../../../../../controller/auth/services/token.service";
+import {Employe} from "../../../../../controller/entities/contacts/user/employe";
 
 @Component({
   selector: 'app-retour-produit-create',
@@ -67,6 +71,8 @@ export class RetourProduitCreateComponent {
   private router = inject(Router)
   private service = inject(RetourProduitService)
   private clientService = inject(ClientService)
+  private employeService = inject(EmployeService);
+
   private entrepriseService = inject(EntrepriseService)
   private formBuilder: FormBuilder= inject(FormBuilder)
   private factureService = inject(FactureService)
@@ -75,16 +81,15 @@ export class RetourProduitCreateComponent {
   private retourProduitProduitService = inject(RetourProduitProduitService)
   private toasterService = inject(ToasterService)
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
-
-
+  private userInfosService = inject(UserInfosService);
+  private tokenService = inject(TokenService);
 
   protected validator = RetourProduitValidator.init(() => this.item)
-  // .setNoteCredit(NoteCreditValidator.init(() => this.noteCredit))
-  //.setRemboursements(RemboursementValidator.init(() => this.remboursements))
 
   protected clientList!: Client[]
   protected entrepriseList!: Entreprise[]
   protected produitList!: Produit[]
+  public entreprises!: Entreprise[];
 
   ngOnInit() {
     this.loadEntreprise();
@@ -102,10 +107,16 @@ export class RetourProduitCreateComponent {
     this.item.noteCredit = new NoteCredit()
     this.item.remboursements = new Remboursement()
 
-    this.loadClientList()
-    this.loadEntrepriseList()
-    this.factureretour()
-    this.loadProduitList()
+    this.loadEntrepriseList();
+    this.factureretour();
+    this.loadProduitList();
+    const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+
+    if (newVar == 1) {
+      this.getClientsForAdmin();
+    } else {
+      this.getClientsForEmploye();
+    }
 
     this.clientForm = this.formBuilder.group({
       code: [{value: this.generateCode(), disabled: true}]
@@ -162,19 +173,85 @@ export class RetourProduitCreateComponent {
       this.item.retourProduitProduit = []
     return this.item.retourProduitProduit;
   }
+
   // LOAD DATA
-  loadClientList() {
-    this.clientService.findAll().subscribe({
-      next: data => this.clientList = data,
-      error: err => console.log(err)
-    })
+  getClientsForAdmin() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe((res: Entreprise[]) => {
+        this.entreprises = res
+        console.log("Entreprises: ", this.entreprises);
+        if (this.entreprises && this.entreprises.length > 0) {
+          this.clientService.getClients(this.entreprises[0].id).subscribe({
+            next: data => {
+              this.clientList = data;
+              console.log("Clients :",data);
+            },
+            error: err => console.log(err)
+          })
+        } else {
+          console.log('Aucune entreprise trouvée.');
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
+
+
+  getClientsForEmploye() {
+    if (this.entrepriseSelectedService.getEntrepriseSelected() != 0) {
+      this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+        next: data => {
+          this.clientList = data;
+          console.log("Clients :",data);
+        },
+        error: err => console.log(err)
+      })
+    } else {
+      this.employeService.findByUserName(this.userInfosService.getUsername()).subscribe((res: Employe) => {
+        console.log("empId: ", res.id);
+        this.entrepriseService.findEntreprisesAdroitAcces(res.id).subscribe((reslt: Entreprise[]) => {
+          this.entreprises = reslt;
+          console.log("EntreprisesÀdroit: ", this.entreprises);
+          if (this.entreprises && this.entreprises.length > 0) {
+            this.clientService.getClients(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+              next: data => {
+                this.clientList = data;
+                console.log("Clients :",data);
+              },
+              error: err => console.log(err)
+            })
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+
   loadEntrepriseList() {
-    this.entrepriseService.findAllOptimized().subscribe({
-      next: data => this.entrepriseList = data,
+    this.entrepriseService.findById(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: entreprise => {
+        this.item.entreprise = entreprise;
+        console.log("entre :", this.item.entreprise);
+      },
       error: err => console.log(err)
-    })
+    });
   }
+
+
   public get itemRP(): RetourProduitProduit {
     return this.retourProduitProduitService.item;
   }

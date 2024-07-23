@@ -257,6 +257,10 @@ produitService::delete
         return fournisseurs.size();
     }
 
+    @Override
+    public List<Fournisseur> getFournisseurs(Long idEntreprise){
+        return dao.findByEntrepriseId(idEntreprise);
+    }
 
 @Transactional(rollbackFor = Exception.class)
 public void deleteAssociated(Fournisseur item) {

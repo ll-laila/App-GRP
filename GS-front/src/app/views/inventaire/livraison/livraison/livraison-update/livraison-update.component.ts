@@ -101,7 +101,6 @@ export class LivraisonUpdateComponent {
 
     this.loadTaxeList();
     this.loadFournisseurList();
-    this.loadEntrepriseList();
     // @ts-ignore
     this.boncmds(this.item.fournisseur.id);
    // this.findBncmd();
@@ -127,11 +126,14 @@ export class LivraisonUpdateComponent {
     })
   }
   loadFournisseurList() {
-    this.fournisseurService.findAllOptimized().subscribe({
-      next: data => this.fournisseurList = data,
+    this.fournisseurService.getFournisseurs(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.fournisseurList = data;
+      },
       error: err => console.log(err)
     })
   }
+
   loadEntrepriseList() {
     this.entrepriseService.findAllOptimized().subscribe({
       next: data => this.entrepriseList = data,
