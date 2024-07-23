@@ -174,6 +174,7 @@ export class FactureCreateComponent implements OnChanges {
     this.loadNiveauPrixList()
     this.loadEntrepriseList()
     this.findProduitCommande()
+    this.loadProduitList();
     this.generateCode();
 
     const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;

@@ -1,7 +1,7 @@
 import {
-  createPopper,
+  createPopper2 as createPopper,
   lib_exports
-} from "./chunk-MHR5VB2V.js";
+} from "./chunk-EPDNLT2K.js";
 import {
   __spreadProps,
   __spreadValues

@@ -3,8 +3,8 @@ import {
   IconDirective
 } from "./chunk-NNB2A6UU.js";
 import {
-  createPopper
-} from "./chunk-XEVKASM7.js";
+  createPopper2 as createPopper
+} from "./chunk-QZACYPDZ.js";
 import {
   Platform,
   _getEventTarget,
