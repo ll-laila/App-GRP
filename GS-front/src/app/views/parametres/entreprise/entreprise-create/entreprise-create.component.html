@@ -66,9 +66,9 @@
           <c-form-feedback [valid]="false">{{ validator.siteweb.message }}</c-form-feedback>
         </c-col>
         <c-col sm="4">
-          <svg cIcon name="cil-satelite" style="color: blue ;font-size: 30px"></svg>
-          <label cLabel for="file" style="color: black;font-family: 'Times New Roman',serif;font-size: 18px;font-weight: bold">Logo</label>
-          <input type="file" id="file" (change)="onFileSelected($event)">
+            <svg cIcon name="cil-satelite" style="color: blue ;font-size: 30px"></svg>
+            <label cLabel for="file" class="form-label" style="color: black;font-family: 'Times New Roman',serif;font-size: 18px;font-weight: bold">Logo</label>
+            <input class="form-control" type="file" id="file" (change)="onFileSelected($event)">
         </c-col>
       </c-row>
     </c-card-body>
