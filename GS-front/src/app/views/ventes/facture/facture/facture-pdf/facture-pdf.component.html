@@ -87,6 +87,24 @@
             font-weight: 600;
         }
 
+        .total-section .total-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ddd;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+
+        .total-section .total-item span {
+            font-weight: bold;
+        }
+
+        .total-section .total-item .total-value {
+            color: #28a745;
+        }
+
         /* Styles pour l'impression */
         @media print {
             .button-panel,
@@ -178,6 +196,16 @@
                 </tbody>
             </table>
         </div>
+        <div class="total-section">
+            <div class="total-item">
+                <span>Prix Payé:</span>
+                <span class="total-value">{{ item.prixPayee | currency }}</span>
+            </div>
+            <div class="total-item">
+                <span>Prix Impayé:</span>
+                <span class="total-value">{{ item.prixRestant | currency }}</span>
+            </div>
+        </div>
         <div class="conditions">
             En votre aimable règlement<br />
             Et avec nos remerciements.<br /><br />
@@ -191,7 +219,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Modal pour afficher la facture en plein écran -->
 <ng-template #invoiceModal let-modal>

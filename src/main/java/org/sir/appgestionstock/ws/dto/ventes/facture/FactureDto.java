@@ -38,9 +38,26 @@ private AdresseDto addressFacturation;
 private AdresseDto addressExpedition;
 private List<FactureProduitDto> factureProduit;
 private EntrepriseDto entreprise;
+private double prixRestant;
+private double prixPayee;
 
+    public double getPrixRestant() {
+        return prixRestant;
+    }
 
-public Long getId() {
+    public void setPrixRestant(double prixRestant) {
+        this.prixRestant = prixRestant;
+    }
+
+    public double getPrixPayee() {
+        return prixPayee;
+    }
+
+    public void setPrixPayee(double prixPayee) {
+        this.prixPayee = prixPayee;
+    }
+
+    public Long getId() {
 return id;
 }
 public void setId(Long id) {

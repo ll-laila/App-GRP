@@ -38,4 +38,6 @@ addressExpedition?: Adresse ;
 factureProduit?: Array<FactureProduit> ;
 entreprise?: Entreprise ;
 commande?:Commande;
+prixPayee?: number;
+prixRestant?: number;
 }

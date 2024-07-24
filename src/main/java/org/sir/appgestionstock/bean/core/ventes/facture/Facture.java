@@ -26,6 +26,8 @@ private float rabais;
 @Enumerated(EnumType.STRING)
 private TypeRabaisEnum typeRabais;
 private int totalUnites;
+private double prixRestant;
+private double prixPayee;
 private double remiseGlobal;
 private double sousTotal;
 private double total;
@@ -61,7 +63,24 @@ public Facture(Long id, String label) {
 this.id = id;
 this.code = label;
 }
-public Long getId() {
+
+    public double getPrixRestant() {
+        return prixRestant;
+    }
+
+    public void setPrixRestant(double prixRestant) {
+        this.prixRestant = prixRestant;
+    }
+
+    public double getPrixPayee() {
+        return prixPayee;
+    }
+
+    public void setPrixPayee(double prixPayee) {
+        this.prixPayee = prixPayee;
+    }
+
+    public Long getId() {
 return id;
 }
 public void setId(Long id) {
