@@ -32,6 +32,10 @@ export class PaiementService {
     return this.http.get<Paiement>(`${this.api}/id/${id}`);
   }
 
+    public findByIdFacture(id: number) {
+        return this.http.get<Paiement>(`${this.api}/idFacture/${id}`);
+    }
+
   public findAllOptimized() {
     return this.http.get<Array<Paiement>>(`${this.api}/optimized`);
   }
@@ -83,9 +87,7 @@ export class PaiementService {
     return this.http.get<Array<Paiement>>(`${this.api}/entreprise/${id}`);
   }
 
-    calculPrixImpaye(facture: Facture, montantPaye: number): number {
-        return facture.total - montantPaye;
-    }
+
   //------------- getters and setters -----------------------
   public get itemIsNull(): boolean {
     return this._item == undefined

@@ -24,8 +24,14 @@ import java.util.List;
 import java.util.ArrayList;
 @Service
 public class PaiementServiceImpl implements PaiementService {
+
 //--------------- FIND -------------------------------------
-public Paiement findById(Long id) {
+
+    public Paiement findByIdFacture(Long id){
+        return dao.findByIdFacture(id);
+    }
+
+    public Paiement findById(Long id) {
 return dao.findById(id).orElse(null);
 }
 public List<Paiement> findAll() {

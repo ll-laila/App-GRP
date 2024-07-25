@@ -4,6 +4,9 @@ export class Paiement {
 id!: number;
 datePaiement?: Date ;
 montantPaye!: number;
+montantRest!:number;
 methodePaiement?: MethodePaiement ;
 entreprise?: Entreprise ;
+idFacture?: number;
+
 }

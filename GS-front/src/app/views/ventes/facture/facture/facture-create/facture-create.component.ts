@@ -318,8 +318,6 @@ export class FactureCreateComponent implements OnChanges {
       console.log(this.validator);
       return;
     }
-    const montantPaye = this.paiement.montantPaye; // Montant payé par l'utilisateur
-    this.service.updateFactureWithPaiement(this.item, montantPaye);
     this.sending = true;
     this.service.create().subscribe({
       next: data => {

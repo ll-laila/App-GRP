@@ -4,6 +4,7 @@ import org.sir.appgestionstock.ws.dto.adresse.AdresseDto;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.ws.dto.parametres.NiveauPrixDto;
 import org.sir.appgestionstock.ws.dto.ventes.PaiementDto;
+import org.sir.appgestionstock.ws.dto.ventes.commande.CommandeDto;
 import org.sir.appgestionstock.ws.dto.ventes.retourproduit.RetourProduitDto;
 import org.sir.appgestionstock.ws.dto.contacts.ClientDto;
 import org.sir.appgestionstock.ws.dto.parametres.DevisesDto;
@@ -38,26 +39,9 @@ private AdresseDto addressFacturation;
 private AdresseDto addressExpedition;
 private List<FactureProduitDto> factureProduit;
 private EntrepriseDto entreprise;
-private double prixRestant;
-private double prixPayee;
 
-    public double getPrixRestant() {
-        return prixRestant;
-    }
 
-    public void setPrixRestant(double prixRestant) {
-        this.prixRestant = prixRestant;
-    }
-
-    public double getPrixPayee() {
-        return prixPayee;
-    }
-
-    public void setPrixPayee(double prixPayee) {
-        this.prixPayee = prixPayee;
-    }
-
-    public Long getId() {
+public Long getId() {
 return id;
 }
 public void setId(Long id) {
@@ -195,5 +179,7 @@ return entreprise;
 public void setEntreprise(EntrepriseDto value) {
 this.entreprise = value;
 }
+
+
 
 }

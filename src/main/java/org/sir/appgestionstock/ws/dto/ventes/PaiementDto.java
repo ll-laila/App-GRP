@@ -10,9 +10,32 @@ public class PaiementDto {
 private Long id;
 private LocalDate datePaiement;
 private double montantPaye;
+private double montantRest;
 private MethodePaiementDto methodePaiement;
 private EntrepriseDto entreprise;
-public Long getId() {
+
+private Long idFacture;
+
+
+
+
+    public Long getIdFacture() {
+        return idFacture;
+    }
+    public void setIdFacture(Long id) {
+        this.idFacture = id;
+    }
+
+
+    public double getMontantRest() {
+        return montantRest;
+    }
+
+    public void setMontantRest(double montantRest) {
+        this.montantRest = montantRest;
+    }
+
+    public Long getId() {
 return id;
 }
 public void setId(Long id) {

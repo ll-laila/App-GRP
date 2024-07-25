@@ -90,11 +90,6 @@ export class FactureService {
   public deleteByTaxeId(id: number){
     return this.http.delete<number>(`${this.api}/taxe/${id}`);
   }
-  public updateFactureWithPaiement(facture: Facture, montantPaye: number): void {
-    const montantRestant = this.paiementService.calculPrixImpaye(facture, montantPaye);
-    facture.prixPayee = montantPaye;
-    facture.prixRestant = montantRestant;
-  }
   public findByTaxeId(id: number){
     return this.http.get<Array<Facture>>(`${this.api}/taxe/${id}`);
   }

@@ -20,6 +20,14 @@ var result = service.findById(id);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+    @GetMapping("/idFacture/{id}")
+    public ResponseEntity<PaiementDto> findByIdFacture(@PathVariable Long id) {
+        var result = service.findByIdFacture(id);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping
 public ResponseEntity<List<PaiementDto>> findAll() {
 var result = service.findAll();

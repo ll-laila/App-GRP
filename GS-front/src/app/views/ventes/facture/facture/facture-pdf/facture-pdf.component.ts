@@ -6,6 +6,7 @@ import {PaiementService} from "../../../../../controller/services/ventes/paiemen
 import {Router} from "@angular/router";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {Paiement} from "../../../../../controller/entities/ventes/paiement";
 @Component({
   selector: 'app-facture-pdf',
   standalone: true,
@@ -18,19 +19,21 @@ export class FacturePdfComponent {
   invoiceUrl?: SafeResourceUrl;
   private modalRef?: NgbModalRef;
 
+  private service = inject(PaiementService);
+
   constructor(
       private factureService: FactureService,
       private paiement: PaiementService,
       private router: Router,
       private sanitizer: DomSanitizer,
-      private modalService: NgbModal
+      private modalService: NgbModal,
+
   ) {}
   public set items(value:Facture[]) {
     this.factureService.items= value;
   }
 
   public get item(): Facture {
-
     return this.factureService.item;
   }
 
@@ -61,20 +64,31 @@ export class FacturePdfComponent {
   }
 
 
-  effectuerPaiement() {
-    this.paiement.returnUrl = this.router.url
-    this.factureService.keepData = true
-    this.router.navigate(['/ventes/paiement/create']).then()
-  }
+    effectuerPaiement() {
+        this.paiement.returnUrl = this.router.url;
+        this.factureService.keepData = true;
+        const queryParams = {
+            montant: this.item.id
+        };
+        this.router.navigate(['/ventes/paiement/create'], { queryParams }).then();
+    }
 
 
-  ngOnInit() {
+
+
+    ngOnInit() {
     this.factureService.findById(this.item.id).subscribe({
         next: data => {
-            this.factureService.item = data
-          console.log( this.item.id );
+            this.factureService.item = data;
+            this.service.findByIdFacture(this.item.id).subscribe({
+                next: paiement => {
+                    this.item.paiement = paiement;
+                    console.log("paiement :",this.item.paiement);
+                },
+                error: err => console.log(err)
+            });
 
-          console.log( this.factureService.item );
+            console.log( this.item );
         },
         error: err => console.log(err)
     })
