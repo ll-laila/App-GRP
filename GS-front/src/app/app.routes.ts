@@ -12,7 +12,7 @@ export const routes: Routes = [
     path: '',
     component: DefaultLayoutComponent,
     canActivate: [authGuard],
-    data: { title: 'Home' },
+    data: { title: 'Accueil' },
     children: [
       {
         path: 'dashboard',

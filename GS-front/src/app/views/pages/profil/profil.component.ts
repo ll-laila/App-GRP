@@ -1,10 +1,25 @@
 import { Component, inject, OnInit } from '@angular/core';
 import {
-  FormSelectDirective, ColComponent, FormControlDirective,
-  FormFloatingDirective, FormLabelDirective, RowComponent,
-  CardComponent, CardBodyComponent, CardHeaderComponent, SpinnerComponent,
-  InputGroupComponent, ButtonDirective, NavComponent, NavItemComponent,
-  FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
+    FormSelectDirective,
+    ColComponent,
+    FormControlDirective,
+    FormFloatingDirective,
+    FormLabelDirective,
+    RowComponent,
+    CardComponent,
+    CardBodyComponent,
+    CardHeaderComponent,
+    SpinnerComponent,
+    InputGroupComponent,
+    ButtonDirective,
+    NavComponent,
+    NavItemComponent,
+    FormCheckComponent,
+    FormCheckLabelDirective,
+    FormCheckInputDirective,
+    FormFeedbackComponent,
+    TableDirective,
+    AvatarComponent
 } from "@coreui/angular";
 import { IconDirective } from "@coreui/icons-angular";
 import { RouterLink } from "@angular/router";
@@ -15,17 +30,18 @@ import {NgForOf,NgIf, NgTemplateOutlet} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {EntrepriseService} from "../../../controller/services/parametres/entreprise.service";
 import {Entreprise} from "../../../controller/entities/parametres/entreprise";
+import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-profil',
   standalone: true,
-  imports: [
-    FormSelectDirective, RowComponent, ColComponent, FormControlDirective,
-    FormsModule, FormLabelDirective, FormFloatingDirective, CardComponent, NgTemplateOutlet,
-    CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
-    RouterLink, NavComponent, NavItemComponent, FormCheckComponent, SpinnerComponent,
-    FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, IconDirective, NgForOf,NgIf, TableDirective,
-  ],
+    imports: [
+        FormSelectDirective, RowComponent, ColComponent, FormControlDirective,
+        FormsModule, FormLabelDirective, FormFloatingDirective, CardComponent, NgTemplateOutlet,
+        CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
+        RouterLink, NavComponent, NavItemComponent, FormCheckComponent, SpinnerComponent,
+        FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, IconDirective, NgForOf, NgIf, TableDirective, AvatarComponent,
+    ],
   templateUrl: './profil.component.html',
   styleUrls: ['./profil.component.scss']
 })
@@ -37,19 +53,23 @@ export class ProfilComponent implements OnInit {
   public entreprises!: Entreprise[];
   private _userInfosService = inject(UserInfosService);
   private _appUserService = inject(AppUserService);
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   pagination = { data: [], totalElements: 0, size: 10, totalPages: 1, page: 0, first: true, last: true };
   paginationSizes = [10, 20, 50];
   paginating = false;
+  public logo?: string;
 
-  ngOnInit() {
+    ngOnInit() {
     this.getAdminByUsername(this._userInfosService.getUsername());
     this.getEntreprises();
   }
   getEntreprises(){
     this.entrepriseService.findByAdmin(this._userInfosService.getUsername()).subscribe(res => {
-      console.log(res);
+      console.log("profile entreprises: ",res);
       this.entreprises = res;
+       this.logo = res.find(entreprise => entreprise.id === this.entrepriseSelectedService.getEntrepriseSelected())?.logo;
+        console.log("entreprise logo: ",this.entrepriseSelectedService.getEntrepriseSelected());
     }, error => {
       console.log(error);
     });
@@ -68,6 +88,8 @@ export class ProfilComponent implements OnInit {
       }
     });
   }
+
+
 
   get loading(): boolean {
     return this._loading;

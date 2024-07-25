@@ -6,10 +6,11 @@ import {PaiementService} from "../../../../../controller/services/ventes/paiemen
 import {Router} from "@angular/router";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {AvatarComponent} from "@coreui/angular";
 @Component({
   selector: 'app-facture-pdf',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarComponent],
   templateUrl: './facture-pdf.component.html',
   styleUrl: './facture-pdf.component.scss'
 })
@@ -17,6 +18,7 @@ export class FacturePdfComponent {
   @ViewChild('invoiceModal') invoiceModal!: ElementRef;
   invoiceUrl?: SafeResourceUrl;
   private modalRef?: NgbModalRef;
+  public logo?:string;
 
   constructor(
       private factureService: FactureService,
@@ -72,6 +74,7 @@ export class FacturePdfComponent {
     this.factureService.findById(this.item.id).subscribe({
         next: data => {
             this.factureService.item = data
+            this.logo = data.entreprise?.logo;
           console.log( this.item.id );
 
           console.log( this.factureService.item );
