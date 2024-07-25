@@ -7,7 +7,9 @@ import {Router} from "@angular/router";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {Paiement} from "../../../../../controller/entities/ventes/paiement";
+
 import {AvatarComponent} from "@coreui/angular";
+
 @Component({
   selector: 'app-facture-pdf',
   standalone: true,
