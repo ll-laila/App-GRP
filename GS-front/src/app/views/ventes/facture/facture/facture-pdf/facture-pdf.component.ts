@@ -83,7 +83,6 @@ export class FacturePdfComponent {
     ngOnInit() {
     this.factureService.findById(this.item.id).subscribe({
         next: data => {
-
             this.factureService.item = data;
             this.service.findByIdFacture(this.item.id).subscribe({
                 next: paiement => {
@@ -94,7 +93,6 @@ export class FacturePdfComponent {
             });
             this.logo = data.entreprise?.logo;
           console.log( this.item.id );
-
             console.log( this.item );
         },
         error: err => console.log(err)
