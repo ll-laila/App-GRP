@@ -25,9 +25,9 @@ public class NotificationProvider {
     @Autowired
     private NotificationConverter notificationConverter;
 
-    @GetMapping()
-    public ResponseEntity<List<NotificationDto>> findAll() {
-        var notifications = notificationService.findAll();
+    @GetMapping("/{idEntreprise}")
+    public ResponseEntity<List<NotificationDto>> findAllByEntreprise(@PathVariable Long idEntreprise) {
+        var notifications = notificationService.findAllByIdErp(idEntreprise);
 
         // Vérifiez si notificationConverter est null pour éviter NullPointerException
         if (notificationConverter == null) {
@@ -37,6 +37,8 @@ public class NotificationProvider {
         var notificationsDto = notificationConverter.toDto(notifications);
         return ResponseEntity.ok(notificationsDto);
     }
+
+
     @DeleteMapping()
     public ResponseEntity<NotificationDto> delete(@RequestBody NotificationDto dto) {
         if (dto == null) {

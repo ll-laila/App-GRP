@@ -35,5 +35,12 @@ export const routes: Routes = [
     data: {
       title: 'Profil Page'
     }
+  },
+  {
+    path: 'parametresCompte',
+    loadComponent: () => import('./parametres-compte/parametres-compte.component').then(m => m.ParametresCompteComponent),
+    data: {
+      title: 'Paramètres du compte'
+    }
   }
 ];

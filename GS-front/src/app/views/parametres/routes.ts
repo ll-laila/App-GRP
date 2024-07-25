@@ -33,6 +33,8 @@ export const routes: Routes = [
       },
     ]
     },
+
+
     {
     path: 'devises',
     children: [
@@ -132,7 +134,7 @@ export const routes: Routes = [
         data: {title: 'update Taxe'}
       },
     ]
-    },
+    }
     ]
   }
 ];

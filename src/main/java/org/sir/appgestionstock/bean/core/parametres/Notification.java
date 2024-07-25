@@ -12,6 +12,8 @@ public class Notification {
     private String message;
     private String nomEmploye;
 
+    private Long entrepriseId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "employee_id")
     private Employe employee;
@@ -54,5 +56,13 @@ public class Notification {
 
     public void setEmployee(Employe employee) {
         this.employee = employee;
+    }
+
+    public Long getEntrepriseId() {
+        return entrepriseId;
+    }
+
+    public void setEntrepriseId(Long entrepriseId) {
+        this.entrepriseId = entrepriseId;
     }
 }

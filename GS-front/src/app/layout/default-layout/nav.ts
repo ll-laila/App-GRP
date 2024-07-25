@@ -2,32 +2,32 @@ import {INavData} from '@coreui/angular';
 
 export const navItems: INavData[] = [
   {
-    name: 'Dashboard',
+    name: 'Tableau de bord',
     url: '/dashboard',
     iconComponent: {name: 'cil-speedometer'},
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW',
+    // },
   },
   {
-    name: 'Contact',
+    name: 'Contacts',
 
     iconComponent: {name: 'cil-address-book'},
 
     children: [
       {
-        name: ' Client',
+        name: ' Clients',
         url: '/contacts/client',
         icon: 'nav-icon-bullet',
       },
       {
-        name: ' Fournisseur',
+        name: ' Fournisseurs',
         url: '/contacts/fournisseur',
         icon: 'nav-icon-bullet',
       },
       {
-        name: ' Employe',
+        name: ' Employes',
         url: '/contacts/user/employe',
         icon: 'nav-icon-bullet',
       },
@@ -37,7 +37,7 @@ export const navItems: INavData[] = [
     ],
   },
   {
-    name: 'Produit',
+    name: 'Produits',
     iconComponent: {name: 'cib-codepen'},
     children: [
       {
@@ -48,18 +48,18 @@ export const navItems: INavData[] = [
     ],
   },
   {
-    name: 'Vente',
+    name: 'Ventes',
     iconComponent: {name: 'cil-cart'},
     children: [
 
       {
-        name: 'Commande',
+        name: 'Commandes',
         url: '/ventes/commande/commande',
         iconComponent: {name: 'cib-codesandbox'},
       },
 
       {
-        name: 'Facture',
+        name: 'Factures',
         url: '/ventes/facture/facture',
         iconComponent: {name: 'cil-description'},
 
@@ -118,7 +118,7 @@ export const navItems: INavData[] = [
     children: [
 
       {
-        name: ' Entreprise',
+        name: ' Entreprises',
         url: '/parametres/entreprise',
         iconComponent: {name: 'cil-building'},
       },
@@ -174,27 +174,27 @@ export const navItems: INavData[] = [
 
 export const navItems2: INavData[] = [
   {
-    name: 'Dashboard',
+    name: 'Tableau de bord',
     url: '/dashboard',
     iconComponent: {name: 'cil-speedometer'},
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
+    // badge: {
+    //   color: 'info',
+    //   text: 'NEW',
+    // },
   },
   {
-    name: 'Contact',
+    name: 'Contacts',
 
     iconComponent: {name: 'cil-address-book'},
 
     children: [
       {
-        name: ' Client',
+        name: ' Clients',
         url: '/contacts/client',
         icon: 'nav-icon-bullet',
       },
       {
-        name: ' Fournisseur',
+        name: ' Fournisseurs',
         url: '/contacts/fournisseur',
         icon: 'nav-icon-bullet',
       },
@@ -203,7 +203,7 @@ export const navItems2: INavData[] = [
     ],
   },
   {
-    name: 'Produit',
+    name: 'Produits',
     iconComponent: {name: 'cib-codepen'},
     children: [
       {
@@ -214,17 +214,17 @@ export const navItems2: INavData[] = [
     ],
   },
   {
-    name: 'Vente',
+    name: 'Ventes',
     iconComponent: {name: 'cil-cart'},
     children: [
       {
-        name: 'Commande',
+        name: 'Commandes',
         url: '/ventes/commande/commande',
         iconComponent: {name: 'cib-codesandbox'},
       },
 
       {
-        name: 'Facture',
+        name: 'Factures',
         url: '/ventes/facture/facture',
         iconComponent: {name: 'cil-cart'},
 

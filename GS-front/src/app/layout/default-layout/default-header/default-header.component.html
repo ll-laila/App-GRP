@@ -53,7 +53,7 @@
     </button>
    <c-header-nav class="d-none d-md-flex">
       <c-nav-item>
-        <a cNavLink routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+        <a cNavLink routerLink="/dashboard" routerLinkActive="active">Tableau de bord</a>
       </c-nav-item>
       @if (isBonCmdPdfRoute()) {
         <c-nav-item>
@@ -117,16 +117,21 @@
     </button>
     <ul cDropdownMenu class="pt-0 w-auto">
       <li>
-        <a cDropdownItem (click)="logout()">
-          <svg cIcon class="me-2" name="cilAccountLogout"></svg>
-          Logout
-
-        </a>
-      </li>
-      <li>
         <a cDropdownItem (click)="profile()">
           <svg cIcon class="me-2" name="cilUser"></svg>
           Profile
+        </a>
+      </li>
+      <li>
+        <a cDropdownItem (click)="parametresCompte()">
+          <svg cIcon class="me-2" name="cil-settings"></svg>
+          Paramètres du compte
+        </a>
+      </li>
+      <li>
+        <a cDropdownItem (click)="logout()">
+          <svg cIcon class="me-2" name="cilAccountLogout"></svg>
+          Se déconnecter
         </a>
       </li>
     </ul>

@@ -15,6 +15,11 @@ export class AppUserService {
     return this.http.get< Array< AppUser>>(this.api);
   }
 
+
+  public getDaysRemaining(username: string) {
+    return this.http.get<number>(`${this.api}/essai/${username}`);
+  }
+
   public findById(id: number) {
     return this.http.get< AppUser>(`${this.api}/id/${id}`);
   }

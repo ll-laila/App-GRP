@@ -45,6 +45,8 @@ public class AppUserConverter {
         dto.setUsername(item.getUsername());
         dto.setPasswordChanged(item.isPasswordChanged());
         dto.setRoles(role ? (List<RoleDto>) roleConverter.toDto(item.getRoles()) : null);
+//        dto.setIsTrial(item.getIsTrial());
+//        dto.setRegistrationDate(item.getRegistrationDate());
         this.configure(true);
         return dto;
     }
@@ -63,6 +65,8 @@ public class AppUserConverter {
         item.setPassword(dto.getPassword());
         item.setPasswordChanged(dto.isPasswordChanged());
         item.setRoles(roleConverter.toItem(dto.getRoles()));
+//        item.setIsTrial(dto.getIsTrial());
+//        item.setRegistrationDate(dto.getRegistrationDate());
         return item;
     }
 

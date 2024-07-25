@@ -27,6 +27,7 @@ public class NotificationConverter {
             dto.setType(item.getType());
             dto.setMessage(item.getMessage());
             dto.setNomEmploye(item.getNomEmploye());
+            dto.setEntrepriseId(item.getEntrepriseId());
             dto.setEmploye(employe ? employeConverter.toDto(item.getEmployee()) : null);
 
             return dto;
@@ -42,6 +43,7 @@ public class NotificationConverter {
             item.setType(dto.getType());
             item.setMessage(dto.getMessage());
             item.setNomEmploye(dto.getNomEmploye());
+            item.setEntrepriseId(dto.getEntrepriseId());
             item.setEmployee(employeConverter.toItem(dto.getEmploye()));
 
             return item;

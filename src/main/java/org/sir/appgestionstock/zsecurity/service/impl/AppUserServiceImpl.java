@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -111,6 +112,10 @@ public class AppUserServiceImpl implements AppUserService {
                 }
                 user.setRoles(roles);
             }
+
+            user.setRegistrationDate(new Date());
+            user.setIsTrial(true);
+
             return appUserDao.save(user);
         }
     }

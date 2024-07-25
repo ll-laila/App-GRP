@@ -1,5 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {NgStyle} from '@angular/common';
+import {NgIf, NgStyle} from '@angular/common';
 import {IconDirective} from '@coreui/icons-angular';
 import {
   ButtonDirective, CardBodyComponent, CardComponent, CardGroupComponent,
@@ -25,12 +25,13 @@ import {AppUserService} from "../../../controller/auth/services/app-user.service
   imports: [
     ContainerComponent, RowComponent, ColComponent, CardGroupComponent, TextColorDirective, CardComponent,
     CardBodyComponent, FormDirective, InputGroupComponent, InputGroupTextDirective, IconDirective, FormControlDirective,
-    ButtonDirective, NgStyle, FormsModule, SpinnerComponent, RouterLink, FormFeedbackComponent
+    ButtonDirective, NgStyle, FormsModule, SpinnerComponent, RouterLink, FormFeedbackComponent, NgIf
   ]
 })
 export class LoginComponent {
 
-  loading = false
+  loading = false;
+  message = false;
 
   private authService = inject(AuthService);
   private toasterService = inject(ToasterService);
@@ -66,6 +67,7 @@ export class LoginComponent {
       error: err => {
         console.log(err)
         this.loading = false;
+        this.message = true;
       }
     })
   }

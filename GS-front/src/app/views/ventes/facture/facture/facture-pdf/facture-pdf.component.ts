@@ -6,11 +6,15 @@ import {PaiementService} from "../../../../../controller/services/ventes/paiemen
 import {Router} from "@angular/router";
 import {DomSanitizer, SafeResourceUrl} from "@angular/platform-browser";
 import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+<<<<<<< HEAD
 import {Paiement} from "../../../../../controller/entities/ventes/paiement";
+=======
+import {AvatarComponent} from "@coreui/angular";
+>>>>>>> 7bad00aa6c6d9b5110f616587feaf85130a00fcd
 @Component({
   selector: 'app-facture-pdf',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, AvatarComponent],
   templateUrl: './facture-pdf.component.html',
   styleUrl: './facture-pdf.component.scss'
 })
@@ -18,6 +22,7 @@ export class FacturePdfComponent {
   @ViewChild('invoiceModal') invoiceModal!: ElementRef;
   invoiceUrl?: SafeResourceUrl;
   private modalRef?: NgbModalRef;
+  public logo?:string;
 
   private service = inject(PaiementService);
 
@@ -79,6 +84,7 @@ export class FacturePdfComponent {
     ngOnInit() {
     this.factureService.findById(this.item.id).subscribe({
         next: data => {
+<<<<<<< HEAD
             this.factureService.item = data;
             this.service.findByIdFacture(this.item.id).subscribe({
                 next: paiement => {
@@ -87,6 +93,11 @@ export class FacturePdfComponent {
                 },
                 error: err => console.log(err)
             });
+=======
+            this.factureService.item = data
+            this.logo = data.entreprise?.logo;
+          console.log( this.item.id );
+>>>>>>> 7bad00aa6c6d9b5110f616587feaf85130a00fcd
 
             console.log( this.item );
         },

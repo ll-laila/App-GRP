@@ -1,8 +1,10 @@
 package org.sir.appgestionstock.bean.core.parametres.abonnement;
 
 import jakarta.persistence.*;
+import org.sir.appgestionstock.zsecurity.entity.AppUser;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name="subscription")
@@ -11,10 +13,20 @@ public class Subscription {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long userId;
-    private Long planId;
-    private LocalDate startDate;
-    private LocalDate endDate;
+
+    @ManyToOne
+    @JoinColumn(name = "plan_id")
+    private Plan plan;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private AppUser user;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date subscriptionDate;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date subscriptionEndDate;
 
 
     // Getters et Setters
@@ -26,36 +38,35 @@ public class Subscription {
         this.id = id;
     }
 
-    public Long getUserId() {
-        return userId;
+    public Plan getPlan() {
+        return plan;
     }
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
+    public void setPlan(Plan plan) {
+        this.plan = plan;
     }
 
-    public Long getPlanId() {
-        return planId;
+    public AppUser getUser() {
+        return user;
     }
 
-    public void setPlanId(Long planId) {
-        this.planId = planId;
+    public void setUser(AppUser user) {
+        this.user = user;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
+    public Date getSubscriptionDate() {
+        return subscriptionDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
+    public void setSubscriptionDate(Date subscriptionDate) {
+        this.subscriptionDate = subscriptionDate;
     }
 
-    public LocalDate getEndDate() {
-        return endDate;
+    public Date getSubscriptionEndDate() {
+        return subscriptionEndDate;
     }
 
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
+    public void setSubscriptionEndDate(Date subscriptionEndDate) {
+        this.subscriptionEndDate = subscriptionEndDate;
     }
-
 }

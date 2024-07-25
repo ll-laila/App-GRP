@@ -1,38 +1,48 @@
-<section class="vh-100 d-flex align-items-start" style="background-color: #f4f5f7;">
-    <div class="container py-5 h-100">
-        <div class="row justify-content-center">
-            <div class="col-md-10">
-                <div class="card mb-3" style="border-radius: .5rem;">
-                    <div class="row g-0">
-                        <div class="col-md-4 gradient-custom text-center text-white"
-                             style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
-                            <i class="far fa-edit mb-5"></i>
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+        <div class=" container-fluid d-flex justify-content-center"> <!-- Changed container to container-fluid -->
+            <div class="col-12">
+              <div class="card user-card-full">
+                    <div class="row m-l-0 m-r-0">
+                        <div class="col-sm-4 bg-c-lite-green user-profile">
+                            <div class="card-block text-center text-white">
+                                <div class="m-b-25">
+                                    <img  [src]="'data:image/png;base64,'+logo"
+                                                 class="img-radius" alt="User-Profile-Image">
+                                </div>
+                                <h6 class="f-w-600">{{ admin.username }}</h6>
+                                <i class="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                            </div>
                         </div>
-                        <div class="col-md-8">
-                            <div class="card-body p-4">
-                                <h6>Information</h6>
-                                <hr class="mt-0 mb-4">
-                                <div class="row pt-1">
-                                    <div class="col-md-6 mb-3">
-                                        <h6>Email</h6>
-                                        <p class="text-muted">{{ admin.email }}</p>
+                        <div class="col-sm-8">
+                            <div class="card-block">
+                                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Informations</h6>
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <p class="m-b-10 f-w-600">Nom d'utilisateur</p>
+                                        <h6 class="text-muted f-w-400">{{ admin.username }}</h6>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <h6>Phone</h6>
-                                        <p class="text-muted">{{ admin.phone }}</p>
+                                    <div class="col-sm-6">
+                                        <p class="m-b-10 f-w-600">Email</p>
+                                        <h6 class="text-muted f-w-400">{{ admin.email }}</h6>
                                     </div>
-                                    <div class="col-md-6 mb-3">
-                                        <h6>Nom d'utilisateur</h6>
-                                        <p class="text-muted">{{ admin.username }}</p>
+                                    <div class="col-sm-6">
+                                        <p class="m-b-10 f-w-600">Téléphone</p>
+                                        <h6 class="text-muted f-w-400">{{ admin.phone }}</h6>
                                     </div>
                                 </div>
-                                <h6>Mes entreprises</h6>
-                                <hr class="mt-0 mb-4">
-                                <div class="row pt-1">
+                                <h6 class="m-b-20 m-t-40 p-b-5 b-b-default f-w-600">Mes entreprises</h6>
+                                <div class="row">
                                     <div class="col-12">
                                         <ul class="list-unstyled">
                                             <li *ngFor="let entreprise of entreprises">
-                                                <h6>{{ entreprise.nom }}</h6>
+                                                <h6>
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-building-fill-lock" viewBox="0 0 16 16">
+                                                        <path d="M2 1a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v7.764a3 3 0 0 0-4.989 2.497 2 2 0 0 0-.743.739H6.5a.5.5 0 0 0-.5.5V16H3a1 1 0 0 1-1-1zm2 1.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3 0v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5m3.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zM4 5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M7.5 5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5M4.5 8a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm2.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5"/>
+                                                        <path d="M9 13a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
+                                                    </svg>
+                                                    {{ entreprise.nom }}
+                                                </h6>
                                             </li>
                                         </ul>
                                     </div>
@@ -44,4 +54,4 @@
             </div>
         </div>
     </div>
-</section>
+</div>

@@ -16,6 +16,10 @@
                   </div>
                   <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Connectez-vous à votre compte</h5>
 
+                  <div class="alert alert-danger" role="alert" *ngIf="message">
+                     Vous devez créer un compte !
+                  </div>
+
                   <div data-mdb-input-init class="form-outline mb-4">
                     <label class="form-label" for="form2Example17">Nom d'utilisateur</label>
                     <input id="form2Example17" name="username" autoComplete="username" cFormControl

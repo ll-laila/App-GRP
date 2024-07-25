@@ -12,7 +12,7 @@ export const routes: Routes = [
     path: '',
     component: DefaultLayoutComponent,
     canActivate: [authGuard],
-    data: { title: 'Home' },
+    data: { title: 'Accueil' },
     children: [
       {
         path: 'dashboard',
@@ -53,6 +53,11 @@ export const routes: Routes = [
         path: 'profil',
         loadComponent: () => import('./views/pages/profil/profil.component').then(m => m.ProfilComponent),
         data: {title: 'profil Page'}
+      },
+      {
+        path: 'parametresCompte',
+        loadComponent: () => import('./views/pages/parametres-compte/parametres-compte.component').then(m => m.ParametresCompteComponent),
+        data: {title: 'Paramètres du compte'}
       },
       {
         path: 'notification',
