@@ -1,10 +1,12 @@
 package org.sir.appgestionstock.zsecurity.ws.dto;
 
+import org.sir.appgestionstock.bean.core.parametres.abonnement.Subscription;
 import org.sir.appgestionstock.zutils.webservice.dto.AuditBaseDto;
 
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AppUserDto extends AuditBaseDto {
@@ -19,6 +21,10 @@ public class AppUserDto extends AuditBaseDto {
     protected String password;
     protected boolean passwordChanged = false;
     protected String confirmPassword;
+
+//    private Date registrationDate;
+//
+//    private Boolean isTrial;
 
 
 
@@ -115,4 +121,22 @@ public class AppUserDto extends AuditBaseDto {
     public String setConfirmPassword() {
         return this.confirmPassword;
     }
+
+//    public Date getRegistrationDate() {
+//        return registrationDate;
+//    }
+//
+//    public void setRegistrationDate(Date registrationDate) {
+//        this.registrationDate = registrationDate;
+//    }
+//
+//    // Getter et Setter pour isTrial
+//    public Boolean getIsTrial() {
+//        return isTrial;
+//    }
+//
+//    public void setIsTrial(Boolean isTrial) {
+//        this.isTrial = isTrial;
+//    }
+
 }

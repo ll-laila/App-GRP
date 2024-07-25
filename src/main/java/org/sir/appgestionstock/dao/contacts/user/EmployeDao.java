@@ -1,6 +1,7 @@
 package org.sir.appgestionstock.dao.contacts.user;
 import org.sir.appgestionstock.bean.core.contacts.user.Employe;
 import org.sir.appgestionstock.bean.core.contacts.user.PermissionsAcces;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,6 +9,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 public interface EmployeDao extends JpaRepository<Employe, Long> {
 
+    List<Employe> findByEntreprise(Entreprise entreprise);
 
     int deleteByIdIn(List<Long> ids);
     int deleteByAdresseId(Long id);

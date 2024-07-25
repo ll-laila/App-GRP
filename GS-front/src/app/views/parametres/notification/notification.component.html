@@ -5,6 +5,15 @@
                 <h4 class="card-title m-b-0">Notifications</h4>
             </div>
             <ul class="list-style-none">
+                <li class="d-flex no-block card-body border-top" *ngIf="viewRemade">
+                    <i class="fa" [ngClass]="'fa-info-circle' + ' w-30px m-t-5 '" ></i>
+                    <div>
+                        <a  class="m-b-0 font-medium p-0" data-abc="true">Période d’essai</a>
+                        <span class="text-muted">Votre période d’essai expirera dans <span style="color:#ef0a34"><strong>{{remade}}</strong></span> jours. Souscrivez à un de nos abonnements.</span>
+                        <a class="m-b-0 font-medium p-0" data-abc="true" style="text-decoration: underline;color:#ef0a34" >Paramètres du compte</a>
+                    </div>
+                </li>
+
                 <li *ngFor="let notification of notifications" class="d-flex no-block card-body border-top">
                     <i class="fa" [ngClass]="getNotificationIcon(notification.type) + ' w-30px m-t-5'"></i>
                     <div>

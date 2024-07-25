@@ -55,6 +55,11 @@ export const routes: Routes = [
         data: {title: 'profil Page'}
       },
       {
+        path: 'parametresCompte',
+        loadComponent: () => import('./views/pages/parametres-compte/parametres-compte.component').then(m => m.ParametresCompteComponent),
+        data: {title: 'Paramètres du compte'}
+      },
+      {
         path: 'notification',
         loadComponent: () => import('./views/parametres/notification/notification.component').then(m => m.NotificationComponent),
         data: {title: 'notification Page'}

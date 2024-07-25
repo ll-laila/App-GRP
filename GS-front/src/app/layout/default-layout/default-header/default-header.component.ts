@@ -1,7 +1,8 @@
-import { Component, DestroyRef, inject, Input } from '@angular/core';
+import {Component, DestroyRef, inject, Input} from '@angular/core';
 import {
   AvatarComponent,
-  BadgeComponent, BadgeModule,
+  BadgeComponent,
+  BadgeModule,
   BreadcrumbRouterComponent,
   ColorModeService,
   ContainerComponent,
@@ -26,22 +27,20 @@ import {
   ThemeDirective
 } from '@coreui/angular';
 
-import { NgForOf, NgStyle, NgTemplateOutlet, NgIf } from '@angular/common';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { IconDirective } from '@coreui/icons-angular';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { delay, filter, map, tap } from 'rxjs/operators';
-import { TokenService } from 'src/app/controller/auth/services/token.service';
-import { UserInfosService } from '../../../controller/shared/user-infos.service';
-import { AppUserService } from '../../../controller/auth/services/app-user.service';
-import { FormsModule } from '@angular/forms';
-import { Entreprise } from '../../../controller/entities/parametres/entreprise';
-import { EntrepriseService } from '../../../controller/services/parametres/entreprise.service';
+import {NgForOf, NgIf, NgStyle, NgTemplateOutlet} from '@angular/common';
+import {ActivatedRoute, Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {IconDirective} from '@coreui/icons-angular';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {delay, filter, map, tap} from 'rxjs/operators';
+import {TokenService} from 'src/app/controller/auth/services/token.service';
+import {UserInfosService} from '../../../controller/shared/user-infos.service';
+import {AppUserService} from '../../../controller/auth/services/app-user.service';
+import {FormsModule} from '@angular/forms';
+import {Entreprise} from '../../../controller/entities/parametres/entreprise';
+import {EntrepriseService} from '../../../controller/services/parametres/entreprise.service';
 import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
 import {NotificationService} from "../../../controller/services/parametres/notification.service";
-import { Notification } from '../../../controller/entities/parametres/notification';
 import {Employe} from "../../../controller/entities/contacts/user/employe";
-import { HttpErrorResponse } from '@angular/common/http';
 import {EmployeService} from "../../../controller/services/contacts/user/employe.service";
 
 
@@ -93,7 +92,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
   readonly colorMode = this.#colorModeService.colorMode;
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
   private notificationService =inject(NotificationService);
-
+  private appUserService = inject(AppUserService);
   readonly tokenService = inject(TokenService);
   readonly router = inject(Router);
 
@@ -122,7 +121,6 @@ export class DefaultHeaderComponent extends HeaderComponent {
   }
 
   ngOnInit() {
-    this.getTotalNotifications();
     const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
     console.log("newVar :",newVar);
     if(newVar == 1){
@@ -131,6 +129,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
     else{
       this.getEntreprisesAdroitAcces();
     }
+    this.getDaysRemaining();
   }
 
 
@@ -145,6 +144,11 @@ export class DefaultHeaderComponent extends HeaderComponent {
   profile() {
     this.router.navigate(['/profil']).then();
   }
+
+  parametresCompte() {
+    this.router.navigate(['/parametresCompte']).then();
+  }
+
   notification(){
     this.totalNotifications = 0;
     this.vu = true;
@@ -168,6 +172,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
       this.entreprises = res;
       if (this.entreprises.length > 0) {
         this.logo = this.entreprises[0].logo;
+        this.getTotalNotifications(this.entreprises[0].id);
         this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id);
       }
     }, error => {
@@ -184,6 +189,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
         if (this.entreprises && this.entreprises.length > 0) {
           console.log("from header :",this.entreprises[0]);
           this.logo = this.entreprises[0].logo;
+          this.getTotalNotifications(this.entreprises[0].id);
           this.entrepriseSelectedService.setEntrepriseSelected(this.entreprises[0].id);
         }
       }, error => {
@@ -208,7 +214,10 @@ export class DefaultHeaderComponent extends HeaderComponent {
       this.entrepriseSelectedService.clearEntrepriseSelected();
       this.entrepriseSelectedService.setEntrepriseSelected(this.entrepriseSelected.id);
       this.logo = selectedEntreprise.logo;
+      this.totalNotifications = 0;
+      this.getTotalNotifications(this.entrepriseSelectedService.getEntrepriseSelected());
       console.log("from header : ", this.entrepriseSelectedService.getEntrepriseSelected());
+
       window.location.reload();
     } else {
       console.error('Entreprise not found');
@@ -224,8 +233,8 @@ export class DefaultHeaderComponent extends HeaderComponent {
     return !!this.tokenService.getRole()?.some(it => it == "ADMIN")
   }
 
-  getTotalNotifications(){
-    this.notificationService.findAll().subscribe({
+  getTotalNotifications(id : number){
+    this.notificationService.findAll(id).subscribe({
       next: (notifications) => {
         this.totalNotifications = notifications.length;
         if(this.vu == true){
@@ -235,6 +244,16 @@ export class DefaultHeaderComponent extends HeaderComponent {
       error: (err) => {
         console.error('Erreur lors de la récupération des notifications', err);
       }
+    });
+  }
+
+  public getDaysRemaining(){
+    this.appUserService.getDaysRemaining(this.userInfosService.getUsername()).subscribe( res => {
+      if(res!=0){
+        this.totalNotifications = this.totalNotifications + 1;
+      }
+    }, error => {
+      console.log(error);
     });
   }
 

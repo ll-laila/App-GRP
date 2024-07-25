@@ -13,8 +13,9 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private BigDecimal price;
-    private int maxUsers;
+    private double price;
+    private int maxEntreprises;
+
 
 
     // Getters et Setters
@@ -34,20 +35,20 @@ public class Plan {
         this.name = name;
     }
 
-    public BigDecimal getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
-    public int getMaxUsers() {
-        return maxUsers;
+    public int getMaxEntreprises() {
+        return maxEntreprises;
     }
 
-    public void setMaxUsers(int maxUsers) {
-        this.maxUsers = maxUsers;
+    public void setMaxEntreprises(int maxEntreprises) {
+        this.maxEntreprises = maxEntreprises;
     }
 
 }

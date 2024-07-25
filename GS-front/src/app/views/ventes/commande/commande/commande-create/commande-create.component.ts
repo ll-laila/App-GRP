@@ -316,7 +316,7 @@ export class CommandeCreateComponent {
   }
 
   create() {
-    this.notificationService.handelcreate('Creation d\'une commande', 'Une nouvelle commande à été crée par l\'employer')
+    this.notificationService.handelcreate('Creation d\'une commande', 'Une nouvelle commande à été crée par l\'employer', this.entrepriseSelectedService.getEntrepriseSelected())
     console.log(this.item)
     if (!this.validator.validate()) {
       console.log(this.validator);

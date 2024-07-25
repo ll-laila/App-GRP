@@ -16,4 +16,7 @@ List<Entreprise> getEntrepriseByIdAdmin(Long admin);
 
     @Query("SELECT e.entreprisesAdroitAcces FROM Employe e WHERE e.id = :employeId")
     List<Entreprise> findEntreprisesByEmployeId(@Param("employeId") Long employeId);
+
+    List<Entreprise> findByIdAdmin(Long id);
+
 }

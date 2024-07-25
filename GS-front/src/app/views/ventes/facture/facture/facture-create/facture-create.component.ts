@@ -312,7 +312,7 @@ export class FactureCreateComponent implements OnChanges {
     })
   }
   create() {
-    this.notificationService.handelcreate('creation d\'une facture','Une nouvelle facture à été crée par l\'employer' )
+    this.notificationService.handelcreate('creation d\'une facture','Une nouvelle facture à été crée par l\'employer' , this.entrepriseSelectedService.getEntrepriseSelected())
     console.log(this.item)
     if (!this.validator.validate()) {
       console.log(this.validator);

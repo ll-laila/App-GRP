@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface NotificationService {
     Notification createNotification(Notification notification);
-    List<Notification> findAll();
+    List<Notification> findAllByIdErp(Long id);
     void delete(Notification notification);
 }

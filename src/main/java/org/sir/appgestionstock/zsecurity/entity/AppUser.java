@@ -2,10 +2,12 @@ package org.sir.appgestionstock.zsecurity.entity;
 
 import jakarta.persistence.*;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
+import org.sir.appgestionstock.bean.core.parametres.abonnement.Subscription;
 import org.sir.appgestionstock.zutils.entity.audit.AuditEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -16,7 +18,6 @@ public class AppUser extends AuditEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
-
     protected String email;
     protected String phone;
     protected String username;
@@ -37,6 +38,15 @@ public class AppUser extends AuditEntity implements UserDetails {
     protected List<Role> roles = new ArrayList<>();
     @Transient
     protected List<Authority> authorities;
+
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date registrationDate;
+
+    private Boolean isTrial;
+
+    @OneToOne(mappedBy = "user")
+    private Subscription subscription;
 
 
     public AppUser() {
@@ -166,5 +176,30 @@ public class AppUser extends AuditEntity implements UserDetails {
         this.authorities = authorities;
     }
 
+    public Date getRegistrationDate() {
+        return registrationDate;
+    }
+
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
+    }
+
+    // Getter et Setter pour isTrial
+    public Boolean getIsTrial() {
+        return isTrial;
+    }
+
+    public void setIsTrial(Boolean isTrial) {
+        this.isTrial = isTrial;
+    }
+
+    // Getter et Setter pour subscription
+    public Subscription getSubscription() {
+        return subscription;
+    }
+
+    public void setSubscription(Subscription subscription) {
+        this.subscription = subscription;
+    }
 
 }

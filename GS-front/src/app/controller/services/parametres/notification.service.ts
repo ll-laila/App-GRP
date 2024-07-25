@@ -36,8 +36,8 @@ export class NotificationService {
   private iSemploye:number=0;
   private _toReturn = () => this._returnUrl != undefined;
 
-  public findAll() {
-    return this._http.get<Array<Notification>>(this.api);
+  public findAll(id: number) {
+    return this._http.get<Array<Notification>>(`${this.api}/${id}`);
   }
 
   delete(notification: Notification): Observable<void> {
@@ -50,8 +50,8 @@ export class NotificationService {
     };
     return this._http.delete<void>(url, httpOptions);
   }
-  public createNotification(type: string, message: string, nomEmploye: string, employe: Employe) {
-    const newNotification: Notification = { type, message, nomEmploye, employe };
+  public createNotification(type: string, message: string, nomEmploye: string, employe: Employe, entrepriseId: number) {
+    const newNotification: Notification = { type, message, nomEmploye, employe, entrepriseId };
     console.log('Notification to be sent:', newNotification);
     return this._http.post<Notification>(this.api, newNotification).pipe(
         tap(response => {
@@ -64,7 +64,7 @@ export class NotificationService {
     );
   }
 
-public handelcreate(type: string, message: string){
+public handelcreate(type: string, message: string, entrepriseId: number){
   this.iSemploye = this.isEmploye;
   console.log(this.iSemploye);
   // Vérifiez si l'utilisateur est un employé avant de créer la notification
@@ -78,7 +78,8 @@ public handelcreate(type: string, message: string){
             type,
             message,
             nomEmploye,
-            employe
+            employe,
+            entrepriseId
         ).subscribe({
           next: response => {
             console.log('Notification envoyée avec succès', response);

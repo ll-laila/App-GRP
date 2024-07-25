@@ -13,7 +13,10 @@ public class NotificationDto {
         private String nomEmploye;
         private EmployeDto employe;
 
-        // Getters and Setters
+        private Long entrepriseId;
+
+
+    // Getters and Setters
         public Long getId() {
             return id;
         }
@@ -52,6 +55,14 @@ public class NotificationDto {
 
         public void setEmploye(EmployeDto employe) {
             this.employe = employe;
+        }
+
+        public Long getEntrepriseId() {
+            return entrepriseId;
+        }
+
+        public void setEntrepriseId(Long entrepriseId) {
+            this.entrepriseId = entrepriseId;
         }
     }
 

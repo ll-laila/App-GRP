@@ -32,7 +32,7 @@ public class NotificationServiceImpl implements NotificationService {
         notificationDao.delete(notification);
     }
     @Override
-    public List<Notification> findAll() {
-        return notificationDao.findAll();
+    public List<Notification> findAllByIdErp(Long id) {
+        return notificationDao.findByEntrepriseId(id);
     }
 }
