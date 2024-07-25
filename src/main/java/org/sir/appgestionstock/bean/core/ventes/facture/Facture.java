@@ -61,7 +61,8 @@ public Facture(Long id, String label) {
 this.id = id;
 this.code = label;
 }
-public Long getId() {
+
+    public Long getId() {
 return id;
 }
 public void setId(Long id) {

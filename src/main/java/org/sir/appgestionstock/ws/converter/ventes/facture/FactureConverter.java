@@ -76,7 +76,7 @@ item.setTotalUnites(dto.getTotalUnites());
 item.setRemiseGlobal(dto.getRemiseGlobal());
 item.setSousTotal(dto.getSousTotal());
 item.setTotal(dto.getTotal());
-item.setStatut(dto.getStatut());
+item.setStatut(dto.getStatut());;
 
 item.setPaiement(paiementConverter.toItem(dto.getPaiement()));
 item.setRetourProduit(retourProduitConverter.toItem(dto.getRetourProduit()));
@@ -105,7 +105,6 @@ dto.setRemiseGlobal(item.getRemiseGlobal());
 dto.setSousTotal(item.getSousTotal());
 dto.setTotal(item.getTotal());
 dto.setStatut(item.getStatut());
-
 dto.setPaiement(paiement? paiementConverter.toDto(item.getPaiement()): null);
 dto.setRetourProduit(retourProduit? retourProduitConverter.toDto(item.getRetourProduit()): null);
 dto.setTaxe(taxe? taxeConverter.toDto(item.getTaxe()): null);

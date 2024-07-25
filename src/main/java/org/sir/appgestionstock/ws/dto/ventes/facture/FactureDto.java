@@ -4,6 +4,7 @@ import org.sir.appgestionstock.ws.dto.adresse.AdresseDto;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.ws.dto.parametres.NiveauPrixDto;
 import org.sir.appgestionstock.ws.dto.ventes.PaiementDto;
+import org.sir.appgestionstock.ws.dto.ventes.commande.CommandeDto;
 import org.sir.appgestionstock.ws.dto.ventes.retourproduit.RetourProduitDto;
 import org.sir.appgestionstock.ws.dto.contacts.ClientDto;
 import org.sir.appgestionstock.ws.dto.parametres.DevisesDto;
@@ -178,5 +179,7 @@ return entreprise;
 public void setEntreprise(EntrepriseDto value) {
 this.entreprise = value;
 }
+
+
 
 }

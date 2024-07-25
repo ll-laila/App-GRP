@@ -22,7 +22,7 @@ import {
   ModalToggleDirective, ModalFooterComponent, PopoverDirective, ModalBodyComponent, ModalComponent, ModalHeaderComponent
 } from "@coreui/angular";
 import {FormBuilder, FormsModule} from "@angular/forms";
-import {Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {NgTemplateOutlet} from "@angular/common";
 
@@ -67,6 +67,7 @@ export class PaiementCreateComponent {
   }
 
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
   private service = inject(PaiementService);
   private methodePaiementService = inject(MethodePaiementService);
   private entrepriseService = inject(EntrepriseService);
@@ -97,7 +98,8 @@ export class PaiementCreateComponent {
 
     this.loadMethodePaiementList();
     this.loadEntrepriseList();
-this.totalFacture();
+
+   this.totalFacture();
     // Set the date to today
     this.setDateToToday();
   }
@@ -125,8 +127,17 @@ this.totalFacture();
     });
   }
 
+  calculPrixImpaye(): number {
+    return this.itemF.total- this.item.montantPaye;
+  }
+
   // METHODS
   create() {
+    this.route.queryParams.subscribe(params => {
+      this.item.idFacture = +params['montant'];
+      console.log('Montant reçu:', this.item.idFacture);
+    });
+    this.item.montantRest=this.calculPrixImpaye();
     console.log(this.item);
     if (!this.validator.validate()) return;
     this.sending = true;

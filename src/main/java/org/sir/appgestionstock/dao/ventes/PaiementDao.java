@@ -11,4 +11,6 @@ int deleteByEntrepriseId(Long id);
 List<Paiement> findByEntrepriseId(Long id);
     @Query("SELECT MAX(item.id) FROM Paiement item")
     Long findMaxId();
+
+    Paiement findByIdFacture(Long id);
 }

@@ -9,6 +9,7 @@ import { RetourProduitValidator } from 'src/app/controller/validators/ventes/ret
 import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
 import {Observable} from "rxjs";
+import {PaiementService} from "../paiement.service";
 
 @Injectable({ providedIn: 'root' })
 export class FactureService {
@@ -16,6 +17,7 @@ export class FactureService {
   private _item!: Facture ;
   private _items!: Array<Facture>;
   private _pagination!: Pagination<Facture>
+  protected paiementService!:PaiementService;
 
   private http = inject(HttpClient)
 
@@ -88,7 +90,6 @@ export class FactureService {
   public deleteByTaxeId(id: number){
     return this.http.delete<number>(`${this.api}/taxe/${id}`);
   }
-
   public findByTaxeId(id: number){
     return this.http.get<Array<Facture>>(`${this.api}/taxe/${id}`);
   }

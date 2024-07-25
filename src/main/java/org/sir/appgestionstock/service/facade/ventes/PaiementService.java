@@ -7,8 +7,9 @@ import java.util.List;
 public interface PaiementService {
 
 double getIncome(Long entrepriseId);
+    Paiement findByIdFacture(Long id);
 
-Paiement findById(Long id);
+    Paiement findById(Long id);
 List<Paiement> findAllOptimized();
 List<Paiement> findAll();
 Pagination<Paiement> findPaginated(int page, int size);

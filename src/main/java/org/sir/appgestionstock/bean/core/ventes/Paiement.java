@@ -12,13 +12,34 @@ public class Paiement {
 private Long id;
 private LocalDate datePaiement;
 private double montantPaye;
+private double montantRest;
 @ManyToOne(fetch = FetchType.LAZY)
 private MethodePaiement methodePaiement;
 @ManyToOne(fetch = FetchType.LAZY)
 private Entreprise entreprise;
+
+private Long idFacture;
+
 public Paiement() {
 }
-public Long getId() {
+
+
+    public Long getIdFacture() {
+        return idFacture;
+    }
+    public void setIdFacture(Long id) {
+        this.idFacture = id;
+    }
+
+    public double getMontantRest() {
+        return montantRest;
+    }
+
+    public void setMontantRest(double montantRest) {
+        this.montantRest = montantRest;
+    }
+
+    public Long getId() {
 return id;
 }
 public void setId(Long id) {

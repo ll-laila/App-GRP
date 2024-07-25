@@ -5,6 +5,7 @@ import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Paiement } from 'src/app/controller/entities/ventes/paiement';
 import { PaiementValidator } from 'src/app/controller/validators/ventes/paiement.validator';
 import {CodeResponse} from "../../utils/code/code-response";
+import {Facture} from "../../entities/ventes/facture/facture";
 
 @Injectable({ providedIn: 'root' })
 export class PaiementService {
@@ -14,6 +15,7 @@ export class PaiementService {
   private _pagination!: Pagination<Paiement>
 
   private http = inject(HttpClient)
+    private facture!:Facture;
 
   public keepData: boolean = false
  public returnUrl!: string  ; public toReturn = () => this.returnUrl != undefined
@@ -22,7 +24,6 @@ export class PaiementService {
         return this.http.get<number>(`${this.api}/income/${entrepriseId}`);
     }
 
-
     public findAll() {
     return this.http.get<Array<Paiement>>(this.api);
   }
@@ -30,6 +31,10 @@ export class PaiementService {
   public findById(id: number) {
     return this.http.get<Paiement>(`${this.api}/id/${id}`);
   }
+
+    public findByIdFacture(id: number) {
+        return this.http.get<Paiement>(`${this.api}/idFacture/${id}`);
+    }
 
   public findAllOptimized() {
     return this.http.get<Array<Paiement>>(`${this.api}/optimized`);
@@ -81,6 +86,7 @@ export class PaiementService {
   public findByEntrepriseId(id: number){
     return this.http.get<Array<Paiement>>(`${this.api}/entreprise/${id}`);
   }
+
 
   //------------- getters and setters -----------------------
   public get itemIsNull(): boolean {
