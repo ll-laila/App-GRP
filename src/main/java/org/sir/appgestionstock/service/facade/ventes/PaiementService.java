@@ -10,7 +10,9 @@ double getIncome(Long entrepriseId);
     Paiement findByIdFacture(Long id);
 
     Paiement findById(Long id);
-List<Paiement> findAllOptimized();
+    List<Paiement> getPaiements(Long id);
+
+    List<Paiement> findAllOptimized();
 List<Paiement> findAll();
 Pagination<Paiement> findPaginated(int page, int size);
 Paiement create(Paiement item);

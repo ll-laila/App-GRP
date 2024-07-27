@@ -55,11 +55,11 @@
       <c-nav-item>
         <a cNavLink routerLink="/dashboard" routerLinkActive="active">Tableau de bord</a>
       </c-nav-item>
-      @if (isBonCmdPdfRoute()) {
-        <c-nav-item>
-          <a cNavLink (click)="printReport()">Télécharger le pdf</a>
-        </c-nav-item>
-      }
+<!--      @if (isBonCmdPdfRoute()) {-->
+<!--        <c-nav-item>-->
+<!--          <a cNavLink (click)="printReport()">Télécharger le pdf</a>-->
+<!--        </c-nav-item>-->
+<!--      }-->
     </c-header-nav>
 
 
@@ -72,13 +72,13 @@
         </select>
       </a>
 
-      <button *ngIf="adminRole" type="button" class="icon-button" (click)="notification()">
-        <span class="material-icons">notifications</span>
-        <span *ngIf="totalNotifications > 0" class="icon-button__badge">{{ totalNotifications }}</span>
-      </button>
-
 
     </c-header-nav>
+
+    <c-header-nav class="mx-0">
+      <ng-container *ngTemplateOutlet="notifsDropdown" />
+    </c-header-nav>
+
     <c-header-nav class="ms-auto ms-md-0">
       <div class="nav-item py-1">
         <div class="vr h-100 mx-2 text-body text-opacity-75"></div>
@@ -110,7 +110,7 @@
       <c-avatar
         shape="rounded-1"
         [size]="'md'"
-        [src]="'data:image/png;base64,'+logo"
+        [src]="logo ? 'data:image/png;base64,' + logo : 'assets/images/profile.webp'"
         status="success"
         textColor="primary"
       />
@@ -122,8 +122,8 @@
           Profile
         </a>
       </li>
-      <li>
-        <a cDropdownItem (click)="parametresCompte()">
+      <li *ngIf="adminRole">
+        <a cDropdownItem (click)="parametres_Compte()">
           <svg cIcon class="me-2" name="cil-settings"></svg>
           Paramètres du compte
         </a>
@@ -189,3 +189,19 @@
     </div>
   </c-dropdown>
 </ng-template>
+
+
+
+<!--notifications-->
+<ng-template #notifsDropdown>
+  <c-dropdown [popperOptions]="{ placement: 'bottom-start' }" variant="nav-item">
+    <button *ngIf="adminRole" type="button" (click)="notification()" [caret]="false" cDropdownToggle class="icon-button py-0 pe-0">
+      <span class="material-icons">notifications</span>
+      <span *ngIf="totalNotifications > 0" class="icon-button__badge">{{ totalNotifications }}</span>
+    </button>
+    <div cDropdownMenu class="pt-0 w-auto shadow-lg">
+      <app-notification cDropdownItem ></app-notification>
+    </div>
+  </c-dropdown>
+</ng-template>
+

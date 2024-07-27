@@ -6,6 +6,7 @@ import { Livraison } from 'src/app/controller/entities/inventaire/livraison/livr
 import { LivraisonValidator } from 'src/app/controller/validators/inventaire/livraison/livraison.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
 import {BonCommande} from "../../../entities/inventaire/boncommande/bon-commande";
+import {Facture} from "../../../entities/ventes/facture/facture";
 
 @Injectable({ providedIn: 'root' })
 export class LivraisonService {
@@ -28,7 +29,11 @@ export class LivraisonService {
       return this.http.get<Livraison>(`${this.api}/id/${id}`);
   }
 
-  public findAllOptimized() {
+    public getLivraisons(entrepriseId: number) {
+        return this.http.get<Array<Livraison>>(`${this.api}/livraisonErp/${entrepriseId}`);
+    }
+
+    public findAllOptimized() {
     return this.http.get<Array<Livraison>>(`${this.api}/optimized`);
   }
 

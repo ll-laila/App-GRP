@@ -3,7 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { NiveauStock } from 'src/app/controller/entities/inventaire/niveau-stock';
-import { NiveauStockValidator } from 'src/app/controller/validators/inventaire/niveau-stock.validator';
+import {Paiement} from "../../entities/ventes/paiement";
 
 @Injectable({ providedIn: 'root' })
 export class NiveauStockService {
@@ -24,6 +24,10 @@ export class NiveauStockService {
 
   public findById(id: number) {
     return this.http.get<NiveauStock>(`${this.api}/id/${id}`);
+  }
+
+  public getNiveauStock(id: number) {
+      return this.http.get<Array<NiveauStock>>(`${this.api}/niveauStockErp/${id}`);
   }
 
   public findAllOptimized() {

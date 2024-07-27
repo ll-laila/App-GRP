@@ -323,6 +323,14 @@ devisProduitService::delete
     public Long findMaxId() {
         return dao.findMaxId();
     }
+
+
+
+    @Override
+    public List<Devis> getDevis(Long id){
+        return dao.findByEntrepriseId(id);
+    }
+
 @Transactional(rollbackFor = Exception.class)
 public void deleteAssociated(Devis item) {
 deleteAssociatedList(item);

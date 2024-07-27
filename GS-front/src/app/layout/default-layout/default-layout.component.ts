@@ -23,7 +23,7 @@ import {
 
 import {DefaultFooterComponent, DefaultHeaderComponent} from './';
 import {navItems, navItems2} from './nav';
-import {NgStyle} from "@angular/common";
+import {NgIf, NgStyle} from "@angular/common";
 import {TokenService} from "../../controller/auth/services/token.service";
 
 function isOverflown(element: HTMLElement) {
@@ -60,13 +60,15 @@ function isOverflown(element: HTMLElement) {
     ColComponent,
     RowComponent,
     CardComponent,
-    ColDirective
+    ColDirective,
+    NgIf
   ]
 })
 export class DefaultLayoutComponent {
 
-  private tokenService = inject(TokenService)
-  private router = inject(Router)
+  private tokenService = inject(TokenService);
+  private router = inject(Router);
+  public showName: boolean = true;
 
   public get navItems() {
     const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? navItems :
@@ -82,5 +84,10 @@ export class DefaultLayoutComponent {
     // if ($event.verticalUsed) {
     // console.log('verticalUsed', $event.verticalUsed);
     // }
+  }
+
+
+  getLogo(){
+    this.showName = !this.showName;
   }
 }

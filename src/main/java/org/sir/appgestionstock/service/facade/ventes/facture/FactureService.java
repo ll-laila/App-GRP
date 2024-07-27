@@ -1,4 +1,5 @@
 package org.sir.appgestionstock.service.facade.ventes.facture;
+import org.sir.appgestionstock.bean.core.ventes.commande.Commande;
 import org.sir.appgestionstock.bean.core.ventes.facture.Facture;
 import org.sir.appgestionstock.bean.core.adresse.Adresse;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
@@ -13,6 +14,8 @@ import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface FactureService {
 Facture findById(Long id);
+List<Facture> getFactures(Long entrepriseId);
+
 List<Facture> findAllOptimized();
 List<Facture> findAll();
 Pagination<Facture> findPaginated(int page, int size);

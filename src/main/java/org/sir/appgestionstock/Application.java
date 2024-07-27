@@ -8,6 +8,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import org.springframework.context.annotation.Primary;
 
 @SpringBootApplication
 public class Application {
@@ -22,10 +23,17 @@ public class Application {
     }
 
     @Bean
-    ObjectMapper objectMapper(){
+    @Primary
+    public ObjectMapper objectMapper() {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
         return objectMapper;
+    }
+
+
+    @Bean
+    public JavaTimeModule javaTimeModule() {
+        return new JavaTimeModule();
     }
 }

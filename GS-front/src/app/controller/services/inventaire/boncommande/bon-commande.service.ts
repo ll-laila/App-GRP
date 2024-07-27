@@ -7,6 +7,7 @@ import { BonCommandeValidator } from 'src/app/controller/validators/inventaire/b
 import { LivraisonValidator } from 'src/app/controller/validators/inventaire/livraison/livraison.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
 import {Facture} from "../../../entities/ventes/facture/facture";
+import {NiveauStock} from "../../../entities/inventaire/niveau-stock";
 
 @Injectable({ providedIn: 'root' })
 export class BonCommandeService {
@@ -22,6 +23,10 @@ export class BonCommandeService {
 
     public getCout(entrepriseId: number) {
         return this.http.get<number>(`${this.api}/cout/${entrepriseId}`);
+    }
+
+    public getBonCommandes(entrepriseId: number) {
+        return this.http.get<Array<BonCommande>>(`${this.api}/bonCommandesErp/${entrepriseId}`);
     }
 
     public getNbAchats(entrepriseId: number) {

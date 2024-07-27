@@ -54,33 +54,14 @@ export class FournisseurListComponent {
   }
 
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
-      },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
-    })
-  }
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new Fournisseur()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadFournisseurList();
       },
       error: err => {
         console.log(err)

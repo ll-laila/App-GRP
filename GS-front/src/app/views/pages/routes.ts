@@ -37,7 +37,7 @@ export const routes: Routes = [
     }
   },
   {
-    path: 'parametresCompte',
+    path: 'parametrescompte',
     loadComponent: () => import('./parametres-compte/parametres-compte.component').then(m => m.ParametresCompteComponent),
     data: {
       title: 'Paramètres du compte'

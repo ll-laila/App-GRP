@@ -55,7 +55,6 @@ public class AuthController {
 
     @PostMapping
     public ResponseEntity<JwtResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
-        this.removeExpiredTrials();
         Authentication authentication = authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),

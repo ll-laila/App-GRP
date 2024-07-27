@@ -7,6 +7,7 @@ import { DevisValidator } from 'src/app/controller/validators/ventes/devis/devis
 import { PaiementValidator } from 'src/app/controller/validators/ventes/paiement.validator';
 import { RetourProduitValidator } from 'src/app/controller/validators/ventes/retourproduit/retour-produit.validator';
 import {CodeResponse} from "../../../utils/code/code-response";
+import {Paiement} from "../../../entities/ventes/paiement";
 
 @Injectable({ providedIn: 'root' })
 export class DevisService {
@@ -24,6 +25,10 @@ export class DevisService {
   public findAll() {
     return this.http.get<Array<Devis>>(this.api);
   }
+
+    public getDevis(id: number) {
+        return this.http.get<Array<Devis>>(`${this.api}/devisErp/${id}`);
+    }
 
   public findById(id: number) {
     return this.http.get<Devis>(`${this.api}/id/${id}`);

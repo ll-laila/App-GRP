@@ -1,5 +1,6 @@
 package org.sir.appgestionstock.service.impl.inventaire;
 import org.sir.appgestionstock.bean.core.inventaire.NiveauStock;
+import org.sir.appgestionstock.bean.core.ventes.Paiement;
 import org.sir.appgestionstock.dao.inventaire.NiveauStockDao;
 import org.sir.appgestionstock.service.facade.inventaire.NiveauStockService;
 import org.sir.appgestionstock.bean.core.parametres.Entreprise;
@@ -117,6 +118,11 @@ if (found == null) return 0;
 found.forEach(this::deleteAssociated);
 return dao.deleteByEntrepriseId(id);
 }
+
+    @Override
+    public List<NiveauStock> getNiveauStock(Long id){
+        return dao.findByEntrepriseId(id);
+    }
 
 @Override
 public List<NiveauStock> findByEntrepriseId(Long id){

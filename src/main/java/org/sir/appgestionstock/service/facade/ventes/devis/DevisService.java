@@ -11,6 +11,7 @@ import org.sir.appgestionstock.bean.core.parametres.Taxe;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface DevisService {
+List<Devis> getDevis(Long id);
 Devis findById(Long id);
 List<Devis> findAllOptimized();
 List<Devis> findAll();

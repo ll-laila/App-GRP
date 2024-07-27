@@ -5,6 +5,7 @@ import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Produit } from 'src/app/controller/entities/produit/produit'
 import { CookieService } from 'ngx-cookie-service';
 import {catchError, throwError} from "rxjs";
+import {Client} from "../../entities/contacts/client";
 
 @Injectable({ providedIn: 'root' })
 export class ProduitService {
@@ -31,13 +32,19 @@ export class ProduitService {
     return this.http.get<Array<Produit>>(this.api);
   }
 
-  public findById(id: number) {
+    public getProduits(id: number) {
+        return this.http.get<Array<Produit>>(`${this.api}/produitsErp/${id}`);
+    }
+
+
+    public findById(id: number) {
     return this.http.get<Produit>(`${this.api}/id/${id}`);
   }
 
   public findAllOptimized() {
     return this.http.get<Array<Produit>>(`${this.api}/optimized`);
   }
+
 
 
   public findPaginated(page: number = 0, size: number = 10) {

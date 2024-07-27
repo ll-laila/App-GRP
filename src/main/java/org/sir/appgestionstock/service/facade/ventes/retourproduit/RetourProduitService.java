@@ -7,6 +7,7 @@ import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface RetourProduitService {
 RetourProduit findById(Long id);
+List<RetourProduit> getRetourProduits(Long id);
 List<RetourProduit> findAllOptimized();
 List<RetourProduit> findAll();
 Pagination<RetourProduit> findPaginated(int page, int size);

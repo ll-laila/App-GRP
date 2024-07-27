@@ -12,6 +12,7 @@ import {Livraison} from "src/app/controller/entities/inventaire/livraison/livrai
 import {Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-livraison-list',
@@ -32,42 +33,34 @@ export class LivraisonListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
-
+  public livraisonList!: Livraison[];
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private service = inject(LivraisonService);
   private router = inject(Router);
 
 
   ngOnInit() {
-    this.findAll()
+    this.loadLivraisonList();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadLivraisonList() {
+    this.service.getLivraisons(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.livraisonList = data;
+        console.log("livraison List :",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new Livraison()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadLivraisonList();
       },
       error: err => {
         console.log(err)

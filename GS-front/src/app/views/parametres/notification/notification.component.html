@@ -1,34 +1,42 @@
-<div class="row d-flex justify-content-center mt-30 mb-30">
-    <div class="col-lg-6">
-        <div class="card">
-            <div class="card-body text-center">
-                <h4 class="card-title m-b-0">Notifications</h4>
-            </div>
-            <ul class="list-style-none">
-                <li class="d-flex no-block card-body border-top" *ngIf="viewRemade">
-                    <i class="fa" [ngClass]="'fa-info-circle' + ' w-30px m-t-5 '" ></i>
-                    <div>
-                        <a  class="m-b-0 font-medium p-0" data-abc="true">Période d’essai</a>
-                        <span class="text-muted">Votre période d’essai expirera dans <span style="color:#ef0a34"><strong>{{remade}}</strong></span> jours. Souscrivez à un de nos abonnements.</span>
-                        <a class="m-b-0 font-medium p-0" data-abc="true" style="text-decoration: underline;color:#ef0a34" >Paramètres du compte</a>
-                    </div>
-                </li>
-
-                <li *ngFor="let notification of notifications" class="d-flex no-block card-body border-top">
-                    <i class="fa" [ngClass]="getNotificationIcon(notification.type) + ' w-30px m-t-5'"></i>
-                    <div>
-                        <a  class="m-b-0 font-medium p-0" data-abc="true">{{ notification.type }}</a>
-                        <span class="text-muted">{{ notification.message }}, <span class="font-weight-bold employee-name">{{ notification.nomEmploye }}</span></span>
-                    </div>
-                    <div class="ml-auto">
-                        <div class="text-right">
-                            <button type="button" class="btn btn-light btn-sm rounded mr-2" (click)="delete(notification)">
-                                <i class="fas fa-times"></i>
-                            </button>
+<div class="full-page">
+    <div class="row d-flex justify-content-center">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h4 class="card-title m-b-0">Notifications</h4>
+                </div>
+                <ul class="list-style-none">
+                    <li class="d-flex no-block card-body border-top" *ngIf="viewRemade">
+                        <i class="fa" [ngClass]="'fa-info-circle' + ' w-30px m-t-5'"></i>
+                        <div>
+                            <a class="m-b-0 font-medium p-0" data-abc="true">Période d’essai</a>
+                            <span class="text-muted">
+                            Votre période d’essai expirera dans
+                            <span style="color:#ef0a34"><strong>{{remade}}</strong></span> jours.
+                            <br/>Souscrivez à un de nos abonnements.
+                           </span>
+                            <a class="m-b-0 font-medium p-0" data-abc="true" style="text-decoration: underline;color:#ef0a34" routerLink="parametresCompte"><b>Paramètres du compte</b></a>
                         </div>
-                    </div>
-                </li>
-            </ul>
+                    </li>
+                    <li *ngFor="let notification of notifications" class="d-flex no-block card-body border-top">
+                        <i class="fa" [ngClass]="getNotificationIcon(notification.type) + ' w-30px m-t-5'"></i>
+                        <div>
+                            <a class="m-b-0 font-medium p-0" data-abc="true">{{ notification.type }}</a>
+                            <span class="text-muted">
+                        {{ notification.message }},
+                        <span class="font-weight-bold employee-name" style="text-decoration: underline;color:#673AB7"><a routerLink="detailsEmploye" (click)="goToDetails(notification.employe)"><b>{{ notification.nomEmploye }}</b></a></span>
+                      </span>
+                        </div>
+                        <div class="ml-auto">
+                            <div class="text-right">
+                                <button type="button" class="btn btn-light btn-sm rounded mr-2" (click)="delete(notification)">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

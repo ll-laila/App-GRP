@@ -12,6 +12,7 @@ import java.util.List;
 public interface BonCommandeService {
 double getCout(Long id);
 double getNbrAchats(Long id);
+List<BonCommande> getBonCommandes(Long id);
 BonCommande findById(Long id);
 List<BonCommande> findAllOptimized();
 List<BonCommande> findAll();

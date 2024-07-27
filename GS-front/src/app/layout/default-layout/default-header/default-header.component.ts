@@ -42,6 +42,7 @@ import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-s
 import {NotificationService} from "../../../controller/services/parametres/notification.service";
 import {Employe} from "../../../controller/entities/contacts/user/employe";
 import {EmployeService} from "../../../controller/services/contacts/user/employe.service";
+import {NotificationComponent} from "../../../views/parametres/notification/notification.component";
 
 
 @Component({
@@ -79,7 +80,8 @@ import {EmployeService} from "../../../controller/services/contacts/user/employe
     FormsModule,
     InputGroupComponent,
     NgForOf,
-    NgIf
+    NgIf,
+    NotificationComponent
   ]
 })
 export class DefaultHeaderComponent extends HeaderComponent {
@@ -145,26 +147,22 @@ export class DefaultHeaderComponent extends HeaderComponent {
     this.router.navigate(['/profil']).then();
   }
 
-  parametresCompte() {
+  parametres_Compte() {
     this.router.navigate(['/parametresCompte']).then();
   }
 
   notification(){
     this.totalNotifications = 0;
     this.vu = true;
-    this.router.navigate(["/notification"]).then();
   }
 
-  printReport(): void {
-    window.print();
-  }
 
-  isBonCmdPdfRoute(): boolean {
-    return this.router.url === '/inventaire/boncommande/bon-commande/boncmdpdf'
-        || this.router.url === '/inventaire/livraison/livraison/livraisonpdf'
-        || this.router.url === '/ventes/commande/commande/commandePdf'
-        || this.router.url === '/ventes/facture/facture/facturepdf';
-  }
+  // isBonCmdPdfRoute(): boolean {
+  //   return this.router.url === '/inventaire/boncommande/bon-commande/boncmdpdf'
+  //       || this.router.url === '/inventaire/livraison/livraison/livraisonpdf'
+  //       || this.router.url === '/ventes/commande/commande/commandePdf'
+  //       || this.router.url === '/ventes/facture/facture/facturepdf';
+  // }
 
   getEntreprises() {
     this.entrepriseService.findByAdmin(this.userInfosService.getUsername()).subscribe(res => {
@@ -217,8 +215,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
       this.totalNotifications = 0;
       this.getTotalNotifications(this.entrepriseSelectedService.getEntrepriseSelected());
       console.log("from header : ", this.entrepriseSelectedService.getEntrepriseSelected());
-
-      window.location.reload();
+       window.location.reload();
     } else {
       console.error('Entreprise not found');
     }

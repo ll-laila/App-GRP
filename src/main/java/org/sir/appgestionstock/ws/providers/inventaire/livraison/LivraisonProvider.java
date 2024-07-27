@@ -2,7 +2,9 @@ package org.sir.appgestionstock.ws.providers.inventaire.livraison;
 import org.sir.appgestionstock.bean.core.inventaire.livraison.Livraison;
 import org.sir.appgestionstock.service.facade.inventaire.livraison.LivraisonService;
 import org.sir.appgestionstock.ws.converter.inventaire.livraison.LivraisonConverter;
+import org.sir.appgestionstock.ws.dto.inventaire.boncommande.BonCommandeDto;
 import org.sir.appgestionstock.ws.dto.inventaire.livraison.LivraisonDto;
+import org.sir.appgestionstock.ws.dto.ventes.facture.FactureDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
 import org.sir.appgestionstock.zutils.code.CodeResponse;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
@@ -22,6 +24,14 @@ var result = service.findById(id);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+    @GetMapping("/livraisonErp/{idEntreprise}")
+    public ResponseEntity<List<LivraisonDto>> getFactures(@PathVariable Long idEntreprise) {
+        var result = service.getLivraisons(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping
 public ResponseEntity<List<LivraisonDto>> findAll() {
 var result = service.findAll();

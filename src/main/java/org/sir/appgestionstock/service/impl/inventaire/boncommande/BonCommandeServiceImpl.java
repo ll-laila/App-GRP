@@ -31,7 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.ArrayList;
 @Service
-public class BonCommandeServiceImpl implements BonCommandeService {
+public class  BonCommandeServiceImpl implements BonCommandeService {
 //--------------- FIND -------------------------------------
 public BonCommande findById(Long id) {
 return dao.findById(id).orElse(null);
@@ -352,6 +352,12 @@ public double getCout(Long id){
         List<BonCommande> boncommandes = dao.findByEntreprise(entreprise);
         return boncommandes.size();
 
+    }
+
+    @Override
+    public List<BonCommande> getBonCommandes(Long id){
+        Entreprise entreprise = entrepriseService.findById(id);
+        return dao.findByEntreprise(entreprise);
     }
 
 //----------------------------------------------------------

@@ -162,6 +162,13 @@ export class ClientListComponent {
         this.item = new Client()
         this.currentIndex = -1
         this.deleteModel = false
+          const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? 1 : 0;
+
+          if (newVar == 1) {
+              this.getClientsForAdmin();
+          } else {
+              this.getClientsForEmploye();
+          }
       },
       error: err => {
         console.log(err)

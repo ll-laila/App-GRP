@@ -1,77 +1,106 @@
-<c-row class="mb-2">
-    <c-nav class="hstack gap">
-        <c-nav-item class="p-2 ms-auto">
-            <button cButton color="info" >
-                Actualiser
-            </button>
-        </c-nav-item>
-        <c-nav-item class="p-2">
-            <button cButton color="primary" routerLink="create">Ajouter un nouveau fournisseur</button>
 
-        </c-nav-item>
-    </c-nav>
-</c-row>
 
-<c-row>
-    <c-col xs>
-        <c-card class="mb-4">
-            <c-card-body>
-                <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
-                    <thead class="text-nowrap text-truncate">
+
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<body>
+<!-- Table -->
+<div align="right">
+    <button cButton class="mb-4 btnAddColor"  routerLink="create">Ajouter un nouveau fournisseur</button>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow-lg">
+            <div class="card-header border-0">
+                <h3 class="mb-0">Vos Fournisseurs</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
                     <tr>
-                           <th class="bg-body-tertiary">Nom</th>
-                            <th class="bg-body-tertiary">Code</th>
-                            <th class="bg-body-tertiary">Email</th>
-                            <th class="bg-body-tertiary">Siteweb</th>
-                            <th class="bg-body-tertiary">Téléphone</th>
-                            <th class="bg-body-tertiary">Taxe Numero</th>
-                            <th class="bg-body-tertiary"> Devise</th>
-                            <th class="bg-body-tertiary"> Niveau de fidélité</th>
-                            <th class="bg-body-tertiary"> Entreprise</th>
-                        <th class="bg-body-tertiary" style="display: flex; justify-content: end;">Actions</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Site web</th>
+                        <th scope="col">Téléphone</th>
+                        <th scope="col">Taxe Numero</th>
+<!--                        <th scope="col">Devise</th>-->
+                        <th scope="col">Niveau de prix</th>
+                        <th scope="col">Entreprise</th>
+                        <th scope="col">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     @for (it of fournisseurList; track it; let i = $index) {
                     <tr>
-
-                            <td>{{ it.nom }}</td>
-                            <td>{{ it.code }}</td>
-                            <td>{{ it.email }}</td>
-                            <td>{{ it.siteweb }}</td>
-                            <td>{{ it.telephone }}</td>
-                            <td>{{ it.taxeNumero }}</td>
-
-                            <td>{{ it.devises != null ? it.devises.nouvelleDevise?.labelle: "null" }}</td>
-                            <td>{{ it.niveauPrix != null ? it.niveauPrix.nom: "null" }}</td>
-                            <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
-                        <td style="display: flex; justify-content: end;">
-                            <button cButton color routerLink="update" (click)="item = it">
-                                <svg cIcon name="cil-pen" size="xl" style="color: #61be04"></svg>
-                            </button>
-                            <button cButton color (click)="item = it; currentIndex = i; deleteModel=true">
-                                <svg cIcon name="cil-trash" size="xl"  style="color: #ef0a34"></svg>
-                            </button>
+                        <th scope="row">
+                    {{ it.code }}
+                    </th>
+                    <td>
+                    {{ it.nom }}
+                    </td>
+                    <td>
+                    {{ it.email }}
+                    </td>
+                     <td>
+                    {{ it.siteweb }}
+                    </td>
+                    <td>
+                    {{ it.telephone }}
+                    </td>
+                   <td>{{ it.taxeNumero }}</td>
+<!--                   <td>{{ it.devises != null ? it.devises.nouvelleDevise?.labelle: "null" }}</td>-->
+                   <td>{{ it.niveauPrix != null ? it.niveauPrix.nom: "null" }}</td>
+                   <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
+                    <td>
+                                <button cButton color routerLink="update" (click)="item = it">
+                                  <svg cIcon name="cil-pen" size="xl" style="color: #61be04"></svg>
+                                </button>
+                                <button cButton color (click)="item = it; currentIndex = i; deleteModel=true">
+                                   <svg cIcon name="cil-trash" size="xl" style="color: #ef0a34"></svg>
+                                </button>
                         </td>
                     </tr>
                     }
                     </tbody>
                 </table>
-            </c-card-body>
-        </c-card>
-    </c-col>
-</c-row>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="row align-items-center justify-content-xl-between">
+        <div class="col-xl-6 m-auto text-center">
 
+        </div>
+    </div>
+</footer>
+</body>
 <c-modal [visible]="deleteModel" alignment="center" backdrop="static">
     <c-modal-header>
-      <h5 cModalTitle style="color: black ; font-size: 20px ;font-family: 'Arial Black'">Confirmation de suppression</h5>
+        <h5 cModalTitle style="color: black ; font-size: 20px ;font-family: 'Arial Black'">Confirmation de suppression</h5>
         <button cButtonClose (click)="deleteModel = false"></button>
     </c-modal-header>
-  <c-modal-body style="color: #ef0a34 ;font-size: 18px; " >
-    Êtes-vous sûr de vouloir supprimer ce fournisseur ?
-  </c-modal-body>
+    <c-modal-body style="color: #ef0a34 ;font-size: 18px; " >
+        Êtes-vous sûr de vouloir supprimer ce fournisseur ?
+    </c-modal-body>
     <c-modal-footer>
         <button (click)="deleteModel = false" cButton style="color: black"variant="ghost">Fermer</button>
         <button cButton color="danger" (click)="delete()">Supprimer</button>
     </c-modal-footer>
 </c-modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

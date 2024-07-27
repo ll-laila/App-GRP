@@ -5,6 +5,7 @@ import org.sir.appgestionstock.service.facade.contacts.user.EmployeService;
 import org.sir.appgestionstock.service.facade.parametres.EntrepriseService;
 import org.sir.appgestionstock.service.facade.ventes.facture.FactureService;
 import org.sir.appgestionstock.ws.converter.ventes.facture.FactureConverter;
+import org.sir.appgestionstock.ws.dto.ventes.commande.CommandeDto;
 import org.sir.appgestionstock.ws.dto.ventes.facture.FactureDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
 import org.sir.appgestionstock.zutils.code.CodeResponse;
@@ -37,6 +38,14 @@ public class FactureProvider {
     var resultDto = converter.toDto(result);
     return ResponseEntity.ok(resultDto);
     }
+
+    @GetMapping("/fcaturesErp/{idEntreprise}")
+    public ResponseEntity<List<FactureDto>> getFactures(@PathVariable Long idEntreprise) {
+        var result = service.getFactures(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
     @GetMapping("/optimized")
     public ResponseEntity<List<FactureDto>> findAllOptimized() {
     var result = service.findAllOptimized();

@@ -1,0 +1,74 @@
+<div class="container">
+    <div class="main-body">
+
+
+        <!-- /Breadcrumb -->
+
+        <div class="row gutters-sm">
+            <div class="col-md-4 mb-3">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <div class="d-flex flex-column align-items-center text-center">
+                            <img src="assets/images/profile.webp"
+                                 alt="" class="rounded-circle" width="150">
+                            <div class="mt-3">
+                                <h4>{{employe.prenom}}{{" "}}{{employe.nom}}</h4>
+                                <p class="text-secondary mb-1">{{employe.code}}</p>
+                                <p class="text-muted font-size-sm align-content-center">---</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 ">
+                <div class="card shadow-lg ">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Nom complet</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{employe.prenom}}{{" "}}{{employe.nom}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Email</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{employe.email}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Téléphone</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{employe.telephone}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">Addresse</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{employe.adresse?.address1}}
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <h6 class="mb-0">ville</h6>
+                            </div>
+                            <div class="col-sm-9 text-secondary">
+                                {{employe.adresse?.city}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

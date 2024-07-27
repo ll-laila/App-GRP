@@ -12,8 +12,9 @@ import {RetourProduit} from "src/app/controller/entities/ventes/retourproduit/re
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
-import {FactureService} from "../../../../../controller/services/ventes/facture/facture.service";
-import {Facture} from "../../../../../controller/entities/ventes/facture/facture";
+import {Devis} from "../../../../../controller/entities/ventes/devis/devis";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+
 
 @Component({
   selector: 'app-retour-produit-list',
@@ -34,40 +35,36 @@ export class RetourProduitListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
+  public retourProduitList!:RetourProduit[];
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   private service = inject(RetourProduitService)
 
   ngOnInit() {
-    this.findAll()
+      this.loadretourProduitList();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadretourProduitList() {
+    this.service.getRetourProduits(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.retourProduitList = data;
+        console.log("retour Produit List :",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
+
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new RetourProduit()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadretourProduitList();
       },
       error: err => {
         console.log(err)

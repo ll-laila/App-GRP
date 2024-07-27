@@ -2,6 +2,20 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/boxicons/2.1.0/css/boxicons.min.css" integrity="sha512-pVCM5+SN2+qwj36KonHToF2p1oIvoU3bsqxphdOIWMYmgr4ZqD3t5DjKvvetKhXGc/ZG5REYTT6ltKfExEei/Q==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.3.45/css/materialdesignicons.css" integrity="sha256-NAxhqDvtY0l4xn+YVa6WjAcmd94NNfttjNsDmNatFVc=" crossorigin="anonymous" />
 </head>
+<!---------------------------------------------------------------------->
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
+<div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="viewRemade">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <strong>Votre période d'essai est sur le point de se terminer !</strong> Elle expirera dans <b>{{remade}}</b> jours. Souscrivez à un de nos abonnements. <a class="m-b-0 font-medium p-0" data-abc="true" style="text-decoration: underline;color:#ef0a34" > Paramètres du compte</a>
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+
+
+<!---------------------------------------------------------------------->
 
 <app-widgets-dropdown />
 <!---------------------------------------------------------------------->
@@ -119,14 +133,14 @@
           <c-col md="6" xl="6" xs="12">
             <c-row>
               <c-col xs="6">
-                <div class="border-start border-start-4 border-start-info py-1 px-3 mb-3">
+                <div class="border-start border-start-4 border-start-primary py-1 px-3 mb-3">
                   <div class="text-body-secondary text-truncate small">Nouveaux Clients</div>
                   <div class="fs-5 fw-semibold">{{getNewClients('MONDAY')+getNewClients('TUESDAY')+getNewClients('WEDNESDAY') +
                  getNewClients('THURSDAY')+getNewClients('FRIDAY')+getNewClients('SATURDAY')+getNewClients('SUNDAY')}}</div>
                 </div>
               </c-col>
               <c-col xs="6">
-                <div class="border-start border-start-4 border-start-danger py-1 px-3 mb-3">
+                <div class="border-start border-start-4 border-start-secondary py-1 px-3 mb-3">
                   <div class="text-body-secondary text-truncate small">
                     Clients récurrents
                   </div>
@@ -140,9 +154,8 @@
                 <span class="text-body-secondary small">Lundi</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info"  [value]="getNewClients('MONDAY')" aria-label="Monday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('MONDAY')" aria-label="Monday recurring clients" />-->
-               <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('MONDAY')" aria-label="Monday new clients" />
+               <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -150,9 +163,8 @@
                 <span class="text-body-secondary small">Mardi</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" [value]="getNewClients('TUESDAY')" aria-label="Tuesday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('TUESDAY')" aria-label="Tuesday recurring clients" />-->
-                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('TUESDAY')" aria-label="Tuesday new clients" />
+                <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -160,9 +172,8 @@
                 <span class="text-body-secondary small">Mercredi</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" [value]="getNewClients('WEDNESDAY')" aria-label="Wednesday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('WEDNESDAY')" aria-label="Wednesday recurring clients" />-->
-                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('WEDNESDAY')" aria-label="Wednesday new clients" />
+                <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -170,9 +181,8 @@
                 <span class="text-body-secondary small">Jeudi</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" [value]="getNewClients('THURSDAY')" aria-label="Thursday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('THURSDAY')" aria-label="Thursday recurring clients" />-->
-                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('THURSDAY')" aria-label="Thursday new clients" />
+                <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -180,9 +190,8 @@
                 <span class="text-body-secondary small">Vendredi</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" [value]="getNewClients('FRIDAY')" aria-label="Friday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('FRIDAY')" aria-label="Friday recurring clients" />-->
-                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('FRIDAY')" aria-label="Friday new clients" />
+                <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -190,9 +199,8 @@
                 <span class="text-body-secondary small">Samedi</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" [value]="getNewClients('SATURDAY')" aria-label="Saturday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('SATURDAY')" aria-label="Saturday recurring clients" />-->
-                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('SATURDAY')" aria-label="Saturday new clients" />
+                <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="progress-group mb-4">
@@ -200,20 +208,19 @@
                 <span class="text-body-secondary small">Dimanche</span>
               </div>
               <div class="progress-group-bars">
-                <c-progress thin color="info" [value]="getNewClients('SUNDAY')" aria-label="Sunday new clients" />
-<!--                <c-progress thin color="danger" [value]="getRecurringClients('SUNDAY')" aria-label="Sunday recurring clients" />-->
-                <c-progress thin color="danger" [value]="nbrClients" aria-label="Monday recurring clients" />
+                <c-progress thin color="primary" [animated]="true" variant="striped" [value]="getNewClients('SUNDAY')" aria-label="Sunday new clients" />
+                <c-progress thin color="secondary" [animated]="true" variant="striped" [value]="nbrClients" aria-label="Monday recurring clients" />
               </div>
             </div>
             <div class="legend text-center d-none d-md-block" ngPreserveWhitespaces>
               <small>
                 <sup>
-                  <span class="badge badge-pill badge-sm bg-info">&nbsp;</span>
+                  <span class="badge badge-pill badge-sm bg-primary">&nbsp;</span>
                 </sup>
                 <span>Nouveaux Clients</span>
                 &nbsp;&nbsp;
                 <sup>
-                  <span class="badge badge-pill badge-sm bg-danger">&nbsp;</span>
+                  <span class="badge badge-pill badge-sm bg-secondary">&nbsp;</span>
                 </sup>
                 <span>Clients récurrents</span>
               </small>

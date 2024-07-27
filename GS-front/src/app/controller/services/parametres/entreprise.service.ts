@@ -3,8 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Entreprise } from 'src/app/controller/entities/parametres/entreprise';
-import { EntrepriseValidator } from 'src/app/controller/validators/parametres/entreprise.validator';
-import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.validator';
+
 
 @Injectable({ providedIn: 'root' })
 export class EntrepriseService {

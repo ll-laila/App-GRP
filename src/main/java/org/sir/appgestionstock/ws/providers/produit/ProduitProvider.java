@@ -29,6 +29,14 @@ public class ProduitProvider {
         return ResponseEntity.ok(resultDto);
     }
 
+    @GetMapping("/produitsErp/{idEntreprise}")
+    public ResponseEntity<List<ProduitDto>> getClients(@PathVariable Long idEntreprise) {
+        var result = service.getProduits(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
+
     @GetMapping
     public ResponseEntity<List<ProduitDto>> findAll() {
         var result = service.findAll();
