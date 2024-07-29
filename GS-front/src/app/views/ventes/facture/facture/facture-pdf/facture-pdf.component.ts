@@ -48,25 +48,6 @@ export class FacturePdfComponent {
   imprimerFacture() {
     window.print();
   }
-  visualiserFacture() {
-    const invoiceElement = document.querySelector('.invoice');
-    if (invoiceElement) {
-      const invoiceContent = invoiceElement.outerHTML;
-
-      // Create a blob with the HTML content
-      const blob = new Blob([invoiceContent], { type: 'text/html' });
-
-      // Create a URL for the blob
-      const url = URL.createObjectURL(blob);
-
-      // Sanitize the URL
-      this.invoiceUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
-
-      // Open the modal with the sanitized URL
-      this.modalRef = this.modalService.open(this.invoiceModal, { size: 'lg' });
-    }
-  }
-
 
     effectuerPaiement() {
         this.paiement.returnUrl = this.router.url;

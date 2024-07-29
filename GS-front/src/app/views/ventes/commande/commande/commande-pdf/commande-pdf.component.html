@@ -1,133 +1,222 @@
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>body{margin-top:20px;
-    background-color:#eee;
-  }
+  <title>Facture</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-size: 1em;
+      color: #333;
+      display: flex;
+    }
+    .button-panel {
+      width: 250px; /* Adjust width as needed */
+      background: #f8f9fa;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    .button-panel .btn {
+      margin-bottom: 15px;
+    }
+    .pdf-container {
+      flex: 1;
+      padding: 20px;
+      overflow: auto;
+    }
+    .invoice {
+      background: #fff;
+      padding: 20px;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      min-height: 29.7cm; /* Adjust as needed */
+      width: 100%;
+    }
+    .logo {
+      width: 100px;
+    }
+    .document-type {
+      text-align: right;
+      color: #444;
+      margin-bottom: 20px;
+    }
+    .address-section {
+      margin-bottom: 40px;
+    }
+    .address-section strong {
+      font-size: 1.2em;
+    }
+    .table {
+      margin-bottom: 40px;
+    }
+    .table th {
+      background: #f9f9f9;
+    }
+    .table th, .table td {
+      padding: 15px;
+      text-align: right;
+    }
+    .table th:first-child, .table td:first-child {
+      text-align: left;
+    }
+    .conditions {
+      font-size: 0.9em;
+      color: #666;
+    }
+    .bottom-page {
+      font-size: 0.9em;
+      text-align: right;
+      color: #666;
+      margin-top: 40px;
+    }
+    .date-section {
+      margin-bottom: 20px;
+      text-align: right;
+    }
+    .total-section {
+      margin-top: 20px;
+    }
+    .total-section h4 {
+      margin: 0;
+      font-weight: 600;
+    }
 
-  .card {
-    box-shadow: 0 20px 27px 0 rgb(0 0 0 / 5%);
-  }
-  .card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    word-wrap: break-word;
-    background-color: #fff;
-    background-clip: border-box;
-    border: 0 solid rgba(0,0,0,.125);
-    border-radius: 1rem;
-  }</style>
+    .total-section .total-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border: 1px solid #ddd;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+    }
+
+    .total-section .total-item span {
+      font-weight: bold;
+    }
+
+    .total-section .total-item .total-value {
+      color: #28a745;
+    }
+
+    .table .total-item-paid {
+      color: #28a745;
+      font-weight: bold;
+    }
+
+    .table .total-item-unpaid {
+      color: #dc3545;
+      font-weight: bold;
+    }
+
+    /* Styles pour l'impression */
+    @media print {
+      .button-panel,
+      .footer {
+        display: none !important;
+      }
+
+      .pdf-container {
+        margin: 0;
+        padding: 0;
+      }
+
+      .invoice {
+        box-shadow: none;
+      }
+    }
+  </style>
 </head>
-
 <body>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css" integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous" />
+<!-- Panel de boutons à gauche -->
+<div class="button-panel">
+  <button class="btn btn-secondary" (click)="imprimerFacture()">Imprimer</button>
+</div>
 
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <div class="card">
-        <div class="card-body">
-          <div class="invoice-title">
-            <h4 class="float-end font-size-15">Gestion Commerciale </h4>
-            <div class="mb-4">
-              <h2 class="mb-1 text-muted">Commande </h2>
-            </div>
-            <div class="text-muted">
-              <p class="mb-1">Date:{{ item.dateExperation }} </p>
-
-            </div>
-          </div>
-
-          <hr class="my-4">
-
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="text-muted">
-                <h5 class="font-size-16 mb-3">Enreprise</h5>
-                <h5 class="font-size-15 mb-2">{{ item.entreprise?.nom }}</h5>
-                <p class="mb-1"> {{ item.entreprise?.telephone }}</p>
-                <p class="mb-1"> {{item.entreprise?.siteweb}}</p>
-                <p class="mb-1"> {{item.entreprise?.adresse?.address1}}</p>
-                <p class="mb-1"> {{item.entreprise?.adresse?.pays?.name}}</p>
-                <p class="mb-1">  {{item.entreprise?.adresse?.city}}</p>
-
-              </div>
-            </div>
-            <!-- end col -->
-            <div class="col-sm-6">
-              <div class="text-muted text-sm-end">
-                <div>
-                  <h5 class="font-size-15 mb-1">Facturé à</h5>
-                  <p>{{ item.client?.nom }}</p>
-                  <p> {{ item.client?.telephone }}</p>
-                  <p>{{ item.client?.adresse?.address1 }}</p>
-                  <p>{{ item.client?.adresse?.pays?.name }}</p>
-                  <p> {{ item.client?.adresse?.city }}</p>
-                </div>
-              </div>
-            </div>
-            <!-- end col -->
-          </div>
-          <!-- end row -->
-
-          <div class="py-2">
-            <h5 class="font-size-15">Order Summary</h5>
-
-            <div class="table-responsive">
-              <table class="table align-middle table-nowrap table-centered mb-0">
-                <thead>
-                <tr>
-                  <th style="width: 70px;">#</th>
-                  <th>Produit</th>
-                  <th>Prix</th>
-                  <th>Quantite</th>
-                  <th class="text-end" style="width: 120px;">Total</th>
-                </tr>
-                </thead><!-- end thead -->
-                <tbody>
-                @for (it of item.commandeProduit; track it; let i = $index) {
-
-                <tr>
-                  <th class="bg-body-tertiary">{{it.id}}</th>
-              <th class="bg-body-tertiary">{{it.produit?.nom}}</th>
-              <th class="bg-body-tertiary">{{ it.prix }}</th>
-              <th class="bg-body-tertiary">{{ it.quantite }}</th>
-              <th class="bg-body-tertiary">{{ it.total }}</th>
-            </tr>
-                }
-                <!-- end tr -->
-                <tr>
-                  <th scope="row" colspan="4" class="text-end">Sous Total</th>
-                  <td class="text-end">{{ item.sousTotal }}</td>
-                </tr>
-
-                <tr>
-                  <th scope="row" colspan="4" class="border-0 text-end">
-                    Taxe</th>
-                  <td class="border-0 text-end">{{item.taxe?.tauxImposition}}</td>
-                </tr>
-                <!-- end tr -->
-                <tr>
-                  <th scope="row" colspan="4" class="border-0 text-end">Total</th>
-                  <td class="border-0 text-end"><h4 class="m-0 fw-semibold">{{item.total}}</h4></td>
-                </tr>
-                <!-- end tr -->
-                </tbody><!-- end tbody -->
-              </table><!-- end table -->
-            </div><!-- end table responsive -->
-          </div>
-        </div>
+<!-- Conteneur de la facture -->
+<div class="pdf-container p-3">
+  <div class="invoice">
+    <div class="row">
+      <div class="col-7">
+        <img [src]="'data:image/png;base64,'+logo" style="width: 100px; padding-bottom: 6px;" alt="Logo" />
       </div>
-    </div><!-- end col -->
+      <div class="col-5">
+        <h1 class="document-type display-4">FACTURE</h1>
+      </div>
+    </div>
+    <div class="row address-section">
+      <div class="col-7">
+        <p>
+          <strong>{{ item.entreprise?.nom }}</strong><br />
+          {{ item.entreprise?.adresse?.address1 }}<br />
+          {{ item.entreprise?.adresse?.pays?.name }}
+        </p>
+      </div>
+      <div class="col-5">
+        <p>
+          <strong>{{ item.client?.nom }}</strong><br />
+          {{ item.client?.adresse?.address1 }}<br />
+          {{ item.client?.adresse?.pays?.name }}
+        </p>
+      </div>
+    </div>
+    <div class="date-section">
+      <p>Date d'expédition : <strong>{{ item.dateExpedition | date: 'dd/MM/yyyy' }}</strong></p>
+      <p>Date d'expiration : <strong>{{ item.dateExperation | date: 'dd/MM/yyyy' }}</strong></p>
+    </div>
+    <div class="table-responsive">
+      <table class="table table-bordered">
+        <thead>
+        <tr>
+          <th style="width: 70px;">#</th>
+          <th>Produit</th>
+          <th>Prix</th>
+          <th>Quantité</th>
+          <th>Total</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let it of item.commandeProduit; let i = index">
+          <td>{{ it.id }}</td>
+          <td>{{ it.produit?.nom }}</td>
+          <td>{{ it.prix }}</td>
+          <td>{{ it.quantite }}</td>
+          <td>{{ it.total }}</td>
+        </tr>
+        <tr>
+          <th scope="row" colspan="4">Sous Total</th>
+          <td>{{ item.sousTotal }}</td>
+        </tr>
+        <tr>
+          <th scope="row" colspan="4">Taxe</th>
+          <td>{{ item.taxe?.tauxImposition }}</td>
+        </tr>
+        <tr>
+          <th scope="row" colspan="4">Total</th>
+          <td>{{ item.total }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="conditions">
+      En votre aimable règlement<br />
+      Et avec nos remerciements.<br /><br />
+      Conditions de paiement : paiement à réception de facture.<br />
+      Aucun escompte consenti pour règlement anticipé.<br />
+      Règlement par virement bancaire ou carte bancaire.<br /><br />
+    </div>
+    <div class="bottom-page">
+      {{ item.entreprise?.nom }} SARL - Email {{ item.entreprise?.email }}<br />
+      {{ item.entreprise?.adresse?.address1 }} - {{ item.entreprise?.adresse?.city }} {{ item.entreprise?.telephone }} - {{ item.entreprise?.siteweb }}<br />
+    </div>
   </div>
 </div>
-</body>
 
+</body>
 </html>
