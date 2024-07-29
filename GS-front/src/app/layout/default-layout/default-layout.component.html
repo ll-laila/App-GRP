@@ -1,29 +1,29 @@
 <!--sidebar-->
 <c-sidebar
-  #sidebar1="cSidebar"
-  class="d-print-none sidebar sidebar-fixed border-end"
-  colorScheme="dark"
-  id="sidebar1"
-  visible
+        #sidebar1="cSidebar"
+        class="sideColor d-print-none sidebar sidebar-fixed border-end"
+        colorScheme="dark"
+        id="sidebar1"
+        visible
 >
   <c-sidebar-header class="border-bottom">
     <c-sidebar-brand [routerLink]="[]">
-<!--      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="InventaireXpert"></svg>-->
-<!--      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg>-->
+      <!--      <svg [class]="{icon: false}" cIcon class="sidebar-brand-full" height="32" name="logo" title="InventaireXpert"></svg>-->
+      <!--      <svg cIcon class="sidebar-brand-narrow" height="32" name="signet" title="CoreUI Logo"></svg>-->
       <div class="d-flex align-items-center mb-3 pb-1">
-        <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-        <span class="h1 fw-bold mb-0">erplain</span>
+        <i class="fas fa-cubes fa-2x me-3 " style=" padding-left:10px; color: #ff6219;"></i>
+        <span class="h1 fw-bold mb-0" *ngIf="showName">erplain</span>
       </div>
     </c-sidebar-brand>
   </c-sidebar-header>
 
-  <ng-scrollbar #scrollbar="ngScrollbar" (updated)="onScrollbarUpdate(scrollbar.state)" class="overflow" pointerEventsMethod="scrollbar" visibility="hover">
+  <ng-scrollbar  #scrollbar="ngScrollbar" (updated)="onScrollbarUpdate(scrollbar.state)" class="overflow" pointerEventsMethod="scrollbar" visibility="hover">
     <c-sidebar-nav #overflow [navItems]="navItems" dropdownMode="close" compact />
   </ng-scrollbar>
   @if (!sidebar1.narrow) {
-    <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
-      <button cSidebarToggler></button>
-    </c-sidebar-footer>
+  <c-sidebar-footer cSidebarToggle="sidebar1" class="border-top d-none d-lg-flex" toggle="unfoldable" style="cursor: pointer;">
+    <button cSidebarToggler (click)="getLogo()"></button>
+  </c-sidebar-footer>
   }
 </c-sidebar>
 

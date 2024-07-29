@@ -18,6 +18,7 @@ import {EmployeService} from "../../../../../controller/services/contacts/user/e
 import {TokenService} from "../../../../../controller/auth/services/token.service";
 import {NgIf} from "@angular/common";
 import {ToasterService} from "../../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
 
 
 @Component({
@@ -41,7 +42,7 @@ export class FactureListComponent {
   protected deleteModel = false
   private toasterService = inject(ToasterService);
   private router = inject(Router);
-
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private service = inject(FactureService);
   private serviceEmploye = inject(EmployeService);
   private userInfosService = inject(UserInfosService);
@@ -49,10 +50,11 @@ export class FactureListComponent {
   private employe: Employe = new Employe();
   public isEmploye: boolean = false;
   public a: boolean = false;
+  public facturesList!: Facture[];
 
 
   ngOnInit() {
-    this.findAll();
+    this.loadFacturesList();
     this.getEmployeByUsername(this.userInfosService.getUsername());
   }
 
@@ -85,33 +87,24 @@ export class FactureListComponent {
   }
 
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadFacturesList() {
+    this.service.getFactures(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.facturesList = data;
+        console.log("factures List :",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
 
   public deletefacture(){
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new Facture()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadFacturesList();
       },
       error: err => {
         console.log(err)

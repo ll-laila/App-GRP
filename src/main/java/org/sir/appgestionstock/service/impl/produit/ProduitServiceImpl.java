@@ -350,6 +350,14 @@ public class ProduitServiceImpl implements ProduitService {
     }
 
 
+    @Override
+    public List<Produit> getProduits(Long idEntreprise){
+         return  dao.findByEntrepriseId(idEntreprise);
+
+    }
+
+
+
     //----------------------------------------------------------
     @Autowired
     private ProduitDao dao;

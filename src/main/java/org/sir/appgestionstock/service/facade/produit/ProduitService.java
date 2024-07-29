@@ -17,6 +17,7 @@ import java.util.List;
 public interface ProduitService {
     double getNbProduits(Long idEntreprise);
     Produit findById(Long id);
+    List<Produit> getProduits(Long idEntreprise);
 List<Produit> findAllOptimized();
 List<Produit> findAll();
 Pagination<Produit> findPaginated(int page, int size);

@@ -1,129 +1,73 @@
-<c-row class="mb-2">
-    <c-nav class="hstack gap">
-        <c-nav-item class="p-2 ms-auto">
-            @if (!loading) {
-            <button cButton color="info" (click)="paginate()">
-                @if (paginating) {
-            <c-spinner aria-hidden="true" size="sm"></c-spinner>
-            } @else {
-            <svg cIcon name="cilReload"></svg>
-            }
-            Actualiser
-         </button>
-            } @else {
-            <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="info" disabled style="width: 100px"></button></p>
-            }
-        </c-nav-item>
-        <c-nav-item class="p-2" >
-            @if (!loading) {
-            <button cButton color="primary" (click)="create()">Ajouter une nouvelle facture</button>
-            } @else {
-            <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="primary" disabled style="width: 100px"></button></p>
-            }
-        </c-nav-item>
-    </c-nav>
-</c-row>
-
-<c-row>
-    <c-col xs>
-        @if (loading) {
-        <p cPlaceholderAnimation="glow">
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-        </p>
-        } @else {
-        <c-card class="mb-4">
-            <c-card-body>
-                <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
-                    <thead class="text-nowrap text-truncate">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<body>
+<!-- Table -->
+<div align="right">
+    <button cButton class="mb-4 btnAddColor"  routerLink="create">Ajouter une nouvelle facture</button>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow-lg">
+            <div class="card-header border-0">
+                <h3 class="mb-0">Factures</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
                     <tr>
-
-                      <th class="bg-body-tertiary">Code</th>
-
-
-
-                            <th class="bg-body-tertiary">Total</th>
-                            <th class="bg-body-tertiary"> Taxe</th>
-                            <th class="bg-body-tertiary"> Client</th>
-                            <th class="bg-body-tertiary"> Devises</th>
-                            <th class="bg-body-tertiary"> Entreprise</th>
-                            <th class="bg-body-tertiary"> Statut</th>
-                        <th class="bg-body-tertiary" style="display: flex; justify-content: end;">Actions</th>
+                        <th scope="col">Code</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Taxe</th>
+                        <th scope="col">Client</th>
+                        <th scope="col">Devises</th>
+                        <th scope="col">Entreprise</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    @for (it of pagination.data; track it; let i = $index) {
-        <tr>
-
-            <td>{{ it.code }}</td>
-
-            <td>{{ it.total }}</td>
-            <td>{{ it.taxe != null ? it.taxe.nom: "null" }}</td>
-            <td>{{ it.client != null ? it.client.nom: "null" }}</td>
-            <td>{{ it.devises != null ? it.devises.nouvelleDevise?.labelle: "null" }}</td>
-            <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
-            <td >
-                <button cButton color="secondary">
-                    {{ it.statut}}                        </button>
-            </td>
-            <td style="display: flex; justify-content: end;">
-                <button cButton color  (click)="navigateToPdfCreate()" (click)="item = it">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
-                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
-                    </svg>
-                </button>
-                <button  cButton color (click)=updateFacture(it) >
-                    <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
-                </button>
-                <button  cButton color (click)="item = it; currentIndex = i; deleteModel=true" >
-                    <svg cIcon name="cil-trash" size="xl" style="color: #ef0a34"></svg>
-                </button>
-
-            </td>
-        </tr>
-        }
-        </tbody>
-    </table>
-    <div class="mt-2 hstack gap">
-        <button cButton disabled color="secondary" variant="outline" style="width: fit-content">
-        {{ pagination.data.length }} / {{ pagination.totalElements }}
-        </button>
-        <c-dropdown class="p-2 ms-auto" style="width: fit-content">
-            <button cButton cDropdownToggle color="secondary" variant="outline">
-        {{ pagination.size }}
-        </button>
-        <ul cDropdownMenu>
-            @for(size of paginationSizes; track size) {
-        <li><a cDropdownItem (click)="paginate(0, size)">{{ size }}</a></li>
-        }
-        </ul>
-    </c-dropdown>
-    @if(pagination.totalPages > 1 && pagination.data.length > 0) {
-        <c-pagination class="p-2" align="end" style="width: fit-content">
-            <li cPageItem [disabled]="paginating || pagination.first" (click)="(loading || pagination.first) || paginate(pagination.page - 1)">
-                <a cPageLink>Previous</a>
-            </li>
-            @for(page of generatePageNumbers; track page) {
-            <li cPageItem [disabled]="paginating" [active]="page === pagination.page + 1"  (click)="(page === pagination.page + 1) || paginate(page - 1)">
-                <a cPageLink>{{ page }}</a>
-                        </li>
-            }
-            <li cPageItem [disabled]="paginating || pagination.last" (click)="(loading || pagination.last) || paginate(pagination.page + 1)">
-                <a cPageLink>Next</a>
-            </li>
-        </c-pagination>
-        }
+                    @for (it of facturesList; track it; let i = $index) {
+                    <tr>
+                        <th>{{ it.code }}</th>
+                        <td>{{ it.total }}</td>
+                        <td>{{ it.taxe != null ? it.taxe.nom: "null" }}</td>
+                        <td>{{ it.client != null ? it.client.nom: "null" }}</td>
+                        <td>{{ it.devises != null ? it.devises.nouvelleDevise?.labelle: "null" }}</td>
+                        <td>{{ it.entreprise != null ? it.entreprise.nom: "null" }}</td>
+                        <td >
+                            <button cButton color="secondary">
+                                {{ it.statut}}
+                            </button>
+                        </td>
+                            <td>
+                                 <button cButton color  (click)="navigateToPdfCreate()" (click)="item = it">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-arrow-down-fill" viewBox="0 0 16 16">
+                                        <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-1 4v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 11.293V7.5a.5.5 0 0 1 1 0"/>
+                                    </svg>
+                                </button>
+                                <button  cButton color (click)=updateFacture(it) >
+                                    <svg cIcon name="cil-pen" size="xl"  style="color: #61be04"></svg>
+                                </button>
+                                <button  cButton color (click)="item = it; currentIndex = i; deleteModel=true" >
+                                    <svg cIcon name="cil-trash" size="xl" style="color: #ef0a34"></svg>
+                                </button>
+                           </td>
+                    </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
         </div>
-    </c-card-body>
-</c-card>
-        }
-    </c-col>
-</c-row>
+    </div>
+</div>
+<footer class="footer">
+    <div class="row align-items-center justify-content-xl-between">
+        <div class="col-xl-6 m-auto text-center">
+
+        </div>
+    </div>
+</footer>
+</body>
+
 
 <c-modal [visible]="deleteModel" alignment="center" backdrop="static">
     <c-modal-header>

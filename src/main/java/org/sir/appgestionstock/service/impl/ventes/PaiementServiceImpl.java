@@ -183,6 +183,14 @@ ServiceHelper.nullifyInContainer(item.getId(), factureService::findByPaiementId,
         return sommeTotale;
     }
 
+
+    @Override
+    public List<Paiement> getPaiements(Long id){
+        return dao.findByEntrepriseId(id);
+    }
+
+
+
 //----------------------------------------------------------
 @Autowired private PaiementDao dao;
 @Lazy @Autowired private MethodePaiementService methodePaiementService;

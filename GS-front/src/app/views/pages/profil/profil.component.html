@@ -7,8 +7,9 @@
                         <div class="col-sm-4 bg-c-lite-green user-profile">
                             <div class="card-block text-center text-white">
                                 <div class="m-b-25">
-                                    <img  [src]="'data:image/png;base64,'+logo"
-                                                 class="img-radius" alt="User-Profile-Image">
+                                    <img
+                                       [src]="logo ? 'data:image/png;base64,' + logo : 'assets/images/profile.webp'"
+                                       class="img-radius" alt="User-Profile-Image">
                                 </div>
                                 <h6 class="f-w-600">{{ admin.username }}</h6>
                                 <i class="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>

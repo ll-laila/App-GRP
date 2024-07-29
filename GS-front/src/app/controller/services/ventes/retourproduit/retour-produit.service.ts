@@ -7,6 +7,7 @@ import { RetourProduitValidator } from 'src/app/controller/validators/ventes/ret
 
 import {CodeResponse} from "../../../utils/code/code-response";
 import {Facture} from "../../../entities/ventes/facture/facture";
+import {Devis} from "../../../entities/ventes/devis/devis";
 
 @Injectable({ providedIn: 'root' })
 export class RetourProduitService {
@@ -30,6 +31,9 @@ export class RetourProduitService {
 
   public toReturn = () => this.returnUrl != undefined
 
+  public getRetourProduits(id: number) {
+    return this.http.get<Array<RetourProduit>>(`${this.api}/retourProduitErp/${id}`);
+  }
 
   public findAll() {
     return this.http.get<Array<RetourProduit>>(this.api);

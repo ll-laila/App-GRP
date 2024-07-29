@@ -5,6 +5,7 @@ import org.sir.appgestionstock.zutils.pagination.Pagination;
 import java.util.List;
 public interface NiveauStockService {
 NiveauStock findById(Long id);
+List<NiveauStock> getNiveauStock(Long id);
 List<NiveauStock> findAllOptimized();
 List<NiveauStock> findAll();
 Pagination<NiveauStock> findPaginated(int page, int size);

@@ -3,6 +3,7 @@ import org.sir.appgestionstock.bean.core.inventaire.NiveauStock;
 import org.sir.appgestionstock.service.facade.inventaire.NiveauStockService;
 import org.sir.appgestionstock.ws.converter.inventaire.NiveauStockConverter;
 import org.sir.appgestionstock.ws.dto.inventaire.NiveauStockDto;
+import org.sir.appgestionstock.ws.dto.ventes.PaiementDto;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,14 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+    @GetMapping("/niveauStockErp/{idEntreprise}")
+    public ResponseEntity<List<NiveauStockDto>> getNiveauStock(@PathVariable Long idEntreprise) {
+        var result = service.getNiveauStock(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping("/optimized")
 public ResponseEntity<List<NiveauStockDto>> findAllOptimized() {
 var result = service.findAllOptimized();

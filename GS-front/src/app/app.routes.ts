@@ -63,6 +63,12 @@ export const routes: Routes = [
         path: 'notification',
         loadComponent: () => import('./views/parametres/notification/notification.component').then(m => m.NotificationComponent),
         data: {title: 'notification Page'}
+      },  {
+        path: 'detailsEmploye',
+        loadComponent: () => import('./views/parametres/details-employe/details-employe.component').then(m => m.DetailsEmployeComponent),
+        data: {
+          title: 'Details Employer'
+        }
       }
 
     ]
@@ -90,5 +96,7 @@ export const routes: Routes = [
     loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
     data: {title: 'Register Page'}
   },
+
   { path: '**', redirectTo: 'dashboard' }
+
 ];

@@ -1,4 +1,4 @@
-import { DOCUMENT, NgStyle } from '@angular/common';
+import {DOCUMENT, NgIf, NgStyle} from '@angular/common';
 import { Component, DestroyRef, effect, inject, OnInit, Renderer2, signal, WritableSignal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 //import { ChartData } from 'chart.js';
@@ -40,6 +40,7 @@ import {ProduitService} from "../../controller/services/produit/produit.service"
 import {BonCommandeService} from "../../controller/services/inventaire/boncommande/bon-commande.service";
 import {Produit} from "../../controller/entities/produit/produit";
 import {Router, RouterLink} from "@angular/router";
+import {AppUserService} from "../../controller/auth/services/app-user.service";
 
 
 interface IUser {
@@ -54,7 +55,7 @@ interface IUser {
   templateUrl: 'dashboard.component.html',
   styleUrls: ['dashboard.component.scss'],
   standalone: true,
-  imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent, RouterLink]
+  imports: [WidgetsDropdownComponent, TextColorDirective, CardComponent, CardBodyComponent, RowComponent, ColComponent, ButtonDirective, IconDirective, ReactiveFormsModule, ButtonGroupComponent, FormCheckLabelDirective, ChartjsComponent, NgStyle, CardFooterComponent, GutterDirective, ProgressBarDirective, ProgressComponent, WidgetsBrandComponent, CardHeaderComponent, TableDirective, AvatarComponent, RouterLink, NgIf]
 })
 export class DashboardComponent implements OnInit {
 
@@ -67,6 +68,7 @@ export class DashboardComponent implements OnInit {
   private entrepriseService = inject(EntrepriseService);
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private userInfosService = inject(UserInfosService);
+  private appUserService = inject(AppUserService);
   private tokenService = inject(TokenService);
   private router = inject(Router)
   readonly #destroyRef: DestroyRef = inject(DestroyRef);
@@ -86,9 +88,8 @@ export class DashboardComponent implements OnInit {
   public nbrVentes: number = 0;
   public nbrAchats: number = 0;
   public nbrClients: number = 0;
-  options = {
-    maintainAspectRatio: false
-  };
+  public remade: number = 0;
+  public viewRemade: boolean = false;
 
 
 
@@ -100,12 +101,26 @@ export class DashboardComponent implements OnInit {
 
     if (newVar == 1) {
       this.getClientsForAdmin();
+      this.getDaysRemaining(this.userInfosService.getUsername());
     } else {
       this.getClientsForEmployer();
     }
 
     this.getEmployers();
 
+  }
+
+
+  public getDaysRemaining(username: string){
+    this.appUserService.getDaysRemaining(username).subscribe( res => {
+      this.remade = res;
+      if (this.remade <= 7) {
+        this.viewRemade = true;
+        console.log("remade after still 7 days : ", this.remade);
+      }
+    }, error => {
+      console.log(error);
+    });
   }
 
   /******************************Clients charts*************************************/

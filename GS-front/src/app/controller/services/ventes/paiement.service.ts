@@ -24,6 +24,10 @@ export class PaiementService {
         return this.http.get<number>(`${this.api}/income/${entrepriseId}`);
     }
 
+    public getPaiements(id: number) {
+        return this.http.get<Array<Paiement>>(`${this.api}/paiementsErp/${id}`);
+    }
+
     public findAll() {
     return this.http.get<Array<Paiement>>(this.api);
   }

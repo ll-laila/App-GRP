@@ -2,6 +2,7 @@ package org.sir.appgestionstock.ws.providers.ventes.devis;
 import org.sir.appgestionstock.bean.core.ventes.devis.Devis;
 import org.sir.appgestionstock.service.facade.ventes.devis.DevisService;
 import org.sir.appgestionstock.ws.converter.ventes.devis.DevisConverter;
+import org.sir.appgestionstock.ws.dto.ventes.PaiementDto;
 import org.sir.appgestionstock.ws.dto.ventes.devis.DevisDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
 import org.sir.appgestionstock.zutils.code.CodeResponse;
@@ -22,6 +23,15 @@ var result = service.findById(id);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+
+    @GetMapping("/devisErp/{idEntreprise}")
+    public ResponseEntity<List<DevisDto>> getPaiements(@PathVariable Long idEntreprise) {
+        var result = service.getDevis(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 @GetMapping
 public ResponseEntity<List<DevisDto>> findAll() {
 var result = service.findAll();

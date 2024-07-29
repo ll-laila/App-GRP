@@ -4,6 +4,7 @@ import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.service.facade.inventaire.boncommande.BonCommandeService;
 import org.sir.appgestionstock.ws.converter.inventaire.boncommande.BonCommandeConverter;
 import org.sir.appgestionstock.ws.converter.parametres.EntrepriseConverter;
+import org.sir.appgestionstock.ws.dto.inventaire.NiveauStockDto;
 import org.sir.appgestionstock.ws.dto.inventaire.boncommande.BonCommandeDto;
 import org.sir.appgestionstock.ws.dto.parametres.EntrepriseDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
@@ -40,6 +41,13 @@ return ResponseEntity.ok(resultDto);
     public ResponseEntity<Double> getCout(@PathVariable Long id) {
         double result = service.getCout(id);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/bonCommandesErp/{idEntreprise}")
+    public ResponseEntity<List<BonCommandeDto>> getBonCommandes(@PathVariable Long idEntreprise) {
+        var result = service.getBonCommandes(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
     }
 
     @GetMapping("/achats/{idEntreprise}")

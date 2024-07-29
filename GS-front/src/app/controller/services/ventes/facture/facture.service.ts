@@ -10,6 +10,7 @@ import { AdresseValidator } from 'src/app/controller/validators/adresse/adresse.
 import {CodeResponse} from "../../../utils/code/code-response";
 import {Observable} from "rxjs";
 import {PaiementService} from "../paiement.service";
+import {Commande} from "../../../entities/ventes/commande/commande";
 
 @Injectable({ providedIn: 'root' })
 export class FactureService {
@@ -27,6 +28,10 @@ export class FactureService {
 
   public findAll() {
     return this.http.get<Array<Facture>>(this.api);
+  }
+
+  public getFactures(id: number) {
+    return this.http.get<Array<Facture>>(`${this.api}/fcaturesErp/${id}`);
   }
 
   public findById(id: number) {

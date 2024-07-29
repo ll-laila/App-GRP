@@ -5,7 +5,8 @@ import {CommonModule} from "@angular/common";
 import {EntrepriseSelectedService} from "../../../controller/shared/entreprise-selected.service";
 import {AppUserService} from "../../../controller/auth/services/app-user.service";
 import {UserInfosService} from "../../../controller/shared/user-infos.service";
-import {RouterLink} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
+import {Employe} from "../../../controller/entities/contacts/user/employe";
 
 @Component({
   selector: 'app-notification',
@@ -20,6 +21,7 @@ export class NotificationComponent {
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private appUserService = inject(AppUserService);
   private userInfosService = inject(UserInfosService);
+  readonly router = inject(Router);
   public remade: number = 0;
   public viewRemade: boolean = false;
 
@@ -29,6 +31,7 @@ export class NotificationComponent {
     this.loadNotifications(this.entrepriseSelectedService.getEntrepriseSelected());
     this.getDaysRemaining(this.userInfosService.getUsername());
   }
+
     delete(notification: Notification): void {
         this.notificationService.delete(notification).subscribe(() => {
             this.notifications = this.notifications.filter(n => n.id !== notification.id);
@@ -37,6 +40,7 @@ export class NotificationComponent {
             console.error('Erreur lors de la suppression de la notification:', error);
         });
     }
+
   loadNotifications(id : number) {
     this.notificationService.findAll(id).subscribe(
         (notifications: Notification[]) => {
@@ -95,4 +99,7 @@ export class NotificationComponent {
     }
 
 
+    goToDetails(employe: Employe | undefined): void {
+        this.router.navigate(['/detailsEmploye'], { state: { employe } });
+    }
 }

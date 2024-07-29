@@ -1,9 +1,23 @@
-@import url(http://fonts.googleapis.com/css?family=Calibri:400,300,700);
+@import url('http://fonts.googleapis.com/css?family=Calibri:400,300,700');
 
 body {
   background-color: #D32F2F;
   font-family: 'Calibri', sans-serif !important;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.full-page {
+  height: 100%;
+  width: 100%;
+}
+
+
 
 .mt-30 {
   margin-top: 50px;
@@ -15,24 +29,17 @@ body {
 
 .card {
   position: relative;
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
   flex-direction: column;
   min-width: 0;
   word-wrap: break-word;
   background-color: #fff;
   background-clip: border-box;
-  border: 0px solid transparent;
-  border-radius: 0px;
+  border: 0 solid transparent;
+  border-radius: 0;
 }
 
 .card-body {
-  -webkit-box-flex: 1;
-  -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   padding: 1rem;
 }
@@ -49,7 +56,7 @@ ul.list-style-none li {
 
 ul.list-style-none li a {
   color: #673AB7;
-  padding: 8px 0px;
+  padding: 8px 0;
   display: block;
   text-decoration: none;
 }
@@ -61,4 +68,3 @@ ul.list-style-none li a {
 .w-30px {
   width: 30px;
 }
-

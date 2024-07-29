@@ -38,6 +38,9 @@ export class LoginComponent {
   private router = inject(Router);
   private tokenService = inject(TokenService);
   protected validator = JwtRequestValidator.init(() => this.item);
+  private appUserService = inject(AppUserService);
+  public remade: number = 0;
+
 
   constructor(private userInfosService: UserInfosService) {
   }
@@ -60,15 +63,31 @@ export class LoginComponent {
         this.tokenService.setRole(data.roles)
         this.validator.reset()
         this.item = new JwtRequest()
-        this.router.navigate(["dashboard"]).then()
-        this.loading = false
-        this.toasterService.toast({message: "Welcome to gestion app!", color: "success"})
-      },
+        this.getDaysRemaining(data.username);
+       },
       error: err => {
         console.log(err)
         this.loading = false;
         this.message = true;
       }
     })
+  }
+
+
+  public getDaysRemaining(username: string){
+    this.appUserService.getDaysRemaining(username).subscribe( res => {
+      this.remade = res;
+      if (this.remade == 0) {
+        console.log("remade :", this.remade);
+        this.router.navigate(["parametrescompte"]).then();
+      }else{
+        console.log("remade :", this.remade);
+        this.router.navigate(["dashboard"]).then()
+        this.loading = false
+        this.toasterService.toast({message: "Bienvenue sur l'application de gestion !", color: "success"})
+      }
+    }, error => {
+      console.log(error);
+    });
   }
 }

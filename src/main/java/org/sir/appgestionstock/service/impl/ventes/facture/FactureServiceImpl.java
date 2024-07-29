@@ -453,6 +453,11 @@ public class FactureServiceImpl implements FactureService {
         return dao.findMaxId();
     }
 
+    @Override
+    public List<Facture> getFactures(Long entrepriseId){
+        return dao.findByEntrepriseId(entrepriseId);
+    }
+
     //----------------------------------------------------------
     @Autowired
     private FactureDao dao;

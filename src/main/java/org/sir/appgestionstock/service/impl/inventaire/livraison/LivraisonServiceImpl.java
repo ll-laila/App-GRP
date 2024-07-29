@@ -3,6 +3,7 @@ package org.sir.appgestionstock.service.impl.inventaire.livraison;
 import org.sir.appgestionstock.bean.core.inventaire.boncommande.BonCommande;
 import org.sir.appgestionstock.bean.core.inventaire.livraison.Livraison;
 import org.sir.appgestionstock.bean.core.inventaire.livraison.LivraisonProduit;
+import org.sir.appgestionstock.bean.core.parametres.Entreprise;
 import org.sir.appgestionstock.bean.enums.StatutLivraisonEnum;
 import org.sir.appgestionstock.dao.inventaire.livraison.LivraisonDao;
 import org.sir.appgestionstock.exception.NotFoundException;
@@ -237,6 +238,11 @@ public class LivraisonServiceImpl implements LivraisonService {
 
     public Long findMaxId() {
         return dao.findMaxId();
+    }
+
+    @Override
+    public List<Livraison> getLivraisons(Long id){
+        return dao.findByEntrepriseId(id);
     }
 
     //----------------------------------------------------------

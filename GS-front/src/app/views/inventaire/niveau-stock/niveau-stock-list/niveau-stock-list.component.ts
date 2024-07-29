@@ -14,7 +14,8 @@ import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
 import {ProduitService} from "../../../../controller/services/produit/produit.service";
 import {Produit} from "../../../../controller/entities/produit/produit";
-import {BonCommande} from "../../../../controller/entities/inventaire/boncommande/bon-commande";
+import {RetourProduit} from "../../../../controller/entities/ventes/retourproduit/retour-produit";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-niveau-stock-list',
@@ -37,39 +38,35 @@ export class NiveauStockListComponent {
   protected deleteModel = false
   private  produitList : Produit[] = []
   private service = inject(NiveauStockService)
-private produitService = inject(ProduitService)
+  private produitService = inject(ProduitService)
+  public niveauStockList!:NiveauStock[];
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+
   ngOnInit() {
-    this.produit()
-    this.findAll()
+    this.produit();
+    this.loadretourProduitList();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.produitService.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadretourProduitList() {
+    this.service.getNiveauStock(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.niveauStockList = data;
+        console.log("niveau Stock List :",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new NiveauStock()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadretourProduitList();
       },
       error: err => {
         console.log(err)

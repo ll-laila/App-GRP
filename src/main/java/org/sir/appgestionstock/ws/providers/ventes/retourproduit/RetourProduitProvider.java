@@ -2,6 +2,7 @@ package org.sir.appgestionstock.ws.providers.ventes.retourproduit;
 import org.sir.appgestionstock.bean.core.ventes.retourproduit.RetourProduit;
 import org.sir.appgestionstock.service.facade.ventes.retourproduit.RetourProduitService;
 import org.sir.appgestionstock.ws.converter.ventes.retourproduit.RetourProduitConverter;
+import org.sir.appgestionstock.ws.dto.ventes.PaiementDto;
 import org.sir.appgestionstock.ws.dto.ventes.retourproduit.RetourProduitDto;
 import org.sir.appgestionstock.zutils.code.CodeGenerator;
 import org.sir.appgestionstock.zutils.code.CodeResponse;
@@ -28,6 +29,16 @@ var result = service.findAll();
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+    @GetMapping("/retourProduitErp/{idEntreprise}")
+    public ResponseEntity<List<RetourProduitDto>> getRetourProduits(@PathVariable Long idEntreprise) {
+        var result = service.getRetourProduits(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
+
+
 @GetMapping("/optimized")
 public ResponseEntity<List<RetourProduitDto>> findAllOptimized() {
 var result = service.findAllOptimized();

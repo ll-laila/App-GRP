@@ -161,10 +161,14 @@ return dao.findByClientId(id);
 
     @Override
     public RetourProduit findByFactureId(Long id){
-
-    return dao.findByFactureId(id);
+        return dao.findByFactureId(id);
     }
 
+
+    @Override
+    public List<RetourProduit> getRetourProduits(Long id){
+        return dao.findByEntrepriseId(id);
+    }
 
 
 

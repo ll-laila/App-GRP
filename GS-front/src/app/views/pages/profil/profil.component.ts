@@ -61,9 +61,14 @@ export class ProfilComponent implements OnInit {
   public logo?: string;
 
     ngOnInit() {
-    this.getAdminByUsername(this._userInfosService.getUsername());
-    this.getEntreprises();
-  }
+        this.getAdminByUsername(this._userInfosService.getUsername());
+        this.getEntreprises();
+    }
+
+
+
+
+
   getEntreprises(){
     this.entrepriseService.findByAdmin(this._userInfosService.getUsername()).subscribe(res => {
       console.log("profile entreprises: ",res);
@@ -74,6 +79,9 @@ export class ProfilComponent implements OnInit {
       console.log(error);
     });
   }
+
+
+
   getAdminByUsername(username: string) {
     this._loading = true;
     this._appUserService.findByUsernameWithRoles(username).subscribe({

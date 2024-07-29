@@ -7,6 +7,21 @@ export const routes: Routes = [
     data: {title: 'Parametres'},
     children: [
       {
+        path: 'parametresCompte',
+        loadComponent: () => import('../pages/parametres-compte/parametres-compte.component').then(m => m.ParametresCompteComponent),
+        data: {
+          title: 'Paramètres du compte'
+        }
+      },
+      {
+        path: 'detailsEmploye',
+        loadComponent: () => import('./details-employe/details-employe.component').then(m => m.DetailsEmployeComponent),
+        data: {
+          title: 'Details Employer'
+        }
+      },
+
+      {
         path: '',
         redirectTo: 'alerte',
         pathMatch: 'full'

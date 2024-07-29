@@ -12,6 +12,7 @@ import {Produit} from "src/app/controller/entities/produit/produit";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-produit-list',
@@ -32,40 +33,33 @@ export class ProduitListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
-
+  public produitsList!: Produit[];
   private service = inject(ProduitService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   ngOnInit() {
-    this.findAll()
+    this.loadProduitsList();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadProduitsList() {
+    this.service.getProduits(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.produitsList = data;
+        console.log("produits List :",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new Produit()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadProduitsList();
       },
       error: err => {
         console.log(err)

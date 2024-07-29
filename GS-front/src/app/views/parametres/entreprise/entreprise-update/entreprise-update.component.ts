@@ -37,6 +37,7 @@ export class EntrepriseUpdateComponent {
   protected resetting = false
   protected standAlon = true
 
+
   @Input("getter") set setItemGetter(getter: () => Entreprise) {
     this.itemGetter = getter
     this.standAlon = false
@@ -65,9 +66,11 @@ export class EntrepriseUpdateComponent {
 
   }
 
-  // LOAD DATA
 
   // METHODS
+
+
+
   update() {
     console.log(this.item)
     if (!this.validator.validate()) return;

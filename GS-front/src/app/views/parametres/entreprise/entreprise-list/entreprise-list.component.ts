@@ -1,17 +1,42 @@
 import {Component, inject} from '@angular/core';
 import {
-  ButtonDirective, CardBodyComponent, CardComponent, ColComponent, ColDirective,
-  NavComponent, NavItemComponent, PlaceholderAnimationDirective,
-  RowComponent, SpinnerComponent, TableDirective, PlaceholderDirective,
-  PageItemDirective, PageLinkDirective, PaginationComponent,
-  DropdownComponent, DropdownToggleDirective, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective,
-  ModalComponent, ModalToggleDirective, ModalHeaderComponent, ModalBodyComponent, TooltipDirective, ModalFooterComponent, PopoverDirective, ModalTitleDirective, ButtonCloseDirective,
+  ButtonDirective,
+  CardBodyComponent,
+  CardComponent,
+  ColComponent,
+  ColDirective,
+  NavComponent,
+  NavItemComponent,
+  PlaceholderAnimationDirective,
+  RowComponent,
+  SpinnerComponent,
+  TableDirective,
+  PlaceholderDirective,
+  PageItemDirective,
+  PageLinkDirective,
+  PaginationComponent,
+  DropdownComponent,
+  DropdownToggleDirective,
+  DropdownMenuDirective,
+  DropdownHeaderDirective,
+  DropdownItemDirective,
+  ModalComponent,
+  ModalToggleDirective,
+  ModalHeaderComponent,
+  ModalBodyComponent,
+  TooltipDirective,
+  ModalFooterComponent,
+  PopoverDirective,
+  ModalTitleDirective,
+  ButtonCloseDirective,
+  AvatarComponent,
 } from "@coreui/angular";
 import {EntrepriseService} from "src/app/controller/services/parametres/entreprise.service";
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {UserInfosService} from "../../../../controller/shared/user-infos.service";
 
 @Component({
   selector: 'app-entreprise-list',
@@ -22,7 +47,7 @@ import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pag
     NavItemComponent, SpinnerComponent, PlaceholderAnimationDirective, PlaceholderDirective,
     ColDirective, PageItemDirective, PageLinkDirective, PaginationComponent,
     DropdownComponent, DropdownToggleDirective, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective,
-    ModalComponent, ModalToggleDirective, ModalHeaderComponent, ModalBodyComponent, TooltipDirective, ModalFooterComponent, PopoverDirective, ModalTitleDirective, ButtonCloseDirective,
+    ModalComponent, ModalToggleDirective, ModalHeaderComponent, ModalBodyComponent, TooltipDirective, ModalFooterComponent, PopoverDirective, ModalTitleDirective, ButtonCloseDirective, AvatarComponent,
   ],
   templateUrl: './entreprise-list.Component.html',
   styleUrl: './entreprise-list.Component.scss'
@@ -33,30 +58,23 @@ export class EntrepriseListComponent {
   protected currentIndex: number  = 0
   protected deleteModel = false
 
-  private service = inject(EntrepriseService)
+  public entreprises !: Entreprise[];
+  private service = inject(EntrepriseService);
+  private userInfosService = inject(UserInfosService);
 
   ngOnInit() {
-    this.findAll()
+    this.getEntreprises();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
+  public getEntreprises() {
+    this.service.findByAdmin(this.userInfosService.getUsername()).subscribe((res:Entreprise[]) => {
+      console.log(res);
+      this.entreprises = res;
+    }, error => {
+      console.log(error);
+    });
   }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
-      },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
-    })
-  }
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
@@ -66,6 +84,7 @@ export class EntrepriseListComponent {
         this.item = new Entreprise()
         this.currentIndex = -1
         this.deleteModel = false
+        this.getEntreprises();
       },
       error: err => {
         console.log(err)

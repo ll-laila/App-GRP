@@ -3,6 +3,7 @@ import org.sir.appgestionstock.bean.core.ventes.Paiement;
 import org.sir.appgestionstock.service.facade.ventes.PaiementService;
 import org.sir.appgestionstock.ws.converter.ventes.PaiementConverter;
 import org.sir.appgestionstock.ws.dto.ventes.PaiementDto;
+import org.sir.appgestionstock.ws.dto.ventes.facture.FactureDto;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -40,6 +41,13 @@ return ResponseEntity.ok(resultDto);
     public ResponseEntity<Double> getIncome(@PathVariable Long id) {
         double result = service.getIncome(id);
         return ResponseEntity.ok(result);
+    }
+
+    @GetMapping("/paiementsErp/{idEntreprise}")
+    public ResponseEntity<List<PaiementDto>> getPaiements(@PathVariable Long idEntreprise) {
+        var result = service.getPaiements(idEntreprise);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
     }
 
 @GetMapping("/optimized")

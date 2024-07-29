@@ -13,6 +13,7 @@ import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
 import {Client} from "../../../../controller/entities/contacts/client";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-paiement-list',
@@ -33,40 +34,33 @@ export class PaiementListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
-
+  public paiementList!: Paiement[];
   private service = inject(PaiementService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   ngOnInit() {
-    this.findAll()
+    this.loadPaiementList();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadPaiementList() {
+    this.service.getPaiements(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.paiementList = data;
+        console.log("paiement List :",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new Paiement()
         this.currentIndex = -1
         this.deleteModel = false
+        this.loadPaiementList();
       },
       error: err => {
         console.log(err)

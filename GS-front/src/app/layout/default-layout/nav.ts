@@ -11,6 +11,10 @@ export const navItems: INavData[] = [
     // },
   },
   {
+    title: true,
+    name: 'personnels'
+  },
+  {
     name: 'Contacts',
 
     iconComponent: {name: 'cil-address-book'},
@@ -37,6 +41,10 @@ export const navItems: INavData[] = [
     ],
   },
   {
+    title: true,
+    name: 'Paramètres produits'
+  },
+  {
     name: 'Produits',
     iconComponent: {name: 'cib-codepen'},
     children: [
@@ -46,6 +54,10 @@ export const navItems: INavData[] = [
 
       },
     ],
+  },
+  {
+    title: true,
+    name: 'Operations'
   },
   {
     name: 'Ventes',
@@ -88,6 +100,7 @@ export const navItems: INavData[] = [
       },
     ],
   },
+
   {
     name: 'Inventaire',
     iconComponent: {name: 'cil-truck'},
@@ -111,6 +124,10 @@ export const navItems: INavData[] = [
 
       },
     ],
+  },
+  {
+    title: true,
+    name: "Autres"
   },
   {
     name: 'Paramètres',

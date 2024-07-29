@@ -6,6 +6,8 @@ import {IconSetService} from "@coreui/icons-angular";
 import {iconSubset} from "./icons/icon-subset";
 import {TokenService} from "./controller/auth/services/token.service";
 import {AppToasterComponent} from "./toaster/app-toaster.component";
+import {AppUserService} from "./controller/auth/services/app-user.service";
+import {UserInfosService} from "./controller/shared/user-infos.service";
 
 @Component({
   selector: 'app-root',
@@ -14,9 +16,10 @@ import {AppToasterComponent} from "./toaster/app-toaster.component";
   template: '<router-outlet/><app-toaster/>'
 })
 export class AppComponent {
-  title = 'app-gestion-stock';
+  title = 'app-gestion-entreprise';
 
-  http = inject(HttpClient)
+  http = inject(HttpClient);
+
 
   constructor(
     private router: Router,
@@ -29,6 +32,7 @@ export class AppComponent {
   }
 
   ngOnInit(): void {
+
     if (!this.tokenService.isLoggedIn()) this.router.navigate(["login"]).then()
 
     this.router.events.subscribe((evt) => {
