@@ -25,6 +25,8 @@ import {DefaultFooterComponent, DefaultHeaderComponent} from './';
 import {navItems, navItems2} from './nav';
 import {NgIf, NgStyle} from "@angular/common";
 import {TokenService} from "../../controller/auth/services/token.service";
+import {AppUserService} from "../../controller/auth/services/app-user.service";
+import {UserInfosService} from "../../controller/shared/user-infos.service";
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -67,8 +69,20 @@ function isOverflown(element: HTMLElement) {
 export class DefaultLayoutComponent {
 
   private tokenService = inject(TokenService);
+  private appUserService = inject(AppUserService);
+  private userInfosService = inject(UserInfosService);
+
   private router = inject(Router);
   public showName: boolean = true;
+  public showDash: boolean = true;
+  public remade: number = 0;
+
+
+
+  ngOnInit() {
+    this.getDaysRemaining(this.userInfosService.getUsername());
+  }
+
 
   public get navItems() {
     const newVar = this.tokenService.getRole()?.some(it => it == "ADMIN") ? navItems :
@@ -90,4 +104,19 @@ export class DefaultLayoutComponent {
   getLogo(){
     this.showName = !this.showName;
   }
+
+
+
+  public getDaysRemaining(username: string){
+    this.appUserService.getDaysRemaining(username).subscribe( res => {
+      this.remade = res;
+      if (this.remade <= 0) {
+        this.showDash = false;
+        console.log("dash remade : ", this.remade);
+      }
+    }, error => {
+      console.log(error);
+    });
+  }
+
 }

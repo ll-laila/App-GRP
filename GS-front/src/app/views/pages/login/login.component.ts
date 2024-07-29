@@ -76,10 +76,11 @@ export class LoginComponent {
 
   public getDaysRemaining(username: string){
     this.appUserService.getDaysRemaining(username).subscribe( res => {
-      this.remade = res;
-      if (this.remade == 0) {
+     this.remade = res;
+      if (this.remade <= 0) {
         console.log("remade :", this.remade);
-        this.router.navigate(["parametrescompte"]).then();
+        console.log("opss")
+        this.router.navigate(["parametresCompte"]).then();
       }else{
         console.log("remade :", this.remade);
         this.router.navigate(["dashboard"]).then()
