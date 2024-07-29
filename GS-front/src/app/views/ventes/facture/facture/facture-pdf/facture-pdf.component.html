@@ -105,6 +105,16 @@
             color: #28a745;
         }
 
+        .table .total-item-paid {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .table .total-item-unpaid {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
         /* Styles pour l'impression */
         @media print {
             .button-panel,
@@ -126,7 +136,6 @@
 <body>
 <!-- Panel de boutons à gauche -->
 <div class="button-panel">
-    <button class="btn btn-primary" (click)="visualiserFacture()">Visualiser Facture</button>
     <button class="btn btn-success" (click)="effectuerPaiement()">Effectuer Paiement</button>
     <button class="btn btn-secondary" (click)="imprimerFacture()">Imprimer</button>
 </div>
@@ -136,7 +145,7 @@
     <div class="invoice">
         <div class="row">
             <div class="col-7">
-                <img  [src]="'data:image/png;base64,'+logo" style="width: 100px; padding-bottom: 6px ; " alt="Logo" />
+                <img [src]="'data:image/png;base64,'+logo" style="width: 100px; padding-bottom: 6px;" alt="Logo" />
             </div>
             <div class="col-5">
                 <h1 class="document-type display-4">FACTURE</h1>
@@ -175,8 +184,8 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let it of item.factureProduit; let i = index">
-                    <td>{{it.id}}</td>
-                    <td>{{it.produit?.nom}}</td>
+                    <td>{{ it.id }}</td>
+                    <td>{{ it.produit?.nom }}</td>
                     <td>{{ it.prix }}</td>
                     <td>{{ it.quantite }}</td>
                     <td>{{ it.total }}</td>
@@ -187,24 +196,22 @@
                 </tr>
                 <tr>
                     <th scope="row" colspan="4">Taxe</th>
-                    <td>{{item.taxe?.tauxImposition}}</td>
+                    <td>{{ item.taxe?.tauxImposition }}</td>
                 </tr>
                 <tr>
                     <th scope="row" colspan="4">Total</th>
                     <td>{{ item.total }}</td>
                 </tr>
+                <tr>
+                    <th scope="row" colspan="4">Prix Payé</th>
+                    <td class="total-item-paid">{{ item.paiement?.montantPaye ?? 0.00 }}</td>
+                </tr>
+                <tr>
+                    <th scope="row" colspan="4">Prix Impayé</th>
+                    <td class="total-item-unpaid">{{ item.paiement?.montantRest ?? item.total }}</td>
+                </tr>
                 </tbody>
             </table>
-        </div>
-        <div class="total-section">
-            <div class="total-item">
-                <span>Prix Payé:</span>
-                <span class="total-value">{{ item.paiement?.montantPaye ?? 0.00 | currency }}</span>
-            </div>
-            <div class="total-item">
-                <span>Prix Impayé:</span>
-                <span class="total-value">{{ item.paiement?.montantRest ?? item.total | currency }}</span>
-            </div>
         </div>
         <div class="conditions">
             En votre aimable règlement<br />
@@ -214,23 +221,11 @@
             Règlement par virement bancaire ou carte bancaire.<br /><br />
         </div>
         <div class="bottom-page">
-            {{ item.entreprise?.nom }}  SARL - Email {{ item.entreprise?.email}} <br />
+            {{ item.entreprise?.nom }} SARL - Email {{ item.entreprise?.email }}<br />
             {{ item.entreprise?.adresse?.address1 }} - {{ item.entreprise?.adresse?.city }} {{ item.entreprise?.telephone }} - {{ item.entreprise?.siteweb }}<br />
         </div>
     </div>
 </div>
 
-<!-- Modal pour afficher la facture en plein écran -->
-<ng-template #invoiceModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title">Facture</h4>
-        <button type="button" class="close" (click)="modal.dismiss('Cross click')">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <div class="modal-body">
-        <iframe [src]="invoiceUrl" style="width: 100%; height: 80vh;" frameborder="0"></iframe>
-    </div>
-</ng-template>
 </body>
 </html>
