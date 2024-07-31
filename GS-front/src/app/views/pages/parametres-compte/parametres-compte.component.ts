@@ -61,7 +61,7 @@ export class ParametresCompteComponent implements OnInit {
   public getDaysRemaining(username: string){
     this.appUserService.getDaysRemaining(username).subscribe( res => {
       this.remade = res;
-      if (this.remade == 0) {
+      if (this.remade <= 0) {
         this.viewRemade = true;
       }
     }, error => {
