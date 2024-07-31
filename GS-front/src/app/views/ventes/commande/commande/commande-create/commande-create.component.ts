@@ -332,7 +332,7 @@ export class CommandeCreateComponent {
           this.router.navigate([this.returnUrl]).then()
           return;
         }
-        this.router.navigate(["/ventes/commande/commande/autre"]).then()
+        this.router.navigate(["/ventes/commande/commande/commandePdf"]).then()
         this.toasterService.toast({message: "Une nouvelle commande a été ajouté", color: "success"})
       },
       error: err => {

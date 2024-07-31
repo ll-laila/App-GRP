@@ -202,7 +202,7 @@ export class BonCommandeCreateComponent {
           this.router.navigate([this.returnUrl]).then()
           return;
         }
-        this.router.navigate(["/inventaire/boncommande/bon-commande/boncmdautre"]).then()
+        this.router.navigate(["/inventaire/boncommande/bon-commande/boncmdpdf"]).then()
         this.toasterService.toast({message: "Un nouveau bon de commande a été ajouté", color: "success"})
 
       },
