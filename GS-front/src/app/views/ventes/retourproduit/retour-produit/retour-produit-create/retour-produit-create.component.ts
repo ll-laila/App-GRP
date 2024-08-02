@@ -7,9 +7,9 @@ import {
   FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent, TableDirective
 } from "@coreui/angular";
 import {FormBuilder, FormGroup, FormsModule} from "@angular/forms";
-import {Router, RouterLink} from "@angular/router";
+import {ActivatedRoute, Router, RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
-import {NgTemplateOutlet} from "@angular/common";
+import {CommonModule, NgTemplateOutlet} from "@angular/common";
 
 
 import {RetourProduitService} from "src/app/controller/services/ventes/retourproduit/retour-produit.service";
@@ -39,6 +39,7 @@ import {UserInfosService} from "../../../../../controller/shared/user-infos.serv
 import {TokenService} from "../../../../../controller/auth/services/token.service";
 import {Employe} from "../../../../../controller/entities/contacts/user/employe";
 
+
 @Component({
   selector: 'app-retour-produit-create',
   standalone: true,
@@ -48,12 +49,13 @@ import {Employe} from "../../../../../controller/entities/contacts/user/employe"
     CardBodyComponent, CardHeaderComponent, InputGroupComponent, ButtonDirective,
     RouterLink, NavComponent, NavItemComponent, SpinnerComponent, IconDirective,
     FormCheckComponent, FormCheckLabelDirective, FormCheckInputDirective, FormFeedbackComponent,
-    TableDirective,
+    TableDirective,CommonModule
   ],
   templateUrl: './retour-produit-create.component.html',
   styleUrl: './retour-produit-create.component.scss'
 })
 export class RetourProduitCreateComponent {
+
   protected sending = false
   protected standAlon = true
 
@@ -72,7 +74,6 @@ export class RetourProduitCreateComponent {
   private service = inject(RetourProduitService)
   private clientService = inject(ClientService)
   private employeService = inject(EmployeService);
-
   private entrepriseService = inject(EntrepriseService)
   private formBuilder: FormBuilder= inject(FormBuilder)
   private factureService = inject(FactureService)
@@ -83,18 +84,43 @@ export class RetourProduitCreateComponent {
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
   private userInfosService = inject(UserInfosService);
   private tokenService = inject(TokenService);
-
+  private route = inject(ActivatedRoute);
   protected validator = RetourProduitValidator.init(() => this.item)
-
   protected clientList!: Client[]
   protected entrepriseList!: Entreprise[]
   protected produitList!: Produit[]
   public entreprises!: Entreprise[];
-
+  protected _clientName: string = this.item.client?.nom ?? '';
+  facturee!: Facture ;
+  idFacture!: number;
+  isClient !:boolean;
   ngOnInit() {
+    // Récupération des paramètres de la route
+    this.route.queryParams.subscribe(params => {
+      this.idFacture = +params['idFacture']; // Assurez-vous que le paramètre est bien défini et converti en nombre
+      // Trouver la facture par ID
+      this.factureService.findById(this.idFacture).subscribe({
+        next: (facture: Facture) => {
+          this.facturee = facture;
+          // Récupérer les données du client depuis la facture
+          if (this.facturee && this.facturee.client && this.facturee.factureProduit) {
+            this.item.client = this.facturee.client;
+            if(this.item.client){
+              this.isClient=true;
+            }
+            if(this.item.client.nom){this._clientName = this.item.client?.nom;
+            }else{
+              console.error('Name of Client is undefined or facture is undefined');
+            }
+          } else {
+            console.error('Client is undefined or facture is undefined');
+          }
+        },
+        error: err => console.log(err)
+      });
+    });
+
     this.loadEntreprise();
-
-
     if(this.service.keepData) {
       let clientCreated = this.clientService.createdItemAfterReturn;
       if (clientCreated.created) {
@@ -167,6 +193,10 @@ export class RetourProduitCreateComponent {
   }
   deleteretourProduitProduit(itemRP: RetourProduitProduit): void {
     this.item.retourProduitProduit = this.item.retourProduitProduit?.filter(item => item !== itemRP);
+  }
+
+  deletefactureProduit(itemF: FactureProduit): void {
+    this.facturee.factureProduit=  this.facturee.factureProduit?.filter(facturee => facturee !== itemF);
   }
   public get retourProduitProduit(): RetourProduitProduit[] {
     if (this.item.retourProduitProduit == null)

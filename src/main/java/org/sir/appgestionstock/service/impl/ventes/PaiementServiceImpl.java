@@ -177,11 +177,15 @@ ServiceHelper.nullifyInContainer(item.getId(), factureService::findByPaiementId,
         double sommeTotale = 0;
 
         for (Paiement commande : paiements) {
-            sommeTotale += commande.getMontantPaye();
+            // Vérifie si le montant payé n'est pas égal à "Bon d'achat"
+            if (!"Bon d'achat".equals(commande.getMethodePaiement().getNom())) {
+                sommeTotale += commande.getMontantPaye();
+            }
         }
 
         return sommeTotale;
     }
+
 
 
     @Override
