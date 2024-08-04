@@ -22,4 +22,6 @@ int deleteByNouvelleDeviseId(Long id);
 List<Devises> findByNouvelleDeviseId(Long id);
 int deleteByEntrepriseId(Long id);
 List<Devises> findByEntrepriseId(Long id);
+    List<Devises> findByEntreprise(Long id);
+
 }

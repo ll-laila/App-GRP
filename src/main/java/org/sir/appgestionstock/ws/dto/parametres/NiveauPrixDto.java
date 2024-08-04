@@ -11,6 +11,8 @@ private Long id;
 private String nom;
 private StatutNiveauPrixEnum type;
 private boolean actif;
+    private Long idEntreprise;
+
 private List<ProduitNiveauPrixDto> produitNiveauPrix;
 public Long getId() {
 return id;
@@ -18,6 +20,15 @@ return id;
 public void setId(Long id) {
 this.id = id;
 }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
+
+
 public String getNom() {
 return nom;
 }

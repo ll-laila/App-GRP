@@ -42,5 +42,12 @@ export const routes: Routes = [
     data: {
       title: 'Paramètres du compte'
     }
+  },
+  {
+    path: 'paiement',
+    loadComponent: () => import('./paiement/paiement.component').then(m => m.PaiementComponent),
+    data: {
+      title: 'Paiement'
+    }
   }
 ];

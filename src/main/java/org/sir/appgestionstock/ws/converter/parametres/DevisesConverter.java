@@ -46,6 +46,7 @@ item.setTauxDeChange(dto.getTauxDeChange());
 item.setNouvelleDevise(nouvelleDeviseConverter.toItem(dto.getNouvelleDevise()));
 item.setEntrepriseDevises(entrepriseDevisesConverter.toItem(dto.getEntrepriseDevises()));
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
+item.setIdEntreprise(dto.getIdEntreprise());
 return item;
 }
 protected DevisesDto convertToDto(Devises item) {
@@ -55,6 +56,7 @@ dto.setTauxDeChange(item.getTauxDeChange());
 dto.setNouvelleDevise(nouvelleDevise? nouvelleDeviseConverter.toDto(item.getNouvelleDevise()): null);
 dto.setEntrepriseDevises(entrepriseDevises? entrepriseDevisesConverter.toDto(item.getEntrepriseDevises()): null);
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
+dto.setIdEntreprise(item.getIdEntreprise());
 return dto;
 }
 public void setNouvelleDevise(boolean value) {

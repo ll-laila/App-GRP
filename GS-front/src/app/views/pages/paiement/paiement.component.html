@@ -1,0 +1,84 @@
+<div class="row" *ngIf="pay">
+    <div class="col-left">
+
+        <div class="c-Info">
+            <div class="single_price_plan active wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                <!-- Side Shape-->
+                <div class="side-shape"><img src="https://bootdey.com/img/popular-pricing.png" alt=""></div>
+                <div class="title">
+                    <h3>{{plan.name}}</h3>
+                    <p>{{plan.description}}</p>
+                    <div class="line"></div>
+                </div>
+                <div class="price">
+                    <h4>{{plan.price}}{{" MAD"}}</h4>
+                </div>
+                <div class="description">
+                    <p><i class="lni lni-checkmark-circle"></i>- {{plan.maxEntreprises}}{{" Entreprises"}}</p>
+                    <p><i class="lni lni-checkmark-circle"></i>- Un montant de {{plan.price}} MAD par mois vous sera facturé à compter d'aujourd'hui</p>
+                </div>
+                <div class="button"><a class="btn btn-warning" routerLink="/parametresCompte" >Changer l'abonnement</a></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-right">
+        <div class="container shadow-lg">
+            <div class="pb-5">
+                <h4 class="mb-4">Informations de paiement</h4>
+                <label for="card-number">Numéro de carte</label>
+                <div id="card-number" #cardNumber></div>
+                <div class="row mt-2">
+                    <div class="col">
+                        <label for="card-expiry">Date d'expiration</label>
+                        <div id="card-expiry" #cardExpiry></div>
+                    </div>
+                    <div class="col">
+                        <label for="card-cvc">CVC</label>
+                        <div id="card-cvc" #cardCvc></div>
+                    </div>
+                </div>
+                <div class="error" *ngIf="cardError">{{cardError}}</div>
+                <button class="mt-4" (click)="onClick()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16">
+                        <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1"/>
+                    </svg>
+                    Payer
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div *ngIf="confirm" >
+    <div class="container shadow-lg">
+        <div class="pb-5">
+            <h3 class="mb-4">Confirmation de paiement</h3>
+            <p class="description">Veuillez confirmer que vous souhaitez effectuer le paiement de {{plan.price}} en cliquant sur le bouton ci-dessous.</p>
+            <div align="right">
+                <a type="button" class="btn btn-secondary btn-lg m-2" (click)="annulerPay()">Annuler</a>
+                <a type="button" class="btn btn-lg m-2" style="background-color: #053F7AFF; color:white" (click)="confirmPay()" >
+                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-credit-card-fill" viewBox="0 0 16 16">
+                    <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v1H0zm0 3v5a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7zm3 2h1a1 1 0 0 1 1 1v1a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1v-1a1 1 0 0 1 1-1"/>
+                   </svg>        Confirmer</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div *ngIf="sucess">
+    <div class="container shadow-lg">
+        <div class="pb-5">
+            <div>
+                <h2 class="m-4 cad">Votre paiement est terminée avec succès</h2>
+            </div>
+            <div align="right">
+                <a type="button" class="btn btn-secondary btn-lg m-2" routerLink="/dashboard">Retour accueil</a>
+            </div>
+        </div>
+    </div>
+</div>
+

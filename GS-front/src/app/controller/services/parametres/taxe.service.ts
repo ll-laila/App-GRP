@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { Taxe } from 'src/app/controller/entities/parametres/taxe';
 import { TaxeValidator } from 'src/app/controller/validators/parametres/taxe.validator';
+import {NiveauPrix} from "../../entities/parametres/niveau-prix";
 
 @Injectable({ providedIn: 'root' })
 export class TaxeService {
@@ -63,7 +64,12 @@ export class TaxeService {
   }
 
 
-  //------------- getters and setters -----------------------
+    public findByEntrepriseId(id: number) {
+        return this.http.get<Array<Taxe>>(`${this.api}/Entreprise/id/${id}`);
+    }
+
+
+    //------------- getters and setters -----------------------
   public get itemIsNull(): boolean {
     return this._item == undefined
   }

@@ -3,4 +3,5 @@ export class NouvelleDevise {
 id!: number;
 labelle?: string ;
 entreprise?: Entreprise ;
+idEntreprise?: number;
 }

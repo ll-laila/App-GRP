@@ -2,14 +2,15 @@ package org.sir.appgestionstock.ws.dto.parametres.abonnement;
 
 import org.sir.appgestionstock.bean.core.parametres.abonnement.Plan;
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
+import org.sir.appgestionstock.zsecurity.ws.dto.AppUserDto;
 
 import java.util.Date;
 
 public class SubscriptionDto {
 
     private Long id;
-    private Plan plan;
-    private AppUser user;
+    private PlanDto plan;
+    private AppUserDto user;
     private Date subscriptionDate;
     private Date subscriptionEndDate;
 
@@ -22,19 +23,19 @@ public class SubscriptionDto {
         this.id = id;
     }
 
-    public Plan getPlan() {
+    public PlanDto getPlan() {
         return plan;
     }
 
-    public void setPlan(Plan plan) {
+    public void setPlan(PlanDto plan) {
         this.plan = plan;
     }
 
-    public AppUser getUser() {
+    public AppUserDto getUser() {
         return user;
     }
 
-    public void setUser(AppUser user) {
+    public void setUser(AppUserDto user) {
         this.user = user;
     }
 

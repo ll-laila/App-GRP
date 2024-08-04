@@ -24,6 +24,8 @@ import {AppUserService} from "../../../../controller/auth/services/app-user.serv
 import {AppUser} from "../../../../controller/auth/entities/app-user";
 import {UserInfosService} from "../../../../controller/shared/user-infos.service";
 import { format } from 'path';
+import {SubscriptionService} from "../../../../controller/services/parametres/abonnement/subscription.service";
+import {Subscription} from "../../../../controller/entities/parametres/abonnement/Subscription";
 
 
 @Component({
@@ -46,6 +48,7 @@ export class EntrepriseCreateComponent {
   private toasterService = inject(ToasterService)
   selectedFile!:File;
 
+
   @Input("getter") set setItemGetter(getter: () => Entreprise) {
     this.itemGetter = getter
     this.standAlon = false
@@ -59,6 +62,7 @@ export class EntrepriseCreateComponent {
 
   private router = inject(Router)
   private service = inject(EntrepriseService)
+
 
   protected validator = EntrepriseValidator.init(() => this.item)
     .setAdresse(AdresseValidator.init(() => this.adresse))
@@ -88,12 +92,12 @@ export class EntrepriseCreateComponent {
 
   // METHODS
 
+
+
+
   onFileSelected(event:any){
     this.selectedFile=event.target.files[0];
   }
-
-
-
   create() {
     console.log(this.item)
     this.item.idAdmin = this.admin.id;

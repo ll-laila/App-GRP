@@ -7,4 +7,5 @@ tauxDeChange!: number;
 nouvelleDevise?: NouvelleDevise ;
 entrepriseDevises?: Array<EntrepriseDevises> ;
 entreprise?: Entreprise ;
+idEntreprise?: number;
 }

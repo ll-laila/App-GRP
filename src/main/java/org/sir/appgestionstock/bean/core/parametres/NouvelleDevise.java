@@ -11,6 +11,9 @@ private Long id;
 private String labelle;
 @ManyToOne(fetch = FetchType.LAZY)
 private Entreprise entreprise;
+    private Long idEntreprise;
+
+
 public NouvelleDevise() {
 }
 public Long getId() {
@@ -19,6 +22,14 @@ return id;
 public void setId(Long id) {
 this.id = id;
 }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
+
 public String getLabelle() {
 return labelle;
 }

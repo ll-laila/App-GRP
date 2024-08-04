@@ -17,6 +17,7 @@ import {MethodePaiement} from "src/app/controller/entities/parametres/methode-pa
 import {MethodePaiementValidator} from "src/app/controller/validators/parametres/methode-paiement.validator";
 import {ValidatorResult} from "@bshg/validation";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 @Component({
   selector: 'app-methode-paiement-create',
   standalone: true,
@@ -35,6 +36,7 @@ export class MethodePaiementCreateComponent {
   protected sending = false
   protected standAlon = true
   private toasterService = inject(ToasterService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   @Input("getter") set setItemGetter(getter: () => MethodePaiement) {
     this.itemGetter = getter
@@ -67,7 +69,8 @@ export class MethodePaiementCreateComponent {
     console.log(this.item)
     if (!this.validator.validate()) return;
     this.sending = true;
-    this.service.create().subscribe({
+    this.item.idEntreprise = this.entrepriseSelectedService.getEntrepriseSelected();
+    this.service.create(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
       next: data => {
         this.sending = false
         if (data == null) return

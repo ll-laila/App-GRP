@@ -86,6 +86,15 @@ items.forEach(this::delete);
 public void deleteByIdIn(List<Long> ids) {
 dao.deleteByIdIn(ids);
 }
+
+
+@Override
+public List<MethodePaiement> findByEntreprise(Long id){
+    return dao.findByEntreprise(id);
+}
+
+
+
 //--------------- FIND AND DELETE BYs ----------------------
 //----------------------------------------------------------
 //----------------------------------------------------------

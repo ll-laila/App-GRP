@@ -20,6 +20,7 @@ import {ProduitNiveauPrixService} from "src/app/controller/services/produit/prod
 import {ProduitNiveauPrix} from "src/app/controller/entities/produit/produit-niveau-prix";
 import {StatutNiveauPrixEnum} from "src/app/controller/enums/statut-niveau-prix-enum";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-niveau-prix-create',
@@ -39,6 +40,7 @@ export class NiveauPrixCreateComponent {
   protected sending = false
   protected standAlon = true
   private toasterService = inject(ToasterService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   @Input("getter") set setItemGetter(getter: () => NiveauPrix) {
     this.itemGetter = getter
@@ -71,6 +73,7 @@ export class NiveauPrixCreateComponent {
     console.log(this.item)
     if (!this.validator.validate()) return;
     this.sending = true;
+    this.item.idEntreprise =  this.entrepriseSelectedService.getEntrepriseSelected();
     this.service.create().subscribe({
       next: data => {
         this.sending = false

@@ -107,7 +107,7 @@ return dao.deleteByEntrepriseId(id);
 }
 @Override
 public List<NouvelleDevise> findByEntrepriseId(Long id){
-return dao.findByEntrepriseId(id);
+return dao.findByEntreprise(id);
 }
 //----------------------------------------------------------
 //----------------------------------------------------------

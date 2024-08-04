@@ -88,9 +88,9 @@ export class NotificationComponent {
 
     public getDaysRemaining(username: string){
         this.appUserService.getDaysRemaining(username).subscribe( res => {
-            this.remade = res;
+            this.remade = res.daysRemaining;
             console.log("remade  : ", this.remade);
-            if(this.remade!=0){
+            if(this.remade>0 && !res.haveSub){
                 this.viewRemade = true;
             }
         }, error => {

@@ -246,7 +246,7 @@ export class DefaultHeaderComponent extends HeaderComponent {
 
   public getDaysRemaining(){
     this.appUserService.getDaysRemaining(this.userInfosService.getUsername()).subscribe( res => {
-      if(res!=0){
+      if(res.daysRemaining>0 && !res.haveSub){
         this.totalNotifications = this.totalNotifications + 1;
       }
     }, error => {

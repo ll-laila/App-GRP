@@ -6,4 +6,5 @@ nom?: string ;
 type?: StatutNiveauPrixEnum ;
 actif?: boolean ;
 produitNiveauPrix?: Array<ProduitNiveauPrix> ;
+idEntreprise?: number;
 }

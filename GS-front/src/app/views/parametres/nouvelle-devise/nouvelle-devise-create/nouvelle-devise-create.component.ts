@@ -18,6 +18,7 @@ import {NouvelleDeviseValidator} from "src/app/controller/validators/parametres/
 import {ValidatorResult} from "@bshg/validation";
 import {EntrepriseService} from "src/app/controller/services/parametres/entreprise.service";
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-nouvelle-devise-create',
@@ -51,8 +52,8 @@ export class NouvelleDeviseCreateComponent {
   private router = inject(Router)
   private service = inject(NouvelleDeviseService)
   private entrepriseService = inject(EntrepriseService)
-
   protected validator = NouvelleDeviseValidator.init(() => this.item)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected entrepriseList!: Entreprise[]
 
@@ -72,6 +73,7 @@ export class NouvelleDeviseCreateComponent {
     console.log(this.item)
     if (!this.validator.validate()) return;
     this.sending = true;
+    this.item.idEntreprise =  this.entrepriseSelectedService.getEntrepriseSelected();
     this.service.create().subscribe({
       next: data => {
         this.sending = false

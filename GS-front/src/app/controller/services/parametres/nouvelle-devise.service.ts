@@ -67,7 +67,7 @@ export class NouvelleDeviseService {
   }
 
   public findByEntrepriseId(id: number){
-    return this.http.get<Array<NouvelleDevise>>(`${this.api}/entreprise/${id}`);
+    return this.http.get<Array<NouvelleDevise>>(`${this.api}/entreprise/id/${id}`);
   }
 
   //------------- getters and setters -----------------------

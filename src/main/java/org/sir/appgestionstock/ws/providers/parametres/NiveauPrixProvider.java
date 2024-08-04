@@ -2,6 +2,7 @@ package org.sir.appgestionstock.ws.providers.parametres;
 import org.sir.appgestionstock.bean.core.parametres.NiveauPrix;
 import org.sir.appgestionstock.service.facade.parametres.NiveauPrixService;
 import org.sir.appgestionstock.ws.converter.parametres.NiveauPrixConverter;
+import org.sir.appgestionstock.ws.dto.parametres.MethodePaiementDto;
 import org.sir.appgestionstock.ws.dto.parametres.NiveauPrixDto;
 import org.sir.appgestionstock.zutils.pagination.Pagination;
 import org.springframework.http.ResponseEntity;
@@ -97,4 +98,12 @@ public ResponseEntity<List<Long>> deleteByIdIn(@RequestParam("id") List<Long> id
 service.deleteByIdIn(ids);
 return ResponseEntity.ok(ids);
 }
+
+    @GetMapping("/Entreprise/id/{id}")
+    public ResponseEntity<List<NiveauPrixDto>> findByIdEntreprise(@PathVariable Long id) {
+        var result = service.findNiveauPrixByEntreprise(id);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
 }

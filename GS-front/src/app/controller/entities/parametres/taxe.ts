@@ -3,4 +3,5 @@ id!: number;
 nom?: string ;
 tauxImposition!: number;
 actif?: boolean ;
+idEntreprise?: number;
 }

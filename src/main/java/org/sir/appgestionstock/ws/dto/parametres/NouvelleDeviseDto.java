@@ -8,12 +8,20 @@ public class NouvelleDeviseDto {
 private Long id;
 private String labelle;
 private EntrepriseDto entreprise;
+    private Long idEntreprise;
+
 public Long getId() {
 return id;
 }
 public void setId(Long id) {
 this.id = id;
 }
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
 public String getLabelle() {
 return labelle;
 }

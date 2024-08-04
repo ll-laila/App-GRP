@@ -1,4 +1,5 @@
 package org.sir.appgestionstock.service.impl.parametres;
+import org.sir.appgestionstock.bean.core.parametres.NiveauPrix;
 import org.sir.appgestionstock.bean.core.parametres.Taxe;
 import org.sir.appgestionstock.dao.parametres.TaxeDao;
 import org.sir.appgestionstock.service.facade.parametres.TaxeService;
@@ -86,6 +87,14 @@ items.forEach(this::delete);
 public void deleteByIdIn(List<Long> ids) {
 dao.deleteByIdIn(ids);
 }
+
+
+    @Override
+    public List<Taxe> findNiveauPrixByEntreprise(Long id){
+        return dao.findByEntreprise(id);
+    }
+
+
 //--------------- FIND AND DELETE BYs ----------------------
 //----------------------------------------------------------
 //----------------------------------------------------------

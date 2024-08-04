@@ -1,101 +1,106 @@
 
-    <link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
+<link rel="stylesheet" href="https://cdn.lineicons.com/3.0/lineicons.css">
 
-   <!------------------------------------bavbar------------------------------------------>
+<!------------------------------------bavbar------------------------------------------>
 
-    <nav class="navbar navbar-light bg-light shadow-lg pb-3" *ngIf="viewRemade">
-        <a class="navbar-brand" style="padding-left: 30px;" >
-            <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-            <span class="h1 fw-bold mb-0">erplain</span>
-        </a>
-    </nav>
+<nav class="navbar navbar-light bg-light shadow-lg pb-3" *ngIf="viewRemade">
+    <a class="navbar-brand" style="padding-left: 30px;" >
+        <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+        <span class="h1 fw-bold mb-0">erplain</span>
+    </a>
+</nav>
 
-    <!------------------------------------bavbar------------------------------------------>
+<!------------------------------------bavbar------------------------------------------>
 
-    <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
-        <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
-            <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
-        </symbol>
-    </svg>
-    <div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="viewRemade">
-        <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
-        <strong>Votre période d'essai est terminée !</strong> vous devez souscrire à un de nos abonnements.
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="exclamation-triangle-fill" fill="currentColor" viewBox="0 0 16 16">
+        <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </symbol>
+</svg>
+<div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="msgRemade">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <strong>Votre période d'essai est terminée !</strong> vous devez souscrire à un de nos abonnements.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+<div class="alert alert-warning alert-dismissible fade show" role="alert" *ngIf="msgSub">
+    <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Warning:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+    <strong>Votre abonnement est terminée pour cet mois !</strong> vous devez souscrire à un de nos abonnements.
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
 
-    <section class="price_plan_area section_padding_130_80 pt-4" id="pricing">
-        <div class="container">
-            <div class="row justify-content-center">
-                <div class="col-12 col-sm-8 col-lg-6">
-                    <!-- Section Heading-->
-                    <div class="section-heading text-center wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                        <h3>Plans tarifaires</h3>
-                        <p>Optimisez vos opérations commerciales avec notre application de gestion &amp; tout-en-un pour vente, achat, stockage et livraison.</p>
-                        <div class="line"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center">
-                <!-- Single Price Plan Area-->
-                <div class="col-12 col-sm-8 col-md-6 col-lg-4 c-Info">
-                    <div class="single_price_plan back wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                        <div class="title">
-                            <h3>FIRST</h3>
-                            <p>La version standard</p>
-                            <div class="line"></div>
-                        </div>
-                        <div class="price ">
-                            <h4>$79</h4>
-                        </div>
-                        <div class="description">
-                            <p><i class="lni lni-checkmark-circle"></i>Duration: par mois</p>
-                            <p><i class="lni lni-checkmark-circle"></i>2 Entreprises</p>
-                            <p><i class="lni lni-close"></i>-</p>
-                        </div>
-                        <div class="button"><a class="btn btn-success btn-2" (click)="getPlanFIRST()" >Choisir cet abonnement</a></div>
-                    </div>
-                </div>
-
-                <!-- Single Price Plan Area-->
-                <div class="col-12 col-sm-8 col-md-6 col-lg-4 c-Info">
-                    <div class="single_price_plan active wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                        <!-- Side Shape-->
-                        <div class="side-shape"><img src="https://bootdey.com/img/popular-pricing.png" alt=""></div>
-                        <div class="title"><span>Popular</span>
-                            <h3>PREMIUM</h3>
-                            <p>Choix le plus populaire</p>
-                            <div class="line"></div>
-                        </div>
-                        <div class="price">
-                            <h4>$129.99</h4>
-                        </div>
-                        <div class="description">
-                            <p><i class="lni lni-checkmark-circle"></i>Duration: par mois</p>
-                            <p><i class="lni lni-checkmark-circle"></i>5 Entreprises</p>
-                            <p><i class="lni lni-close"></i>-</p>
-                        </div>
-                        <div class="button"><a class="btn btn-warning" (click)="getPlanPREMIUM()" >Choisir cet abonnement</a></div>
-                    </div>
-                </div>
-
-                <!-- Single Price Plan Area-->
-                <div class="col-12 col-sm-8 col-md-6 col-lg-4 c-Info">
-                    <div class="single_price_plan back wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
-                        <div class="title">
-                            <h3>ELITE</h3>
-                            <p>Possibilités illimitées</p>
-                            <div class="line"></div>
-                        </div>
-                        <div class="price">
-                            <h4>$249.99</h4>
-                        </div>
-                        <div class="description">
-                            <p><i class="lni lni-checkmark-circle"></i>Duration: par mois</p>
-                            <p><i class="lni lni-checkmark-circle"></i>10 Entreprises</p>
-                        </div>
-                        <div class="button"><a class="btn btn-info" (click)="getPlanELITE()" >Choisir cet abonnement</a></div>
-                    </div>
+<section class="price_plan_area section_padding_130_80 pt-4" id="pricing">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-sm-8 col-lg-6">
+                <!-- Section Heading-->
+                <div class="section-heading text-center wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <h3>Plans tarifaires</h3>
+                    <p>Optimisez vos opérations commerciales avec notre application de gestion &amp; tout-en-un pour vente, achat, stockage et livraison.</p>
+                    <div class="line"></div>
                 </div>
             </div>
         </div>
-    </section>
+        <div class="row justify-content-center">
+            <!-- Single Price Plan Area-->
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4 c-Info">
+                <div class="single_price_plan back wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <div class="title">
+                        <h3>{{plans[0].name}}</h3>
+                        <p>La version standard</p>
+                        <div class="line"></div>
+                    </div>
+                    <div class="price ">
+                        <h4>{{plans[0].price}}{{" MAD"}}</h4>
+                    </div>
+                    <div class="description">
+                        <p><i class="lni lni-checkmark-circle"></i>Duration: par mois</p>
+                        <p><i class="lni lni-checkmark-circle"></i>{{plans[0].maxEntreprises}}{{" Entreprises"}}</p>
+                        <p><i class="lni lni-close"></i>-</p>
+                    </div>
+                    <div class="button"><a class="btn btn-success btn-2" (click)="getPlanFIRST(plans[0].id)" >Choisir cet abonnement</a></div>
+                </div>
+            </div>
+
+            <!-- Single Price Plan Area-->
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4 c-Info">
+                <div class="single_price_plan active wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <!-- Side Shape-->
+                    <div class="side-shape"><img src="https://bootdey.com/img/popular-pricing.png" alt=""></div>
+                    <div class="title"><span>Popular</span>
+                        <h3>{{plans[1].name}}</h3>
+                        <p>Choix le plus populaire</p>
+                        <div class="line"></div>
+                    </div>
+                    <div class="price">
+                        <h4>{{plans[1].price}}{{" MAD"}}</h4>
+                    </div>
+                    <div class="description">
+                        <p><i class="lni lni-checkmark-circle"></i>Duration: par mois</p>
+                        <p><i class="lni lni-checkmark-circle"></i>{{plans[1].maxEntreprises}}{{" Entreprises"}}</p>
+                        <p><i class="lni lni-close"></i>-</p>
+                    </div>
+                    <div class="button"><a class="btn btn-warning" (click)="getPlanPREMIUM(plans[1].id)" >Choisir cet abonnement</a></div>
+                </div>
+            </div>
+
+            <!-- Single Price Plan Area-->
+            <div class="col-12 col-sm-8 col-md-6 col-lg-4 c-Info">
+                <div class="single_price_plan back wow fadeInUp" data-wow-delay="0.2s" style="visibility: visible; animation-delay: 0.2s; animation-name: fadeInUp;">
+                    <div class="title">
+                        <h3>{{plans[2].name}}</h3>
+                        <p>Possibilités illimitées</p>
+                        <div class="line"></div>
+                    </div>
+                    <div class="price">
+                        <h4>{{plans[2].price}}{{" MAD"}}</h4>
+                    </div>
+                    <div class="description">
+                        <p><i class="lni lni-checkmark-circle"></i>Duration: par mois</p>
+                        <p><i class="lni lni-checkmark-circle"></i>{{plans[2].maxEntreprises}}{{" Entreprises"}}</p>
+                    </div>
+                    <div class="button"><a class="btn btn-info" (click)="getPlanELITE(plans[2].id)" >Choisir cet abonnement</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

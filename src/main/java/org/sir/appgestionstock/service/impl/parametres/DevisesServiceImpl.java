@@ -150,6 +150,12 @@ return dao.deleteByEntrepriseId(id);
 public List<Devises> findByEntrepriseId(Long id){
 return dao.findByEntrepriseId(id);
 }
+
+    @Override
+    public List<Devises> findByEntreprise(Long id){
+        return dao.findByEntreprise(id);
+    }
+
 //----------------------------------------------------------
 public void createAssociatedList(Devises item) {
 if (item == null || item.getId() == null) return;

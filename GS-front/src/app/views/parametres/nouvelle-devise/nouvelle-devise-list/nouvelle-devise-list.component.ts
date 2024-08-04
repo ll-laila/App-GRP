@@ -12,6 +12,8 @@ import {NouvelleDevise} from "src/app/controller/entities/parametres/nouvelle-de
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
+import {Devises} from "../../../../controller/entities/parametres/devises";
 
 @Component({
   selector: 'app-nouvelle-devise-list',
@@ -32,37 +34,31 @@ export class NouvelleDeviseListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
+  public nouvelleDeviseList!:NouvelleDevise[];
 
   private service = inject(NouvelleDeviseService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+
 
   ngOnInit() {
-    this.findAll()
+    this.loadNouvelleDeviseList()
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadNouvelleDeviseList() {
+    this.service.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.nouvelleDeviseList = data;
+        console.log("nouvelleDevise List:",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
+
 
   delete() {
     this.service.deleteById(this.item.id).subscribe({
       next: value => {
-        this.pagination.data.splice(this.currentIndex as number, 1)
-        this.pagination.totalElements--
         this.item = new NouvelleDevise()
         this.currentIndex = -1
         this.deleteModel = false

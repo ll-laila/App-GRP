@@ -41,6 +41,7 @@ import {BonCommandeService} from "../../controller/services/inventaire/boncomman
 import {Produit} from "../../controller/entities/produit/produit";
 import {Router, RouterLink} from "@angular/router";
 import {AppUserService} from "../../controller/auth/services/app-user.service";
+import {SubResponse} from "../../controller/entities/parametres/abonnement/SubResponse";
 
 
 interface IUser {
@@ -90,6 +91,7 @@ export class DashboardComponent implements OnInit {
   public nbrClients: number = 0;
   public remade: number = 0;
   public viewRemade: boolean = false;
+  public subResponse!:SubResponse;
 
 
 
@@ -113,8 +115,9 @@ export class DashboardComponent implements OnInit {
 
   public getDaysRemaining(username: string){
     this.appUserService.getDaysRemaining(username).subscribe( res => {
-      this.remade = res;
-      if (this.remade <= 7) {
+      this.subResponse = res;
+      this.remade = res.daysRemaining;
+      if (this.remade  > 0 && this.remade  <= 7) {
         this.viewRemade = true;
         console.log("remade after still 7 days : ", this.remade);
       }

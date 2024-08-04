@@ -42,6 +42,7 @@ item.setNom(dto.getNom());
 item.setType(dto.getType());
 item.setActif(dto.isActif());
 item.setProduitNiveauPrix(produitNiveauPrixConverter.toItem(dto.getProduitNiveauPrix()));
+item.setIdEntreprise(dto.getIdEntreprise());
 return item;
 }
 protected NiveauPrixDto convertToDto(NiveauPrix item) {
@@ -51,6 +52,7 @@ dto.setNom(item.getNom());
 dto.setType(item.getType());
 dto.setActif(item.isActif());
 dto.setProduitNiveauPrix(produitNiveauPrix? produitNiveauPrixConverter.toDto(item.getProduitNiveauPrix()): null);
+dto.setIdEntreprise(item.getIdEntreprise());
 return dto;
 }
 public void setProduitNiveauPrix(boolean value) {

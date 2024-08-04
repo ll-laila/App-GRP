@@ -119,4 +119,12 @@ var result = service.findByEntrepriseId(id);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
 }
+
+
+    @GetMapping("/entreprise/{id}")
+    public ResponseEntity<List<DevisesDto>> findByEntreprise(@PathVariable Long id){
+        var result = service.findByEntreprise(id);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
 }

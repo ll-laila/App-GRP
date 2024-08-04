@@ -4,6 +4,7 @@ import { environment } from 'src/environments/environment';
 import {Pagination} from "src/app/controller/utils/pagination/pagination";
 import { NiveauPrix } from 'src/app/controller/entities/parametres/niveau-prix';
 import { NiveauPrixValidator } from 'src/app/controller/validators/parametres/niveau-prix.validator';
+import {MethodePaiement} from "../../entities/parametres/methode-paiement";
 
 @Injectable({ providedIn: 'root' })
 export class NiveauPrixService {
@@ -61,6 +62,10 @@ export class NiveauPrixService {
   public deleteById(id: number) {
     return this.http.delete<number>(`${this.api}/id/${id}`);
   }
+
+    public findByEntrepriseId(id: number) {
+        return this.http.get<Array<NiveauPrix>>(`${this.api}/Entreprise/id/${id}`);
+    }
 
 
   //------------- getters and setters -----------------------

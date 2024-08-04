@@ -59,6 +59,15 @@ export const routes: Routes = [
         loadComponent: () => import('./views/pages/parametres-compte/parametres-compte.component').then(m => m.ParametresCompteComponent),
         data: {title: 'Paramètres du compte'}
       },
+
+      {
+        path: 'paiement',
+        loadComponent: () => import('./views/pages/paiement/paiement.component').then(m => m.PaiementComponent),
+        data: {
+          title: 'Paiement'
+        }
+      },
+
       {
         path: 'notification',
         loadComponent: () => import('./views/parametres/notification/notification.component').then(m => m.NotificationComponent),

@@ -18,11 +18,10 @@ import {DevisesValidator} from "src/app/controller/validators/parametres/devises
 import {ValidatorResult} from "@bshg/validation";
 import {NouvelleDeviseService} from "src/app/controller/services/parametres/nouvelle-devise.service";
 import {NouvelleDevise} from "src/app/controller/entities/parametres/nouvelle-devise";
-import {EntrepriseDevisesService} from "src/app/controller/services/parametres/entreprise-devises.service";
-import {EntrepriseDevises} from "src/app/controller/entities/parametres/entreprise-devises";
 import {EntrepriseService} from "src/app/controller/services/parametres/entreprise.service";
 import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-devises-create',
@@ -58,6 +57,7 @@ export class DevisesCreateComponent {
   private nouvelleDeviseService = inject(NouvelleDeviseService)
   private entrepriseService = inject(EntrepriseService)
   private toasterService = inject(ToasterService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = DevisesValidator.init(() => this.item)
 
@@ -98,6 +98,7 @@ export class DevisesCreateComponent {
     console.log(this.item)
     if (!this.validator.validate()) return;
     this.sending = true;
+    this.item.idEntreprise = this.entrepriseSelectedService.getEntrepriseSelected();
     this.service.create().subscribe({
       next: data => {
         this.sending = false

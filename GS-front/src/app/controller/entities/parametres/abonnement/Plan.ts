@@ -4,4 +4,5 @@ export class Plan {
     name?: string ;
     price?: number ;
     maxEntreprises?: number ;
+    description?: string;
 }

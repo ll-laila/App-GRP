@@ -12,6 +12,8 @@ import {Taxe} from "src/app/controller/entities/parametres/taxe";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {NouvelleDevise} from "../../../../controller/entities/parametres/nouvelle-devise";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-taxe-list',
@@ -32,29 +34,22 @@ export class TaxeListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
+  public taxeList!:Taxe[];
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   private service = inject(TaxeService)
 
   ngOnInit() {
-    this.findAll()
+    this.loadTaxeList();
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadTaxeList() {
+    this.service.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.taxeList = data;
+        console.log("taxe List:",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
 

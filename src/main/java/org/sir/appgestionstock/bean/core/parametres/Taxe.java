@@ -11,6 +11,9 @@ private Long id;
 private String nom;
 private double tauxImposition;
 private boolean actif;
+
+    private Long idEntreprise;
+
 public Taxe() {
 }
 public Long getId() {
@@ -19,6 +22,14 @@ return id;
 public void setId(Long id) {
 this.id = id;
 }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
+
 public String getNom() {
 return nom;
 }

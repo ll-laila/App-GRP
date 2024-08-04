@@ -17,6 +17,7 @@ import {Taxe} from "src/app/controller/entities/parametres/taxe";
 import {TaxeValidator} from "src/app/controller/validators/parametres/taxe.validator";
 import {ValidatorResult} from "@bshg/validation";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 @Component({
   selector: 'app-taxe-create',
   standalone: true,
@@ -34,6 +35,7 @@ import {ToasterService} from "../../../../toaster/controller/toaster.service";
 export class TaxeCreateComponent {
   protected sending = false
   protected standAlon = true
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   @Input("getter") set setItemGetter(getter: () => Taxe) {
     this.itemGetter = getter
@@ -67,6 +69,7 @@ export class TaxeCreateComponent {
     console.log(this.item)
     if (!this.validator.validate()) return;
     this.sending = true;
+    this.item.idEntreprise = this.entrepriseSelectedService.getEntrepriseSelected();
     this.service.create().subscribe({
       next: data => {
         this.sending = false

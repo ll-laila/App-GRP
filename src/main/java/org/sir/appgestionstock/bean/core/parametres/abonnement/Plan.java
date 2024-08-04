@@ -2,11 +2,13 @@ package org.sir.appgestionstock.bean.core.parametres.abonnement;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
 
-import java.math.BigDecimal;
 
+@Getter
 @Entity
 @Table(name="plan")
+
 public class Plan {
 
     @Id
@@ -15,40 +17,27 @@ public class Plan {
     private String name;
     private double price;
     private int maxEntreprises;
+    private String description;
 
-
-
-    // Getters et Setters
-    public Long getId() {
-        return id;
-    }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
     public void setPrice(double price) {
         this.price = price;
     }
 
-    public int getMaxEntreprises() {
-        return maxEntreprises;
-    }
-
     public void setMaxEntreprises(int maxEntreprises) {
         this.maxEntreprises = maxEntreprises;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
 }

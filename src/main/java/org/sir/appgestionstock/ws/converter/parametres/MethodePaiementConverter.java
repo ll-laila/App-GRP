@@ -37,6 +37,7 @@ item.setId(dto.getId());
 item.setNom(dto.getNom());
 item.setDisponiblePos(dto.isDisponiblePos());
 item.setActif(dto.isActif());
+item.setIdEntreprise(item.getIdEntreprise());
 return item;
 }
 protected MethodePaiementDto convertToDto(MethodePaiement item) {
@@ -45,6 +46,10 @@ dto.setId(item.getId());
 dto.setNom(item.getNom());
 dto.setDisponiblePos(item.isDisponiblePos());
 dto.setActif(item.isActif());
+dto.setIdEntreprise(item.getIdEntreprise());
 return dto;
 }
+
+
+
 }

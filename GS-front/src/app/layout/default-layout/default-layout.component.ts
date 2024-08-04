@@ -27,6 +27,7 @@ import {NgIf, NgStyle} from "@angular/common";
 import {TokenService} from "../../controller/auth/services/token.service";
 import {AppUserService} from "../../controller/auth/services/app-user.service";
 import {UserInfosService} from "../../controller/shared/user-infos.service";
+import {SubResponse} from "../../controller/entities/parametres/abonnement/SubResponse";
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -76,6 +77,7 @@ export class DefaultLayoutComponent {
   public showName: boolean = true;
   public showDash: boolean = true;
   public remade: number = 0;
+  public subResponse!:SubResponse;
 
 
 
@@ -109,8 +111,9 @@ export class DefaultLayoutComponent {
 
   public getDaysRemaining(username: string){
     this.appUserService.getDaysRemaining(username).subscribe( res => {
-      this.remade = res;
-      if (this.remade <= 0) {
+      this.subResponse = res;
+      this.remade = res.daysRemaining;
+      if (this.remade <= 0 && !this.subResponse.haveSub) {
         this.showDash = false;
         console.log("dash remade : ", this.remade);
       }

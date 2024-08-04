@@ -41,10 +41,11 @@ var result = service.findPaginated(page, size);
 var pagination = result.convert(converter::toDto);
 return ResponseEntity.ok(pagination);
 }
-@PostMapping
-public ResponseEntity<MethodePaiementDto> save(@RequestBody MethodePaiementDto dto) {
+@PostMapping("/{id}")
+public ResponseEntity<MethodePaiementDto> save(@PathVariable Long id , @RequestBody MethodePaiementDto dto) {
 if (dto == null) return ResponseEntity.status(HttpStatus.CONFLICT).build();
 var item = converter.toItem(dto);
+item.setIdEntreprise(id);
 var result = service.create(item);
 var resultDto = converter.toDto(result);
 return ResponseEntity.ok(resultDto);
@@ -97,4 +98,14 @@ public ResponseEntity<List<Long>> deleteByIdIn(@RequestParam("id") List<Long> id
 service.deleteByIdIn(ids);
 return ResponseEntity.ok(ids);
 }
+
+
+    @GetMapping("/Entreprise/id/{id}")
+    public ResponseEntity<List<MethodePaiementDto>> findByIdEntreprise(@PathVariable Long id) {
+        var result = service.findByEntreprise(id);
+        var resultDto = converter.toDto(result);
+        return ResponseEntity.ok(resultDto);
+    }
+
+
 }

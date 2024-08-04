@@ -9,12 +9,23 @@ private Long id;
 private String nom;
 private boolean disponiblePos;
 private boolean actif;
+private Long idEntreprise;
+
 public Long getId() {
 return id;
 }
 public void setId(Long id) {
 this.id = id;
 }
+
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
+
 public String getNom() {
 return nom;
 }

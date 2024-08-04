@@ -15,6 +15,9 @@ private NouvelleDevise nouvelleDevise;
 private List<EntrepriseDevises> entrepriseDevises;
 @ManyToOne(fetch = FetchType.LAZY)
 private Entreprise entreprise;
+
+    private Long idEntreprise;
+
 public Devises() {
 }
 public Long getId() {
@@ -23,6 +26,13 @@ return id;
 public void setId(Long id) {
 this.id = id;
 }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
 public double getTauxDeChange() {
 return tauxDeChange;
 }

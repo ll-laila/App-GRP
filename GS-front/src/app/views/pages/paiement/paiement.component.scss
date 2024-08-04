@@ -1,0 +1,285 @@
+.container {
+ // display: flex;
+  max-width: 1000px;
+  margin: auto;
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.col-left {
+  display: flex;
+  justify-content: center; /* Centre horizontalement le contenu */
+  align-items: center; /* Centre verticalement le contenu */
+  height: 100%; /* Assure que le conteneur prend toute la hauteur disponible */
+}
+
+.cad{
+  justify-content: center;
+  align-items: center;
+}
+
+.col-left, .col-right {
+  flex: 1;
+  padding: 20px;
+}
+
+.pb-5 {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.col {
+  flex: 1;
+}
+
+#card-number,
+#card-expiry,
+#card-cvc {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+  background-color: white;
+}
+
+#card-expiry {
+  margin-right: 10px;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  background-color: #053F7AFF;
+  //background: linear-gradient(81.67deg, #053f7a 0%, #0a0000 100%);
+  border: none;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0667d0;
+}
+
+button svg {
+  margin-right: 8px;
+}
+
+.error {
+  color: red;
+  margin-top: 10px;
+}
+
+
+
+
+////////////
+
+
+
+body {
+  margin-top: 20px;
+}
+
+.price_plan_area {
+  position: relative;
+  z-index: 1;
+  /* background-color: #f5f5ff; */
+}
+
+.single_price_plan {
+  position: relative;
+  z-index: 1;
+  border-radius: 0.5rem 0.5rem 0 0;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms;
+  margin-bottom: 30px; /* Réduit l'espace en bas */
+  background-color: #ffffff;
+  padding: 2rem 2.5rem; /* Réduit le padding intérieur */
+  width: 90%; /* Réduit la largeur du div à 80% de son conteneur parent */
+  max-width: 500px; /* Définit une largeur maximale pour éviter que le div ne devienne trop large */
+  box-sizing: border-box; /* Assure que le padding et la bordure sont inclus dans la largeur totale */
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .single_price_plan {
+    padding: 2rem 2.5rem; /* Réduit le padding intérieur */
+    width: 90%; /* Réduit la largeur du div à 80% de son conteneur parent */
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .single_price_plan {
+    padding: 1.5rem 2rem; /* Ajuste le padding pour les petits écrans */
+    width: 90%; /* Augmente la largeur pour les petits écrans */
+    max-width: none; /* Supprime la largeur maximale sur les petits écrans */
+  }
+}
+
+.single_price_plan::after {
+  position: absolute;
+  content: "";
+  background-image: url("https://bootdey.com/img/half-circle-pricing.png");
+  background-repeat: repeat;
+  width: 100%;
+  height: 17px;
+  bottom: -17px;
+  z-index: 1;
+  left: 0;
+}
+
+.single_price_plan .title {
+  text-transform: capitalize;
+  -webkit-transition-duration: 500ms;
+  transition-duration: 500ms;
+  margin-bottom: 1.5rem; /* Réduit l'espace en bas */
+}
+
+.single_price_plan .title span {
+  color: #ffffff;
+  padding: 0.2rem 0.6rem;
+  font-size: 12px;
+  text-transform: uppercase;
+  background-color: #2ecc71;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.single_price_plan .title h3 {
+  font-size: 1.7rem; /* Réduit la taille de la police */
+}
+
+.single_price_plan .title p {
+  font-weight: 300;
+  line-height: 1;
+  font-size: 19px; /* Réduit la taille de la police */
+}
+
+.single_price_plan .title .line {
+  width: 60px; /* Réduit la largeur de la ligne */
+  height: 4px;
+  border-radius: 10px;
+  background-color: #3f43fd;
+}
+
+.single_price_plan .price {
+  margin-bottom: 1.5rem; /* Réduit l'espace en bas */
+}
+
+.single_price_plan .price h4 {
+  position: relative;
+  z-index: 1;
+  font-size: 1.8rem; /* Réduit la taille de la police */
+  line-height: 1;
+  margin-bottom: 0;
+  color: #3f43fd;
+  display: inline-block;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-color: transparent;
+  background-image: -webkit-gradient(linear, left top, right top, from(#e24997), to(#2d2ed4));
+  background-image: linear-gradient(90deg, #e24997, #2d2ed4);
+}
+
+
+.single_price_plan .description {
+  position: relative;
+  margin-bottom: 1rem; /* Réduit l'espace en bas */
+}
+
+.single_price_plan .description p {
+  line-height: 16px;
+  margin: 0;
+  padding: 8px 0; /* Réduit le padding vertical */
+  display: flex;
+  align-items: center;
+  font-size: 15px; /* Réduit la taille de la police */
+}
+
+.single_price_plan .description p i {
+  color: #2ecc71;
+  margin-right: 0.5rem;
+}
+
+.single_price_plan .description p .lni-close {
+  color: #e74c3c;
+}
+
+.single_price_plan.active,
+.single_price_plan:hover,
+.single_price_plan:focus {
+  -webkit-box-shadow: 0 6px 50px 8px rgba(23, 112, 218, 0.33);
+  box-shadow: 0 6px 50px 8px rgba(33, 140, 243, 0.32);
+}
+
+.back {
+  -webkit-box-shadow: 0 6px 50px 8px rgba(21, 131, 233, 0.15);
+  box-shadow: 0 6px 50px 8px rgba(21, 131, 233, 0.15);
+}
+
+
+
+.c-Info {
+  transition: transform 0.3s ease;
+  width: 80%; /* Ajustez selon vos besoins */
+  max-width: 500px; /* Ajustez selon vos besoins */
+}
+
+.c-Info:hover {
+  transform: scale(1.05);
+  z-index: 1;
+}
+
+.single_price_plan .side-shape img {
+  position: absolute;
+  max-width: 50%; /* Réduit la taille de l'image */
+  height: auto;
+  top: 0;
+  right: 0;
+  z-index: -2;
+}
+
+.section-heading h3 {
+  margin-bottom: 1rem;
+  font-size: 3.125rem;
+  letter-spacing: -1px;
+}
+
+.section-heading p {
+  margin-bottom: 0;
+  font-size: 1.25rem;
+}
+
+.section-heading .line {
+  width: 120px;
+  height: 5px;
+  margin: 30px auto 0;
+  border-radius: 6px;
+  background: #2d2ed4;
+  background: -webkit-gradient(linear, left top, right top, from(#e24997), to(#2d2ed4));
+  background: linear-gradient(to right, #e24997, #2d2ed4);
+}
+

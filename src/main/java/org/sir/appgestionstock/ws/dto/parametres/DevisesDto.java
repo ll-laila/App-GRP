@@ -10,12 +10,21 @@ private double tauxDeChange;
 private NouvelleDeviseDto nouvelleDevise;
 private List<EntrepriseDevisesDto> entrepriseDevises;
 private EntrepriseDto entreprise;
+    private Long idEntreprise;
+
 public Long getId() {
 return id;
 }
 public void setId(Long id) {
 this.id = id;
 }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
 public double getTauxDeChange() {
 return tauxDeChange;
 }

@@ -3,7 +3,6 @@ package org.sir.appgestionstock.bean.core.parametres.abonnement;
 import jakarta.persistence.*;
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity

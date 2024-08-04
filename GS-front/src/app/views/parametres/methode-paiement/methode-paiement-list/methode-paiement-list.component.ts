@@ -12,6 +12,7 @@ import {MethodePaiement} from "src/app/controller/entities/parametres/methode-pa
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-methode-paiement-list',
@@ -32,29 +33,24 @@ export class MethodePaiementListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
+  public methodePaiementList!:MethodePaiement[];
 
   private service = inject(MethodePaiementService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
+
 
   ngOnInit() {
-    this.findAll()
+    this.loadMethodePaiementList()
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
 
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadMethodePaiementList() {
+    this.service.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.methodePaiementList = data;
+        console.log("methodePaiement List:",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
 

@@ -1,62 +1,32 @@
-<c-row class="mb-2">
-    <c-nav class="hstack gap">
-        <c-nav-item class="p-2 ms-auto">
-            @if (!loading) {
-            <button cButton color="info" (click)="paginate()">
-                @if (paginating) {
-                <c-spinner aria-hidden="true" size="sm"></c-spinner>
-                } @else {
-                <svg cIcon name="cilReload"></svg>
-                }
-                ReFresh
-            </button>
-            } @else {
-            <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="info" disabled style="width: 100px"></button></p>
-            }
-        </c-nav-item>
-        <c-nav-item class="p-2">
-            @if (!loading) {
-            <button cButton color="primary" routerLink="create">Ajouter un nouveau niveau de fidélité</button>
-            } @else {
-            <p cPlaceholderAnimation="glow"><button cButton cCol="7" cPlaceholder color="primary" disabled style="width: 100px"></button></p>
-            }
-        </c-nav-item>
-    </c-nav>
-</c-row>
-
-<c-row>
-    <c-col xs>
-        @if (loading) {
-        <p cPlaceholderAnimation="glow">
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-            <span cCol="12" size="lg" cPlaceholder></span>
-        </p>
-        } @else {
-        <c-card class="mb-4">
-            <c-card-body>
-                <table [hover]="true" [responsive]="true" [striped]="true" align="middle" cTable class="mb-0 border">
-                    <thead class="text-nowrap text-truncate">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
+<body>
+<!-- Table -->
+<div align="right">
+    <button cButton class="mb-4 btnAddColor"  routerLink="create">Ajouter un nouveau niveau de prix</button>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="card shadow-lg">
+            <div class="card-header border-0">
+                <h3 class="mb-0">Niveaux de prix</h3>
+            </div>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
                     <tr>
-                        <th class="bg-body-tertiary">No.</th>
-                                                    <th class="bg-body-tertiary">Nom</th>
-                                                    <th class="bg-body-tertiary">Type</th>
-                            <th class="bg-body-tertiary">Actif</th>
-                        <th class="bg-body-tertiary" style="display: flex; justify-content: end;">Actions</th>
+                        <th scope="col">Nom</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Actif</th>
+                        <th scope="col"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @for (it of pagination.data; track it; let i = $index) {
+                    @for (it of niveauPrixList; track it; let i = $index) {
                     <tr>
-                        <td>{{ it.id }}</td>
                             <td>{{ it.nom }}</td>
                             <td>{{ it.type }}</td>
                             <td>{{ it.actif }}</td>
-                        <td style="display: flex; justify-content: end;">
+                         <td style="display: flex; justify-content: end;">
                             <button cButton color routerLink="update" (click)="item = it">
                                 <svg cIcon name="cil-pen" size="xl" style="color: #61be04"></svg>
                             </button>
@@ -68,41 +38,21 @@
                     }
                     </tbody>
                 </table>
-                <div class="mt-2 hstack gap">
-                    <button cButton disabled color="secondary" variant="outline" style="width: fit-content">
-                        {{ pagination.data.length }} / {{ pagination.totalElements }}
-                    </button>
-                    <c-dropdown class="p-2 ms-auto" style="width: fit-content">
-                        <button cButton cDropdownToggle color="secondary" variant="outline">
-                            {{ pagination.size }}
-                        </button>
-                        <ul cDropdownMenu>
-                            @for(size of paginationSizes; track size) {
-                            <li><a cDropdownItem (click)="paginate(0, size)">{{ size }}</a></li>
-                            }
-                        </ul>
-                    </c-dropdown>
-                    @if(pagination.totalPages > 1 && pagination.data.length > 0) {
-                    <c-pagination class="p-2" align="end" style="width: fit-content">
-                        <li cPageItem [disabled]="paginating || pagination.first" (click)="(loading || pagination.first) || paginate(pagination.page - 1)">
-                            <a cPageLink>Previous</a>
-                        </li>
-                        @for(page of generatePageNumbers; track page) {
-                        <li cPageItem [disabled]="paginating" [active]="page === pagination.page + 1"  (click)="(page === pagination.page + 1) || paginate(page - 1)">
-                            <a cPageLink>{{ page }}</a>
-                        </li>
-                        }
-                        <li cPageItem [disabled]="paginating || pagination.last" (click)="(loading || pagination.last) || paginate(pagination.page + 1)">
-                            <a cPageLink>Next</a>
-                        </li>
-                    </c-pagination>
-                    }
-                </div>
-            </c-card-body>
-        </c-card>
-        }
-    </c-col>
-</c-row>
+            </div>
+        </div>
+    </div>
+</div>
+<footer class="footer">
+    <div class="row align-items-center justify-content-xl-between">
+        <div class="col-xl-6 m-auto text-center">
+
+        </div>
+    </div>
+</footer>
+</body>
+
+
+
 
 <c-modal [visible]="deleteModel" alignment="center" backdrop="static">
     <c-modal-header>
@@ -110,7 +60,7 @@
         <button cButtonClose (click)="deleteModel = false"></button>
     </c-modal-header>
   <c-modal-body style="color: #ef0a34 ;font-size: 18px; " >
-    Êtes-vous sûr de vouloir supprimer ce niveaux de fidélité ?
+    Êtes-vous sûr de vouloir supprimer ce niveaux de prix ?
   </c-modal-body>
     <c-modal-footer>
         <button (click)="deleteModel = false" cButton color="secondary" variant="ghost">Annuler</button>

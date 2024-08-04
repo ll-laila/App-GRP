@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import {AppUser} from 'src/app/controller/auth/entities/app-user';
 import {AppUserValidator} from "src/app/controller/auth/validators/app-user.validator";
 import {environment} from "src/environments/environment";
+import {SubResponse} from "../../entities/parametres/abonnement/SubResponse";
 
 @Injectable({providedIn: 'root'})
 export class AppUserService {
@@ -17,7 +18,7 @@ export class AppUserService {
 
 
   public getDaysRemaining(username: string) {
-    return this.http.get<number>(`${this.api}/essai/${username}`);
+    return this.http.get<SubResponse>(`${this.api}/essai/${username}`);
   }
 
   public findById(id: number) {

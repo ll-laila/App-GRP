@@ -2,8 +2,8 @@
 <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet">
 <body>
         <!-- Table -->
-      <div align="right">
-          <button cButton class="mb-4 btnAddColor"  routerLink="create">Ajouter une nouvelle entreprise</button>
+      <div align="right" *ngIf="showAdd">
+          <button cButton class="mb-4 btnAddColor"  routerLink="create" >Ajouter une nouvelle entreprise</button>
       </div>
       <div class="row">
          <div class="col">

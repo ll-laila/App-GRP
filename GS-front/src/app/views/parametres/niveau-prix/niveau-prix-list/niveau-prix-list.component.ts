@@ -12,6 +12,7 @@ import {NiveauPrix} from "src/app/controller/entities/parametres/niveau-prix";
 import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-niveau-prix-list',
@@ -32,29 +33,22 @@ export class NiveauPrixListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
+  public niveauPrixList!:NiveauPrix[];
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   private service = inject(NiveauPrixService)
 
   ngOnInit() {
-    this.findAll()
+    this.loadNiveauPrixList()
   }
 
-  findAll() {
-    this.loading = true
-    this.paginate().then(() => this.loading = false)
-  }
-
-  async paginate(page: number = this.pagination.page, size: number = this.pagination.size) {
-    this.paginating = true
-    this.service.findPaginated(page, size).subscribe({
-      next: value => {
-        this.pagination = value
-        this.paginating = false
+  loadNiveauPrixList() {
+    this.service.findByEntrepriseId(this.entrepriseSelectedService.getEntrepriseSelected()).subscribe({
+      next: data => {
+        this.niveauPrixList = data;
+        console.log("niveauPrix List:",data);
       },
-      error: err => {
-        console.log(err)
-        this.paginating = false
-      }
+      error: err => console.log(err)
     })
   }
 

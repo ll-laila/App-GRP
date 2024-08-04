@@ -37,6 +37,7 @@ item.setId(dto.getId());
 item.setNom(dto.getNom());
 item.setTauxImposition(dto.getTauxImposition());
 item.setActif(dto.isActif());
+item.setIdEntreprise(dto.getIdEntreprise());
 return item;
 }
 protected TaxeDto convertToDto(Taxe item) {
@@ -45,6 +46,7 @@ dto.setId(item.getId());
 dto.setNom(item.getNom());
 dto.setTauxImposition(item.getTauxImposition());
 dto.setActif(item.isActif());
+dto.setIdEntreprise(item.getIdEntreprise());
 return dto;
 }
 }

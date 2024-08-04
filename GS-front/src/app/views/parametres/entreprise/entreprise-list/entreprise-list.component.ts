@@ -37,6 +37,9 @@ import {RouterLink} from "@angular/router";
 import {IconDirective} from "@coreui/icons-angular";
 import {generatePageNumbers, paginationSizes} from "src/app/controller/utils/pagination/pagination";
 import {UserInfosService} from "../../../../controller/shared/user-infos.service";
+import {SubscriptionService} from "../../../../controller/services/parametres/abonnement/subscription.service";
+import {AppUserService} from "../../../../controller/auth/services/app-user.service";
+import {NgIf} from "@angular/common";
 
 @Component({
   selector: 'app-entreprise-list',
@@ -47,7 +50,7 @@ import {UserInfosService} from "../../../../controller/shared/user-infos.service
     NavItemComponent, SpinnerComponent, PlaceholderAnimationDirective, PlaceholderDirective,
     ColDirective, PageItemDirective, PageLinkDirective, PaginationComponent,
     DropdownComponent, DropdownToggleDirective, DropdownMenuDirective, DropdownHeaderDirective, DropdownItemDirective,
-    ModalComponent, ModalToggleDirective, ModalHeaderComponent, ModalBodyComponent, TooltipDirective, ModalFooterComponent, PopoverDirective, ModalTitleDirective, ButtonCloseDirective, AvatarComponent,
+    ModalComponent, ModalToggleDirective, ModalHeaderComponent, ModalBodyComponent, TooltipDirective, ModalFooterComponent, PopoverDirective, ModalTitleDirective, ButtonCloseDirective, AvatarComponent, NgIf,
   ],
   templateUrl: './entreprise-list.Component.html',
   styleUrl: './entreprise-list.Component.scss'
@@ -57,23 +60,43 @@ export class EntrepriseListComponent {
   protected paginating = false
   protected currentIndex: number  = 0
   protected deleteModel = false
-
+  public showAdd:boolean = true;
+  public nbrEntreprises:number = 0;
   public entreprises !: Entreprise[];
   private service = inject(EntrepriseService);
   private userInfosService = inject(UserInfosService);
+  private appUserService = inject(AppUserService);
+  private subscriptionService = inject(SubscriptionService);
 
   ngOnInit() {
     this.getEntreprises();
   }
 
+
   public getEntreprises() {
-    this.service.findByAdmin(this.userInfosService.getUsername()).subscribe((res:Entreprise[]) => {
-      console.log(res);
-      this.entreprises = res;
+    this.service.findByAdmin(this.userInfosService.getUsername()).subscribe((ress:Entreprise[]) => {
+      console.log(ress);
+      this.entreprises = ress;
+      this.nbrEntreprises = ress.length;
+      this.appUserService.findByUsernameWithRoles(this.userInfosService.getUsername()).subscribe(res => {
+        console.log(res);
+        this.subscriptionService.findById(res.id).subscribe(resl => {
+          console.log(resl);
+          // @ts-ignore
+          if(this.nbrEntreprises >= resl.plan?.maxEntreprises){
+            this.showAdd = false;
+          }
+        }, error => {
+          console.log(error);
+        });
+      }, error => {
+        console.log(error);
+      });
     }, error => {
       console.log(error);
     });
   }
+
 
 
   delete() {

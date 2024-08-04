@@ -121,6 +121,14 @@ deleteAssociatedList(item);
 public void deleteAssociatedList(NiveauPrix item) {
 produitNiveauPrixService.deleteByNiveauPrixId(item.getId());
 }
+
+
+@Override
+public List<NiveauPrix> findNiveauPrixByEntreprise(Long id){
+    return dao.findByEntreprise(id);
+}
+
+
 //----------------------------------------------------------
 @Autowired private NiveauPrixDao dao;
 @Lazy @Autowired private ProduitNiveauPrixService produitNiveauPrixService;

@@ -16,4 +16,6 @@ void deleteById(Long id);
 void delete(NiveauPrix item);
 void delete(List<NiveauPrix> items);
 void deleteByIdIn(List<Long> ids);
+
+List<NiveauPrix> findNiveauPrixByEntreprise(Long id);
 }

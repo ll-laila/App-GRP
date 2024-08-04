@@ -26,7 +26,12 @@ export class MethodePaiementService {
     return this.http.get<MethodePaiement>(`${this.api}/id/${id}`);
   }
 
-  public findAllOptimized() {
+    public findByEntrepriseId(id: number) {
+        return this.http.get<Array<MethodePaiement>>(`${this.api}/Entreprise/id/${id}`);
+    }
+
+
+    public findAllOptimized() {
     return this.http.get<Array<MethodePaiement>>(`${this.api}/optimized`);
   }
 
@@ -34,8 +39,8 @@ export class MethodePaiementService {
     return this.http.get<Pagination<MethodePaiement>>(`${this.api}/paginated?page=${page}&size=${size}`);
   }
 
-  public create() {
-    return this.http.post<MethodePaiement>(this.api, this.item);
+  public create(id: number) {
+    return this.http.post<MethodePaiement>(`${this.api}/${id}`, this.item);
   }
 
   public createList() {

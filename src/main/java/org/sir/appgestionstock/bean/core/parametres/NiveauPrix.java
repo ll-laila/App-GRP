@@ -16,6 +16,9 @@ private StatutNiveauPrixEnum type;
 private boolean actif;
 @OneToMany(mappedBy = "niveauPrix")
 private List<ProduitNiveauPrix> produitNiveauPrix;
+
+    private Long idEntreprise;
+
 public NiveauPrix() {
 }
 public Long getId() {
@@ -24,6 +27,13 @@ return id;
 public void setId(Long id) {
 this.id = id;
 }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long idEntreprise) {
+        this.idEntreprise = idEntreprise;
+    }
 public String getNom() {
 return nom;
 }

@@ -16,6 +16,7 @@ import {JwtRequest} from "src/app/controller/auth/entities/jwt-request";
 import {ToasterService} from "../../../toaster/controller/toaster.service";
 import {UserInfosService} from "../../../controller/shared/user-infos.service";
 import {AppUserService} from "../../../controller/auth/services/app-user.service";
+import {SubResponse} from "../../../controller/entities/parametres/abonnement/SubResponse";
 
 @Component({
   selector: 'app-login',
@@ -40,7 +41,7 @@ export class LoginComponent {
   protected validator = JwtRequestValidator.init(() => this.item);
   private appUserService = inject(AppUserService);
   public remade: number = 0;
-
+  public subResponse:SubResponse =new SubResponse();
 
   constructor(private userInfosService: UserInfosService) {
   }
@@ -76,13 +77,18 @@ export class LoginComponent {
 
   public getDaysRemaining(username: string){
     this.appUserService.getDaysRemaining(username).subscribe( res => {
-     this.remade = res;
-      if (this.remade <= 0) {
-        console.log("remade :", this.remade);
-        console.log("opss")
+     this.subResponse.daysRemaining = res.daysRemaining;
+      this.subResponse.isSubEnd = res.isSubEnd;
+      this.subResponse.haveSub = res.haveSub;
+      console.log("remade:", this.subResponse);
+
+      if (this.subResponse.daysRemaining <= 0 && !this.subResponse.haveSub || this.subResponse.isSubEnd) {
+        console.log("remade essai:", this.subResponse.daysRemaining);
+        console.log("remade sub:", this.subResponse.isSubEnd);
         this.router.navigate(["parametresCompte"]).then();
       }else{
-        console.log("remade :", this.remade);
+        console.log("remade essai:", this.subResponse.daysRemaining);
+        console.log("remade sub:", this.subResponse.isSubEnd);
         this.router.navigate(["dashboard"]).then()
         this.loading = false
         this.toasterService.toast({message: "Bienvenue sur l'application de gestion !", color: "success"})

@@ -39,6 +39,7 @@ var item = new NouvelleDevise();
 item.setId(dto.getId());
 item.setLabelle(dto.getLabelle());
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
+item.setIdEntreprise(dto.getIdEntreprise());
 return item;
 }
 protected NouvelleDeviseDto convertToDto(NouvelleDevise item) {
@@ -46,6 +47,7 @@ var dto = new NouvelleDeviseDto();
 dto.setId(item.getId());
 dto.setLabelle(item.getLabelle());
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
+dto.setIdEntreprise(item.getIdEntreprise());
 return dto;
 }
 public void setEntreprise(boolean value) {
