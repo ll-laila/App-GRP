@@ -133,7 +133,7 @@ export class LivraisonCreateComponent {
       next: data => {
         this.item = data;
         this.item = new Livraison()
-        this.router.navigate(["/inventaire/livraison/livraison"]).then()
+        this.router.navigate(["/inventaire/livraison/livraison/livraisonpdf"]).then()
         this.toasterService.toast({message: "Un nouveau livraison a été ajouté", color: "success"})
 
       },

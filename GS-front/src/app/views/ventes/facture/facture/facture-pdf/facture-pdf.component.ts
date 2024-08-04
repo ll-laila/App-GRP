@@ -9,6 +9,8 @@ import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {Paiement} from "../../../../../controller/entities/ventes/paiement";
 
 import {AvatarComponent} from "@coreui/angular";
+import {RetourProduitService} from "../../../../../controller/services/ventes/retourproduit/retour-produit.service";
+
 
 @Component({
   selector: 'app-facture-pdf',
@@ -28,6 +30,7 @@ export class FacturePdfComponent {
   constructor(
       private factureService: FactureService,
       private paiement: PaiementService,
+      private retourproduit:RetourProduitService,
       private router: Router,
       private sanitizer: DomSanitizer,
       private modalService: NgbModal,
@@ -56,9 +59,17 @@ export class FacturePdfComponent {
             montant: this.item.id
         };
         this.router.navigate(['/ventes/paiement/create'], { queryParams }).then();
+        window.location.reload()
     }
 
-
+    retourProduit(){
+        this.retourproduit.returnUrl = this.router.url;
+        this.factureService.keepData = true;
+        const queryParams = {
+            idFacture: this.item.id,
+        };
+        this.router.navigate(['/ventes/retourproduit/retour-produit/create'], { queryParams }).then();
+    }
 
 
     ngOnInit() {
