@@ -1,6 +1,17 @@
 import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-2OVXVWW6.js";
+import {
   IconDirective
 } from "./chunk-KLUL77CK.js";
+import {
+  createPopper2 as createPopper
+} from "./chunk-EPDNLT2K.js";
 import {
   Platform,
   _getEventTarget,
@@ -12,9 +23,6 @@ import {
   coerceNumberProperty,
   normalizePassiveListenerOptions
 } from "./chunk-WQILDWK4.js";
-import {
-  createPopper2 as createPopper
-} from "./chunk-EPDNLT2K.js";
 import {
   takeUntilDestroyed,
   toObservable
@@ -31,14 +39,6 @@ import {
   trigger,
   useAnimation
 } from "./chunk-5F3O6CPL.js";
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-2OVXVWW6.js";
 import "./chunk-AUQ3BORM.js";
 import "./chunk-KGK42DWN.js";
 import {
@@ -163,11 +163,11 @@ import {
   ɵɵtextInterpolate1,
   ɵɵviewQuery
 } from "./chunk-JZQD6LGX.js";
+import "./chunk-TFMRLFGK.js";
 import {
   fromEvent,
   merge
 } from "./chunk-5X3OOUUX.js";
-import "./chunk-TFMRLFGK.js";
 import {
   BehaviorSubject,
   Observable,

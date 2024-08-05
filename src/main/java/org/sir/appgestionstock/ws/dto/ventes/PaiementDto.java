@@ -17,7 +17,13 @@ private EntrepriseDto entreprise;
 private Long idFacture;
 
 
-
+    private Long idEntreprise;
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long id) {
+        this.idEntreprise = id;
+    }
 
     public Long getIdFacture() {
         return idFacture;

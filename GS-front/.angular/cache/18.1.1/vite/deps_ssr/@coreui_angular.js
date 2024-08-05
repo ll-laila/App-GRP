@@ -3,9 +3,6 @@ import {
   IconDirective
 } from "./chunk-XCSSEX5T.js";
 import {
-  createPopper2 as createPopper
-} from "./chunk-QZACYPDZ.js";
-import {
   Platform,
   _getEventTarget,
   _getFocusedElementPierceShadowDom,
@@ -16,6 +13,9 @@ import {
   coerceNumberProperty,
   normalizePassiveListenerOptions
 } from "./chunk-DWNQSZRK.js";
+import {
+  createPopper2 as createPopper
+} from "./chunk-QZACYPDZ.js";
 import {
   takeUntilDestroyed,
   toObservable

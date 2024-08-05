@@ -22,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Objects;
+
 @Service
 public class PaiementServiceImpl implements PaiementService {
 
@@ -173,13 +175,15 @@ ServiceHelper.nullifyInContainer(item.getId(), factureService::findByPaiementId,
 
     @Override
     public double getIncome(Long entrepriseId) {
-        List<Paiement> paiements = dao.findByEntrepriseId(entrepriseId);
+        List<Paiement> paiements = dao.findByIdEntreprise(entrepriseId);
         double sommeTotale = 0;
 
-        for (Paiement commande : paiements) {
-            // Vérifie si le montant payé n'est pas égal à "Bon d'achat"
-            if (!"Bon d'achat".equals(commande.getMethodePaiement().getNom())) {
-                sommeTotale += commande.getMontantPaye();
+
+        for (Paiement paiement : paiements) {
+            MethodePaiement m = methodePaiementService.findById(paiement.getMethodePaiement().getId());
+
+            if (!m.getNom().equals("Bon d'achat")) {
+                sommeTotale += paiement.getMontantPaye();
             }
         }
 
@@ -190,7 +194,7 @@ ServiceHelper.nullifyInContainer(item.getId(), factureService::findByPaiementId,
 
     @Override
     public List<Paiement> getPaiements(Long id){
-        return dao.findByEntrepriseId(id);
+        return dao.findByIdEntreprise(id);
     }
 
 

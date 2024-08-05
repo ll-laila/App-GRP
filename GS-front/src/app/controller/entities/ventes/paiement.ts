@@ -8,5 +8,5 @@ montantRest!:number;
 methodePaiement?: MethodePaiement ;
 entreprise?: Entreprise ;
 idFacture?: number;
-
+idEntreprise?: number;
 }

@@ -20,8 +20,12 @@ private Entreprise entreprise;
 
 private Long idFacture;
 
+private Long idEntreprise;
+
+
 public Paiement() {
 }
+
 
 
     public Long getIdFacture() {
@@ -29,6 +33,13 @@ public Paiement() {
     }
     public void setIdFacture(Long id) {
         this.idFacture = id;
+    }
+
+    public Long getIdEntreprise() {
+        return idEntreprise;
+    }
+    public void setIdEntreprise(Long id) {
+        this.idEntreprise = id;
     }
 
     public double getMontantRest() {

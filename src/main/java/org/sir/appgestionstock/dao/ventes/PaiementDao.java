@@ -13,4 +13,5 @@ List<Paiement> findByEntrepriseId(Long id);
     Long findMaxId();
 
     Paiement findByIdFacture(Long id);
+    List<Paiement> findByIdEntreprise(Long id);
 }

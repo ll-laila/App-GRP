@@ -37,6 +37,7 @@ import {Entreprise} from "src/app/controller/entities/parametres/entreprise";
 import {FactureService} from "../../../../controller/services/ventes/facture/facture.service";
 import {Facture} from "../../../../controller/entities/ventes/facture/facture";
 import {ToasterService} from "../../../../toaster/controller/toaster.service";
+import {EntrepriseSelectedService} from "../../../../controller/shared/entreprise-selected.service";
 
 @Component({
   selector: 'app-paiement-create',
@@ -74,6 +75,7 @@ export class PaiementCreateComponent {
   private factureService = inject(FactureService);
   private formBuilder: FormBuilder= inject(FormBuilder);
   private toasterService = inject(ToasterService)
+  private entrepriseSelectedService = inject(EntrepriseSelectedService);
 
   protected validator = PaiementValidator.init(() => this.item);
 
@@ -128,7 +130,7 @@ export class PaiementCreateComponent {
   }
 
   calculPrixImpaye(): number {
-    return this.itemF.total- this.item.montantPaye;
+    return this.itemF.total- this.item.montantPaye;this.item.methodePaiement
   }
 
   // METHODS
@@ -138,6 +140,7 @@ export class PaiementCreateComponent {
       console.log('Montant reçu:', this.item.idFacture);
     });
     this.item.montantRest=this.calculPrixImpaye();
+    this.item.idEntreprise = this.entrepriseSelectedService.getEntrepriseSelected();
     console.log(this.item);
     if (!this.validator.validate()) return;
     this.sending = true;
@@ -152,7 +155,7 @@ export class PaiementCreateComponent {
         }
         this.item = new Paiement();
         this.router.navigate(["/ventes/paiement"]).then(()=> {
-                this.toasterService.toast({message: "votre piementt a été effectué avec success", color: "success"})
+          this.toasterService.toast({message: "votre piementt a été effectué avec success", color: "success"})
         });
       },
       error: err => {
@@ -162,6 +165,7 @@ export class PaiementCreateComponent {
       }
     });
   }
+
 
   reset(force = true) {
     if (force || this.item == null) this.item = new Paiement();

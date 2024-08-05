@@ -47,6 +47,7 @@ item.setMontantRest(dto.getMontantRest());
 item.setMethodePaiement(methodePaiementConverter.toItem(dto.getMethodePaiement()));
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
 item.setIdFacture(dto.getIdFacture());
+item.setIdEntreprise(dto.getIdEntreprise());
 return item;
 }
 protected PaiementDto convertToDto(Paiement item) {
@@ -58,6 +59,7 @@ dto.setMontantRest(item.getMontantRest());
 dto.setMethodePaiement(methodePaiement? methodePaiementConverter.toDto(item.getMethodePaiement()): null);
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
 dto.setIdFacture(item.getIdFacture());
+dto.setIdEntreprise(item.getIdEntreprise());
 return dto;
 }
 public void setMethodePaiement(boolean value) {
