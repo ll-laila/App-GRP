@@ -5,7 +5,7 @@
         colorScheme="dark"
         id="sidebar1"
         visible
-        *ngIf="showDash"
+        *ngIf="showAccueil"
 >
   <c-sidebar-header class="border-bottom">
     <c-sidebar-brand [routerLink]="[]">
@@ -29,12 +29,12 @@
 </c-sidebar>
 
 <!--main-->
-<div class="wrapper d-flex flex-column min-vh-100">
+<div class="wrapper d-flex flex-column min-vh-100" *ngIf="showAccueil">
   <!--app-header-->
   <app-default-header [cShadowOnScroll]="'sm'"
                       class="mb-4 d-print-none header header-sticky p-0 shadow-sm"
                       position="sticky"
-                      sidebarId="sidebar1" *ngIf="showDash"/>
+                      sidebarId="sidebar1" />
   <!--app-body-->
   <div class="body flex-grow-1">
     <c-container breakpoint="lg" class="h-auto px-4">
@@ -43,4 +43,8 @@
   </div>
   <!--app footer-->
   <app-default-footer />
+</div>
+
+<div class="wrapper d-flex flex-column min-vh-100" *ngIf="showAbon">
+  <app-abonnements></app-abonnements>
 </div>

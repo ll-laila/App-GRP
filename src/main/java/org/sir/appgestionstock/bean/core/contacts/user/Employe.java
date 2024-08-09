@@ -43,6 +43,8 @@ private List<Notification> notifications;
     )
     private List<PermissionsAcces> permissionsAcces;
 
+    private String admin;
+
 
     public Employe() {
 super();
@@ -67,6 +69,12 @@ return code;
 public void setCode(String value) {
 this.code = value;
 }
+    public String getAdmin() {
+        return admin;
+    }
+    public void setAdmin(String id) {
+        this.admin = id;
+    }
 public String getNom() {
 return nom;
 }

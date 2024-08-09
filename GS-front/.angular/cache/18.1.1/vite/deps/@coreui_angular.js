@@ -1,12 +1,4 @@
 import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterLink,
-  RouterLinkActive,
-  RouterModule
-} from "./chunk-2OVXVWW6.js";
-import {
   IconDirective
 } from "./chunk-KLUL77CK.js";
 import {
@@ -39,6 +31,14 @@ import {
   trigger,
   useAnimation
 } from "./chunk-5F3O6CPL.js";
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+  RouterModule
+} from "./chunk-2OVXVWW6.js";
 import "./chunk-AUQ3BORM.js";
 import "./chunk-KGK42DWN.js";
 import {

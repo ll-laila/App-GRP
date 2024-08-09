@@ -60,6 +60,7 @@ item.setDestinataireEmploye(destinataireEmployeConverter.toItem(dto.getDestinata
 item.setEntreprise(entrepriseConverter.toItem(dto.getEntreprise()));
 item.setEntreprisesAdroitAcces(entrepriseConverter.toItem(dto.getEntreprisesAdroitAcces()));
 item.setPermissionsAcces(permissionsAccesConverter.toItem(dto.getPermissionsAcces()));
+item.setAdmin(dto.getAdmin());
 return item;
 }
 protected EmployeDto convertToDto(Employe item) {
@@ -74,6 +75,7 @@ dto.setDestinataireEmploye(destinataireEmploye? destinataireEmployeConverter.toD
 dto.setEntreprise(entreprise? entrepriseConverter.toDto(item.getEntreprise()): null);
 dto.setEntreprisesAdroitAcces(entreprise? entrepriseConverter.toDto(item.getEntreprisesAdroitAcces()): null);
 dto.setPermissionsAcces(permissionsAcces? permissionsAccesConverter.toDto(item.getPermissionsAcces()):null);
+dto.setAdmin(item.getAdmin());
 return dto;
 }
 public void setAdresse(boolean value) {

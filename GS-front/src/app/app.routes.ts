@@ -105,7 +105,13 @@ export const routes: Routes = [
     loadComponent: () => import('./views/pages/register/register.component').then(m => m.RegisterComponent),
     data: {title: 'Register Page'}
   },
-
+  {
+    path: 'abonnements',
+    loadComponent: () => import('./views/pages/abonnements/abonnements.component').then(m => m.AbonnementsComponent),
+    data: {
+      title: 'Abonnements'
+    }
+  },
   { path: '**', redirectTo: 'dashboard' }
 
 ];

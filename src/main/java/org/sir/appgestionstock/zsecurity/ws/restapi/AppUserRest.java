@@ -1,7 +1,9 @@
 package org.sir.appgestionstock.zsecurity.ws.restapi;
 
+import org.sir.appgestionstock.bean.core.contacts.user.Employe;
 import org.sir.appgestionstock.bean.core.parametres.abonnement.Subscription;
 import org.sir.appgestionstock.dao.parametres.abonnement.SubscriptionDao;
+import org.sir.appgestionstock.service.facade.contacts.user.EmployeService;
 import org.sir.appgestionstock.zsecurity.entity.AppUser;
 import org.sir.appgestionstock.zsecurity.permissions.RoleEnum;
 import org.sir.appgestionstock.zsecurity.service.facade.AppUserService;
@@ -22,10 +24,13 @@ public class AppUserRest {
 
     private final SubscriptionDao subscriptiondao;
 
-    public AppUserRest(AppUserService appUserService, AppUserConverter appUserConverter, SubscriptionDao subscriptiondao) {
+    private final EmployeService employeService;
+
+    public AppUserRest(AppUserService appUserService, AppUserConverter appUserConverter, SubscriptionDao subscriptiondao, EmployeService employeService) {
         this.appUserService = appUserService;
         this.appUserConverter = appUserConverter;
         this.subscriptiondao = subscriptiondao;
+        this.employeService = employeService;
     }
 
     @GetMapping()
@@ -61,7 +66,14 @@ public class AppUserRest {
     @GetMapping("/essai/{username}")
     public SubResponse getDaysRemaining(@PathVariable String username) {
         SubResponse response = new SubResponse();
-        AppUser user = appUserService.findByUsername(username);
+        AppUser user = new AppUser();
+        Employe employe = employeService.findByUsername(username);
+
+        if(employe != null){
+             user = appUserService.findByUsername(employe.getAdmin());
+        }else{
+            user = appUserService.findByUsername(username);
+        }
 
         if (user == null) {
             throw new IllegalArgumentException("Utilisateur non trouvé : " + username);

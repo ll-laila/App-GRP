@@ -26,6 +26,7 @@ import {RolesListComponent} from "../roles-list/roles-list.component";
 import * as bootstrap from 'bootstrap';
 import {PermissionsAcces} from "../../../../../controller/entities/contacts/user/PermissionsAcces";
 import {EntrepriseSelectedService} from "../../../../../controller/shared/entreprise-selected.service";
+import {UserInfosService} from "../../../../../controller/shared/user-infos.service";
 
 @Component({
   selector: 'app-employe-create',
@@ -60,6 +61,7 @@ export class EmployeCreateComponent {
 
   private router = inject(Router)
   private entrepriseSelectedService = inject(EntrepriseSelectedService);
+  private userInfosService = inject(UserInfosService);
   private service = inject(EmployeService)
   private entrepriseService = inject(EntrepriseService)
   private formBuilder: FormBuilder= inject(FormBuilder)
@@ -137,6 +139,7 @@ export class EmployeCreateComponent {
       return;
     }
     this.sending = true;
+    this.item.admin = this.userInfosService.getUsername();
     this.service.create().subscribe({
       next: data => {
         this.sending = false

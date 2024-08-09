@@ -85,7 +85,7 @@ export class LoginComponent {
       if (this.subResponse.daysRemaining <= 0 && !this.subResponse.haveSub || this.subResponse.isSubEnd) {
         console.log("remade essai:", this.subResponse.daysRemaining);
         console.log("remade sub:", this.subResponse.isSubEnd);
-        this.router.navigate(["parametresCompte"]).then();
+        this.router.navigate(["abonnements"]).then();
       }else{
         console.log("remade essai:", this.subResponse.daysRemaining);
         console.log("remade sub:", this.subResponse.isSubEnd);

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, inject, NgZone, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, inject, NgZone, OnInit, ViewChild} from '@angular/core';
 import { NgIf } from "@angular/common";
 import { StripeService } from "../../../controller/services/parametres/abonnement/stripe.service";
 import {Plan} from "../../../controller/entities/parametres/abonnement/Plan";
@@ -9,18 +9,22 @@ import {UserInfosService} from "../../../controller/shared/user-infos.service";
 import {AppUserService} from "../../../controller/auth/services/app-user.service";
 import {Subscription} from "../../../controller/entities/parametres/abonnement/Subscription";
 import {SubscriptionService} from "../../../controller/services/parametres/abonnement/subscription.service";
+import {FormLabelDirective} from "@coreui/angular";
 
 @Component({
     selector: 'app-paiement',
     standalone: true,
     imports: [
         NgIf,
-        RouterLink
+        RouterLink,
+        FormLabelDirective
     ],
     templateUrl: './paiement.component.html',
     styleUrls: ['./paiement.component.scss']
 })
 export class PaiementComponent implements AfterViewInit {
+
+
 
     @ViewChild('cardNumber') cardNumber: ElementRef | undefined;
     @ViewChild('cardExpiry') cardExpiry: ElementRef | undefined;
@@ -44,7 +48,8 @@ export class PaiementComponent implements AfterViewInit {
     public subscriptionService = inject(SubscriptionService);
     private subscription: Subscription = new Subscription();
 
-    constructor(private ngZone: NgZone, private stripeService: StripeService) {}
+    constructor(private ngZone: NgZone, private stripeService: StripeService) {
+    }
 
     ngOnInit(): void {
         this.getAdminByUsername(this._userInfosService.getUsername());
@@ -141,8 +146,6 @@ export class PaiementComponent implements AfterViewInit {
             this.ngZone.run(() => this.cardError = error.message);
         }
     }
-
-
 
 
 

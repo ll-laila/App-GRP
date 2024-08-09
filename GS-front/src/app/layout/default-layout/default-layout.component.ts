@@ -28,6 +28,7 @@ import {TokenService} from "../../controller/auth/services/token.service";
 import {AppUserService} from "../../controller/auth/services/app-user.service";
 import {UserInfosService} from "../../controller/shared/user-infos.service";
 import {SubResponse} from "../../controller/entities/parametres/abonnement/SubResponse";
+import {AbonnementsComponent} from "../../views/pages/abonnements/abonnements.component";
 
 function isOverflown(element: HTMLElement) {
   return (
@@ -64,7 +65,8 @@ function isOverflown(element: HTMLElement) {
     RowComponent,
     CardComponent,
     ColDirective,
-    NgIf
+    NgIf,
+    AbonnementsComponent
   ]
 })
 export class DefaultLayoutComponent {
@@ -75,13 +77,16 @@ export class DefaultLayoutComponent {
 
   private router = inject(Router);
   public showName: boolean = true;
-  public showDash: boolean = true;
   public remade: number = 0;
   public subResponse!:SubResponse;
+  public showAbon: boolean = false;
+  public showAccueil: boolean = true;
+
 
 
 
   ngOnInit() {
+    this.isRoute();
     this.getDaysRemaining(this.userInfosService.getUsername());
   }
 
@@ -114,12 +119,19 @@ export class DefaultLayoutComponent {
       this.subResponse = res;
       this.remade = res.daysRemaining;
       if (this.remade <= 0 && !this.subResponse.haveSub) {
-        this.showDash = false;
         console.log("dash remade : ", this.remade);
       }
     }, error => {
       console.log(error);
     });
+  }
+
+
+  isRoute(): void {
+    if(this.router.url === './pages/abonnements/abonnements'){
+        this.showAbon = true;
+        this.showAccueil = false;
+    }
   }
 
 }

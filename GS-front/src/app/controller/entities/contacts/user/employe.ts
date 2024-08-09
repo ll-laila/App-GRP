@@ -15,4 +15,5 @@ export class Employe extends AppUser {
     entreprise?: Entreprise ;
     entreprisesAdroitAcces?: Entreprise[];
     permissionsAcces?: PermissionsAcces[];
+    admin?: string;
 }

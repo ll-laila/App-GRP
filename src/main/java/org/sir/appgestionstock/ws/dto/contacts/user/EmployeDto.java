@@ -21,6 +21,7 @@ private List<DestinataireEmployeDto> destinataireEmploye;
 private EntrepriseDto entreprise;
 private List<EntrepriseDto>  entreprisesAdroitAcces;
 private List<PermissionsAccesDto> permissionsAcces;
+private String admin;
 
 
 public Long getId() {
@@ -29,6 +30,12 @@ return id;
 public void setId(Long id) {
 this.id = id;
 }
+    public String getAdmin() {
+        return admin;
+    }
+    public void setAdmin(String id) {
+        this.admin = id;
+    }
 public String getCode() {
 return code;
 }

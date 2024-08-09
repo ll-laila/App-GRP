@@ -27,14 +27,9 @@ export class ParametresCompteComponent implements OnInit {
   readonly router = inject(Router);
 
   public remade: number = 0;
-  public viewRemade: boolean = false;
   public msgRemade: boolean = false;
   public msgSub: boolean = false;
 
-
-  public FIRST!: Plan;
-  public PREMIUM!: Plan
-  public ELITE!: Plan
   public plans!: Plan[];
 
   ngOnInit(): void {
@@ -71,11 +66,9 @@ export class ParametresCompteComponent implements OnInit {
     this.appUserService.getDaysRemaining(username).subscribe( res => {
       this.remade = res.daysRemaining;
       if (this.remade <= 0 && !res.haveSub) {
-        this.viewRemade = true;
         this.msgRemade = true;
       }
       if (res.haveSub && res.isSubEnd) {
-        this.viewRemade = true;
         this.msgSub = true;
       }
     }, error => {
